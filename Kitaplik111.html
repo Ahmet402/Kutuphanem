@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Benim Güzel Kütüphanem</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #F8F5F2;
+            --card-bg: #FFFFFF;
+            --primary-text: #403D39;
+            --secondary-text: #74716C;
+            --accent-color: #D4A276;
+            --green-accent: #6D8B74;
+            --pink-accent: #E1C4B8;
+            --danger-color: #e74c3c;
+            --font-heading: 'Lora', serif;
+            --font-body: 'Montserrat', sans-serif;
+        }
+        body { font-family: var(--font-body); margin: 0; background-color: var(--bg-color); color: var(--primary-text); }
+        .container { max-width: 1200px; margin: 20px auto; padding: 15px; }
+        h1, h2, h3 { font-family: var(--font-heading); }
+        header { text-align: center; padding: 1rem; margin-bottom: 20px; }
+        header h1 { color: var(--primary-text); font-size: 2.5em; margin: 0; }
+        nav { display: flex; justify-content: center; background-color: var(--card-bg); border-radius: 12px; padding: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 25px; }
+        .nav-button { flex: 1; padding: 12px 20px; border: none; background: none; border-radius: 8px; cursor: pointer; font-size: 1em; font-weight: 500; color: var(--secondary-text); transition: all 0.3s; }
+        .nav-button.active { background-color: var(--green-accent); color: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .controls-bar { padding: 15px; background-color: var(--card-bg); border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; flex-direction: column; gap: 15px; margin-bottom: 25px; }
+        .top-controls, .bottom-controls { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
+        .add-button, .action-button { background-color: var(--green-accent); color: white; padding: 12px 20px; border: none; border-radius: 8px; cursor: pointer; font-size: 1em; font-weight: 500; transition: background-color 0.3s; }
+        .add-button:hover { background-color: #5a7462; }
+        .controls-bar select, .controls-bar input[type="text"] { padding: 12px; border: 1px solid #ddd; border-radius: 8px; background-color: var(--bg-color); min-width: 180px; }
+        .list-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+        .book-card, .wish-card { background-color: var(--card-bg); border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); overflow: hidden; display: flex; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; border-left: 5px solid transparent; }
+        .book-card:hover, .wish-card:hover { transform: translateY(-5px); box-shadow: 0 6px 20px rgba(0,0,0,0.08); }
+        .status-card-okunuyor { border-left-color: var(--accent-color); background-color: #fefcf9; }
+        .status-card-okundu { border-left-color: var(--green-accent); background-color: #f9fbf8; }
+        .status-card-odunc-verildi { border-left-color: var(--pink-accent); background-color: #fdfaf8; }
+        .card-cover img { width: 100px; height: 150px; object-fit: cover; }
+        .card-info { padding: 15px; display: flex; flex-direction: column; justify-content: center; flex-grow: 1; }
+        .card-info h3 { margin: 0 0 5px 0; font-size: 1.1em; }
+        .card-info p { margin: 2px 0; font-size: 0.9em; color: var(--secondary-text); }
+        .book-rating { color: var(--accent-color); font-size: 1.1em; margin-top: 8px !important; }
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.5); backdrop-filter: blur(5px); animation: fadeIn 0.3s; }
+        .modal-content { background-color: var(--card-bg); margin: 5% auto; padding: 30px; border-radius: 16px; width: 90%; max-width: 600px; position: relative; box-shadow: 0 5px 25px rgba(0,0,0,0.1); animation: slideIn 0.4s; }
+        .close-button { color: #aaa; position: absolute; top: 15px; right: 25px; font-size: 32px; font-weight: bold; cursor: pointer; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 500; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; background-color: var(--bg-color); }
+        .file-upload-label { display: inline-block; padding: 8px 15px; background-color: var(--pink-accent); color: var(--primary-text); border-radius: 8px; cursor: pointer; font-size: 0.9em; margin-top: 8px; transition: background-color 0.3s; }
+        #cover-preview { max-width: 100px; max-height: 150px; margin-top: 10px; border-radius: 8px; border: 1px solid #ddd; }
+        .hidden { display: none; }
+        #login-screen { text-align: center; padding-top: 20vh; }
+        .user-profile { font-weight: 500; }
+        @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
+        @keyframes slideIn { from {transform: translateY(-50px); opacity: 0;} to {transform: translateY(0); opacity: 1;} }
+    </style>
+</head>
+<body>
+
+    <div id="login-screen">
+        <header><h1>Benim Güzel Kütüphanem</h1></header>
+        <button id="login-btn" class="add-button" style="font-size: 1.2em; padding: 15px 30px;">Google ile Giriş Yap</button>
+    </div>
+
+    <div id="main-app" class="hidden">
+        <header>
+            <h1>Benim Güzel Kütüphanem</h1>
+            <div class="user-profile">
+                <span id="user-display-name"></span>
+                <button id="logout-btn" class="action-button" style="background:var(--pink-accent); color:var(--primary-text); margin-left:15px; font-size:0.8em; padding:8px 12px;">Çıkış Yap</button>
+            </div>
+        </header>
+
+        <div class="container">
+            <nav>
+                <button class="nav-button active" id="show-library-btn">Kütüphanem</button>
+                <button class="nav-button" id="show-wishlist-btn">İstek Listem</button>
+            </nav>
+
+            <main id="library-view">
+                <div class="controls-bar">
+                    <div class="top-controls">
+                        <button class="add-button" id="add-book-btn">Yeni Kitap Ekle</button>
+                        <div class="search-group"><input type="text" id="search-input" placeholder="Kitap veya yazar ara..."></div>
+                    </div>
+                    <div class="bottom-controls">
+                        <div class="filter-group"><label for="filter-status">Filtrele:</label><select id="filter-status"><option value="Tümü">Tümü</option><option value="Okunacak">Okunacak</option><option value="Okunuyor">Okunuyor</option><option value="Okundu">Okundu</option><option value="Ödünç Verildi">Ödünç Verildi</option></select></div>
+                        <div class="data-actions"><button id="import-btn">İçe Aktar</button><button id="export-btn">Dışa Aktar</button><input type="file" id="import-file" class="hidden" accept=".json"></div>
+                    </div>
+                </div>
+                <div class="list-container" id="book-list"></div>
+            </main>
+
+            <main id="wishlist-view" class="hidden">
+                <div class="controls-bar"><button class="add-button" id="add-wish-btn">Yeni İstek Ekle</button></div>
+                <div class="list-container" id="wish-list"></div>
+            </main>
+        </div>
+
+        <div id="book-form-modal" class="modal"></div>
+        <div id="wish-form-modal" class="modal"></div>
+        <div id="book-details-modal" class="modal"></div>
+        <div id="lend-modal" class="modal"></div>
+    </div>
+    
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+        // --- YENİ: FIREBASE BAŞLATMA ---
+        // Sizin gönderdiğiniz yapılandırma kodunu buraya yapıştırın.
+        const firebaseConfig = {
+            apiKey: "AIzaSyASaHGgjR-zsQ50E9JmCcBnBq2KyXcltuE",
+            authDomain: "benim-kutuphanem402.firebaseapp.com",
+            projectId: "benim-kutuphanem402",
+            storageBucket: "benim-kutuphanem402.appspot.com",
+            messagingSenderId: "400988696330",
+            appId: "1:400988696330:web:d9e2f0fa4301c2c8f714f3"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // --- DEĞİŞTİ: UYGULAMA MANTIĞI ARTIK KULLANICI GİRİŞİNE BAĞLI ---
+        let books = [];
+        let wishes = [];
+        let currentUser = null; // Giriş yapan kullanıcıyı saklamak için
+        let unsubscribe = null; // Firestore dinleyicisini durdurmak için
+        
+        const loginScreen = document.getElementById('login-screen');
+        const mainApp = document.getElementById('main-app');
+        const loginBtn = document.getElementById('login-btn');
+        const logoutBtn = document.getElementById('logout-btn');
+        const userDisplayName = document.getElementById('user-display-name');
+
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                // Kullanıcı giriş yapmışsa
+                currentUser = user;
+                loginScreen.classList.add('hidden');
+                mainApp.classList.remove('hidden');
+                userDisplayName.textContent = `Hoş geldin, ${user.displayName.split(' ')[0]}`;
+                loadData(user.uid); // Kullanıcının verilerini yükle
+            } else {
+                // Kullanıcı çıkış yapmışsa
+                currentUser = null;
+                loginScreen.classList.remove('hidden');
+                mainApp.classList.add('hidden');
+                books = [];
+                wishes = [];
+                // Eğer bir dinleyici aktifse, durdur
+                if (unsubscribe) unsubscribe();
+            }
+        });
+
+        loginBtn.onclick = () => {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            auth.signInWithPopup(provider).catch(error => console.error("Giriş Hatası:", error));
+        };
+
+        logoutBtn.onclick = () => auth.signOut();
+        
+        // --- DEĞİŞTİ: VERİ FONKSİYONLARI ARTIK FIREBASE KULLANIYOR ---
+        const saveData = () => {
+            if (currentUser) {
+                db.collection('users').doc(currentUser.uid).set({
+                    books: books,
+                    wishes: wishes
+                }).catch(error => console.error("Kaydetme hatası:", error));
+            }
+        };
+
+        const loadData = (userId) => {
+            // Önceki dinleyiciyi durdur (kullanıcı değişirse diye)
+            if (unsubscribe) unsubscribe();
+
+            unsubscribe = db.collection('users').doc(userId).onSnapshot(doc => {
+                if (doc.exists) {
+                    const data = doc.data();
+                    books = data.books || [];
+                    wishes = data.wishes || [];
+                } else { // Kullanıcı için ilk defa veri oluşturuluyor
+                    db.collection('users').doc(userId).set({ books: [], wishes: [] });
+                    books = [];
+                    wishes = [];
+                }
+                renderBooks();
+                renderWishes();
+            }, error => console.error("Veri okuma hatası:", error));
+        };
+
+        // --- GERİ KALAN TÜM KODLAR (RENDER FONKSİYONLARI, EVENT LISTENERS VB.) DEĞİŞMEDİ ---
+        // Sadece global değişkenleri ve saveData/loadData çağrılarını kullanmaya devam ediyorlar.
+        
+        let editingBookId = null;
+        let editingWishId = null;
+        let activeBookIdForNotes = null;
+        let searchTimeout;
+
+        const ui = {
+            bookList: document.getElementById('book-list'),
+            wishList: document.getElementById('wish-list'),
+            searchInput: document.getElementById('search-input'),
+            filterStatus: document.getElementById('filter-status'),
+            libraryView: document.getElementById('library-view'),
+            wishlistView: document.getElementById('wishlist-view'),
+            nav: { library: document.getElementById('show-library-btn'), wishlist: document.getElementById('show-wishlist-btn') },
+            modals: { bookForm: document.getElementById('book-form-modal'), wishForm: document.getElementById('wish-form-modal'), bookDetails: document.getElementById('book-details-modal'), lend: document.getElementById('lend-modal') }
+        };
+
+        const getStarRating = (r) => '★'.repeat(r) + '☆'.repeat(5 - r);
+        const renderBooks = () => {
+            ui.bookList.innerHTML = '';
+            const searchTerm = ui.searchInput.value.toLowerCase();
+            const currentFilter = ui.filterStatus.value;
+            books.sort((a, b) => a.title.localeCompare(b.title, 'tr', { sensitivity: 'base' }));
+            const filteredBooks = books.filter(book => (book.title.toLowerCase().includes(searchTerm) || book.author.toLowerCase().includes(searchTerm)) && (currentFilter === 'Tümü' || book.status === currentFilter));
+            filteredBooks.forEach(book => {
+                const card = document.createElement('div');
+                card.className = `book-card status-card-${book.status.toLowerCase().replace(/\s/g, '-')}`;
+                card.dataset.id = book.id;
+                card.innerHTML = `<div class="card-cover"><img src="${book.coverUrl || 'https://via.placeholder.com/100x150/F8F5F2/403D39?text=Kapak'}" alt="${book.title}"></div><div class="card-info"><h3>${book.title}</h3><p>${book.author}</p><p style="font-size: 0.8em; color: #A9A9A9;">${book.publisher || ''}</p><p class="book-rating">${getStarRating(book.rating)}</p></div>`;
+                card.onclick = () => renderDetailsModal(book.id);
+                ui.bookList.appendChild(card);
+            });
+        };
+        const renderWishes = () => {
+            ui.wishList.innerHTML = '';
+            wishes.sort((a, b) => a.title.localeCompare(b.title, 'tr', { sensitivity: 'base' }));
+            wishes.forEach(wish => {
+                const card = document.createElement('div');
+                card.className = 'wish-card';
+                card.dataset.id = wish.id;
+                card.innerHTML = `<div class="card-info"><h3>${wish.title}</h3><p>${wish.author}</p><div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap:wrap;"><button class="btn-edit-wish">Düzenle</button><button class="btn-delete-wish">Sil</button><button class="btn-move-to-library">Kütüphaneye Taşı</button></div></div>`;
+                card.querySelector('.btn-edit-wish').onclick = (e) => { e.stopPropagation(); handleEditWish(wish.id); };
+                card.querySelector('.btn-delete-wish').onclick = (e) => { e.stopPropagation(); handleDeleteWish(wish.id); };
+                card.querySelector('.btn-move-to-library').onclick = (e) => { e.stopPropagation(); handleMoveToLibrary(wish.id); };
+                ui.wishList.appendChild(card);
+            });
+        };
+        const renderModalContent = (modal, content) => {
+            modal.innerHTML = `<div class="modal-content">${content}</div>`;
+            modal.querySelector('.close-button').onclick = () => closeModal(modal);
+        };
+        const renderDetailsModal = (bookId) => {
+            const book = books.find(b => b.id === bookId);
+            if (!book) return;
+            activeBookIdForNotes = bookId;
+            const content = `<span class="close-button">&times;</span><div class="details-grid"><div class="details-cover"><img src="${book.coverUrl || 'https://via.placeholder.com/150x220/F8F5F2/403D39?text=Kapak'}" alt="${book.title}"></div><div class="details-info"><h2>${book.title}</h2><p><strong>Yazar:</strong> ${book.author}</p><p><strong>Yayınevi:</strong> ${book.publisher || '-'}</p><p><strong>Puan:</strong> <span class="book-rating">${getStarRating(book.rating)}</span></p><p><strong>Durum:</strong> ${book.status} ${book.status === 'Ödünç Verildi' ? `(${book.lentTo || ''})` : ''}</p>${book.startDate ? `<p><strong>Başlama:</strong> ${book.startDate}</p>` : ''}${book.finishDate ? `<p><strong>Bitirme:</strong> ${book.finishDate}</p>` : ''}</div></div><div id="notes-section" style="margin-top: 20px;"><h3>Kitap Notları</h3><div id="notes-list"></div><div class="form-group" style="margin-top:15px;"><textarea id="new-note-text" placeholder="Yeni bir not ekle..." rows="3"></textarea><button id="add-note-btn" class="add-button" style="width:auto; float:right; margin-top:10px;">Not Ekle</button></div></div><div style="margin-top: 60px; border-top: 1px solid #eee; padding-top: 20px; display: flex; gap: 10px; flex-wrap:wrap;"><button id="edit-book-btn">Düzenle</button>${book.status !== 'Ödünç Verildi' ? '<button id="lend-book-btn">Ödünç Ver</button>' : '<button id="return-book-btn">Geri Al</button>'}<button id="delete-book-btn" style="background:var(--danger-color); color:white;">Sil</button></div>`;
+            renderModalContent(ui.modals.bookDetails, content);
+            renderNotes(bookId);
+            const wrapper = ui.modals.bookDetails;
+            wrapper.querySelector('#edit-book-btn').onclick = () => handleEditBook(bookId);
+            wrapper.querySelector('#delete-book-btn').onclick = () => handleDeleteBook(bookId);
+            const lendBtn = wrapper.querySelector('#lend-book-btn');
+            if (lendBtn) lendBtn.onclick = () => handleLendBook(bookId);
+            const returnBtn = wrapper.querySelector('#return-book-btn');
+            if (returnBtn) returnBtn.onclick = () => handleReturnBook(bookId);
+            wrapper.querySelector('#add-note-btn').onclick = handleAddOrUpdateNote;
+            wrapper.querySelector('#notes-list').onclick = handleNoteActions;
+            openModal(ui.modals.bookDetails);
+        };
+        const renderNotes = (bookId) => {
+            const book = books.find(b => b.id === bookId);
+            const notesListDiv = document.getElementById('notes-list');
+            if (!notesListDiv) return;
+            notesListDiv.innerHTML = '';
+            if (book && book.notes && book.notes.length > 0) {
+                book.notes.forEach(note => {
+                    const noteDiv = document.createElement('div');
+                    noteDiv.className = 'note-item';
+                    noteDiv.dataset.noteId = note.id;
+                    noteDiv.innerHTML = `<div class="note-item-header"><span>${note.date}</span><div class="note-item-actions"><button class="edit-note-btn">✏️</button><button class="delete-note-btn">🗑️</button></div></div><p>${note.text.replace(/\n/g, '<br>')}</p>`;
+                    notesListDiv.appendChild(noteDiv);
+                });
+            } else {
+                notesListDiv.innerHTML = '<p style="color:var(--secondary-text); text-align:center;">Henüz not eklenmemiş.</p>';
+            }
+        };
+        const renderBookFormModal = (book = {}) => {
+            editingBookId = book.id || null;
+            const title = book.id ? 'Kitabı Düzenle' : 'Yeni Kitap Ekle';
+            const content = `<span class="close-button">&times;</span><h2 id="form-title">${title}</h2><form id="book-form"><div class="form-group"><label for="title">Kitap Adı</label><input type="text" id="title" value="${book.title || ''}" required><div id="api-results"></div></div><div class="form-group"><label for="author">Yazar</label><input type="text" id="author" value="${book.author || ''}" required></div><div class="form-group"><label for="publisher">Yayınevi</label><input type="text" id="publisher" value="${book.publisher || ''}"></div><div class="form-group"><label for="cover-url">Kapak Fotoğrafı URL</label><input type="text" id="cover-url" value="${book.coverUrl || ''}"><label for="cover-file-input" class="file-upload-label">Veya Bilgisayardan Seç</label><input type="file" id="cover-file-input" class="hidden" accept="image/*"><img id="cover-preview" class="${book.coverUrl ? '' : 'hidden'}" src="${book.coverUrl || ''}" alt="Kapak Önizlemesi"></div><div class="form-group"><label for="status">Durum</label><select id="status"></select></div><div class="form-group hidden" id="start-date-group"><label for="start-date">Başlama Tarihi</label><input type="date" id="start-date" value="${book.startDate || ''}"></div><div class="form-group hidden" id="finish-date-group"><label for="finish-date">Bitirme Tarihi</label><input type="date" id="finish-date" value="${book.finishDate || ''}"></div><div class="form-group"><label for="rating">Puan (0-5)</label><input type="number" id="rating" min="0" max="5" step="1" value="${book.rating || 0}"></div><button type="submit" class="add-button" style="width:100%; padding: 15px;">Kaydet</button></form>`;
+            renderModalContent(ui.modals.bookForm, content);
+            const statusSelect = ui.modals.bookForm.querySelector('#status');
+            ['Okunacak', 'Okunuyor', 'Okundu'].forEach(s => {
+                const option = document.createElement('option');
+                option.value = s; option.textContent = s;
+                if (book.status === s) option.selected = true;
+                statusSelect.appendChild(option);
+            });
+            const updateDateFields = () => {
+                ui.modals.bookForm.querySelector('#start-date-group').classList.toggle('hidden', statusSelect.value !== 'Okunuyor');
+                ui.modals.bookForm.querySelector('#finish-date-group').classList.toggle('hidden', statusSelect.value !== 'Okundu');
+            };
+            statusSelect.onchange = updateDateFields;
+            updateDateFields();
+            ui.modals.bookForm.querySelector('#book-form').onsubmit = handleBookFormSubmit;
+            ui.modals.bookForm.querySelector('#title').onkeyup = (e) => { clearTimeout(searchTimeout); searchTimeout = setTimeout(() => searchGoogleBooks(e.target.value), 500); };
+            ui.modals.bookForm.querySelector('#cover-file-input').onchange = handleCoverFileUpload;
+            openModal(ui.modals.bookForm);
+        };
+        const renderWishFormModal = (wish = {}) => {
+            editingWishId = wish.id || null;
+            const title = wish.id ? 'İsteği Düzenle' : 'Yeni İstek Ekle';
+            const content = `<span class="close-button">&times;</span><h2>${title}</h2><form id="wish-form"><div class="form-group"><label for="wish-title">Kitap Adı</label><input type="text" id="wish-title" value="${wish.title || ''}" required></div><div class="form-group"><label for="wish-author">Yazar</label><input type="text" id="wish-author" value="${wish.author || ''}"></div><button type="submit" class="add-button" style="width:100%;">Kaydet</button></form>`;
+            renderModalContent(ui.modals.wishForm, content);
+            ui.modals.wishForm.querySelector('#wish-form').onsubmit = handleWishFormSubmit;
+            openModal(ui.modals.wishForm);
+        };
+        const openModal = (modal) => modal.style.display = 'block';
+        const closeModal = (modal) => modal.style.display = 'none';
+        window.onclick = e => { if (e.target.classList.contains('modal')) closeModal(e.target); };
+        const searchGoogleBooks = async (query) => {
+            const apiResultsDiv = document.getElementById('api-results');
+            if (!apiResultsDiv || query.length < 3) { if(apiResultsDiv) apiResultsDiv.innerHTML = ''; return; }
+            apiResultsDiv.innerHTML = '<p>Aranıyor...</p>';
+            try {
+                const res = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&maxResults=5`);
+                const data = await res.json();
+                apiResultsDiv.innerHTML = '';
+                if (!data.items) return;
+                data.items.forEach(item => {
+                    const info = item.volumeInfo;
+                    const div = document.createElement('div');
+                    div.className = 'api-item';
+                    div.innerHTML = `<img src="${info.imageLinks?.thumbnail || ''}" alt=""><div class="api-item-info"><p><strong>${info.title}</strong></p><p>${info.authors?.join(', ') || ''}</p><p style="color:var(--secondary-text); font-size:0.9em;">${info.publisher || ''}</p></div>`;
+                    div.onclick = () => { const form = document.getElementById('book-form'); form.title.value = info.title || ''; form.author.value = info.authors?.join(', ') || ''; form.publisher.value = info.publisher || ''; form.querySelector('#cover-url').value = info.imageLinks?.thumbnail || ''; apiResultsDiv.innerHTML = ''; };
+                    apiResultsDiv.appendChild(div);
+                });
+            } catch (error) { console.error("API Hatası:", error); }
+        };
+        const handleCoverFileUpload = (e) => { const file = e.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = () => { const dataUrl = reader.result; const urlInput = document.getElementById('cover-url'); const previewImg = document.getElementById('cover-preview'); urlInput.value = dataUrl; previewImg.src = dataUrl; previewImg.classList.remove('hidden'); }; reader.readAsDataURL(file); };
+        const handleBookFormSubmit = (e) => { e.preventDefault(); const f = e.target.elements; const bookData = { title: f.title.value, author: f.author.value, publisher: f.publisher.value, coverUrl: f['cover-url'].value, status: f.status.value, startDate: f['start-date'].value, finishDate: f['finish-date'].value, rating: parseInt(f.rating.value) || 0 }; if (editingBookId) { const index = books.findIndex(b => b.id === editingBookId); books[index] = { ...books[index], ...bookData }; } else { books.unshift({ id: Date.now(), notes: [], ...bookData }); } saveData(); renderBooks(); closeModal(ui.modals.bookForm); };
+        const handleWishFormSubmit = (e) => { e.preventDefault(); const f = e.target.elements; const wishData = { title: f['wish-title'].value, author: f['wish-author'].value }; if (editingWishId) { const index = wishes.findIndex(w => w.id === editingWishId); wishes[index] = { ...wishes[index], ...wishData }; } else { wishes.push({ id: Date.now(), ...wishData }); } saveData(); renderWishes(); closeModal(ui.modals.wishForm); };
+        const handleEditBook = (id) => { closeModal(ui.modals.bookDetails); renderBookFormModal(books.find(b => b.id === id)); };
+        const handleDeleteBook = (id) => { if (confirm('Bu kitabı silmek istediğinize emin misiniz?')) { books = books.filter(b => b.id !== id); saveData(); renderBooks(); closeModal(ui.modals.bookDetails); } };
+        const handleEditWish = (id) => renderWishFormModal(wishes.find(w => w.id === id));
+        const handleDeleteWish = (id) => { if (confirm('Bu isteği silmek istediğinize emin misiniz?')) { wishes = wishes.filter(w => w.id !== id); saveData(); renderWishes(); } };
+        const handleMoveToLibrary = (id) => { const wish = wishes.find(w => w.id === id); if (confirm(`"${wish.title}" kitabını kütüphaneye taşımak istediğinize emin misiniz?`)) { renderBookFormModal({ title: wish.title, author: wish.author }); wishes = wishes.filter(w => w.id !== id); saveData(); renderWishes(); } };
+        const handleLendBook = (id) => { closeModal(ui.modals.bookDetails); const content = `<span class="close-button">&times;</span><h2>Kitabı Ödünç Ver</h2><form id="lend-form" data-book-id="${id}"><div class="form-group"><label for="borrower">Kime Ödünç Verildi?</label><input type="text" id="borrower" required></div><div class="form-group"><label for="lend-date">Ödünç Verme Tarihi</label><input type="date" id="lend-date"></div><button type="submit" class="add-button" style="width:100%;">Onayla</button></form>`; renderModalContent(ui.modals.lend, content); ui.modals.lend.querySelector('#lend-form').onsubmit = (e) => { e.preventDefault(); const book = books.find(b => b.id === id); book.status = 'Ödünç Verildi'; book.lentTo = e.target.elements.borrower.value; book.lentDate = e.target.elements['lend-date'].value; saveData(); renderBooks(); closeModal(ui.modals.lend); }; openModal(ui.modals.lend); };
+        const handleReturnBook = (id) => { const book = books.find(b => b.id === id); book.status = 'Okunacak'; delete book.lentTo; delete book.lentDate; saveData(); renderBooks(); closeModal(ui.modals.bookDetails); };
+        let editingNoteId = null;
+        const handleAddOrUpdateNote = () => { const book = books.find(b => b.id === activeBookIdForNotes); const noteText = document.getElementById('new-note-text').value.trim(); if (!book || !noteText) return; if (editingNoteId) { const note = book.notes.find(n => n.id === editingNoteId); note.text = noteText; } else { if (!book.notes) book.notes = []; book.notes.push({ id: Date.now(), text: noteText, date: new Date().toLocaleDateString('tr-TR') }); } editingNoteId = null; document.getElementById('new-note-text').value = ''; document.getElementById('add-note-btn').textContent = 'Not Ekle'; saveData(); renderNotes(activeBookIdForNotes); };
+        const handleNoteActions = (e) => { const noteItem = e.target.closest('.note-item'); if (!noteItem) return; const noteId = Number(noteItem.dataset.noteId); const book = books.find(b => b.id === activeBookIdForNotes); if (e.target.classList.contains('delete-note-btn')) { book.notes = book.notes.filter(n => n.id !== noteId); saveData(); renderNotes(activeBookIdForNotes); } else if (e.target.classList.contains('edit-note-btn')) { const note = book.notes.find(n => n.id === noteId); document.getElementById('new-note-text').value = note.text; document.getElementById('add-note-btn').textContent = 'Notu Güncelle'; editingNoteId = noteId; } };
+        document.getElementById('add-book-btn').onclick = () => renderBookFormModal();
+        document.getElementById('add-wish-btn').onclick = () => renderWishFormModal();
+        ui.searchInput.oninput = renderBooks;
+        ui.filterStatus.onchange = renderBooks;
+        ui.nav.library.onclick = () => { ui.libraryView.classList.remove('hidden'); ui.wishlistView.classList.add('hidden'); ui.nav.library.classList.add('active'); ui.nav.wishlist.classList.remove('active'); };
+        ui.nav.wishlist.onclick = () => { ui.libraryView.classList.add('hidden'); ui.wishlistView.classList.remove('hidden'); ui.nav.library.classList.remove('active'); ui.nav.wishlist.classList.add('active'); };
+        document.getElementById('export-btn').onclick = () => { const data = { books, wishes }; const dataStr = JSON.stringify(data, null, 2); const blob = new Blob([dataStr], {type: "application/json"}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `kutuphanem_${new Date().toISOString().slice(0,10)}.json`; a.click(); URL.revokeObjectURL(url); };
+        const importInput = document.getElementById('import-file');
+        document.getElementById('import-btn').onclick = () => importInput.click();
+        importInput.onchange = e => { const file = e.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = event => { try { const data = JSON.parse(event.target.result); if (confirm('Mevcut veriler bu dosyayla değiştirilecek. Onaylıyor musunuz?')) { books = data.books || []; wishes = data.wishes || []; saveData(); renderBooks(); renderWishes(); } else { alert('Dosya formatı geçersiz veya işlem iptal edildi.'); } } catch (error) { alert('Hata: Dosya okunamadı.'); } }; reader.readAsText(file); };
+        
+    });
+    </script>
+</body>
+</html>
+  
