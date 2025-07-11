@@ -59,6 +59,9 @@
         .hidden { display: none; }
         #login-screen { text-align: center; padding-top: 20vh; }
         .user-profile { font-weight: 500; }
+        /* --- YENİ: BİLDİRİM (TOAST) STİLİ --- */
+        .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background-color: var(--primary-text); color: white; padding: 12px 25px; border-radius: 8px; z-index: 2000; opacity: 0; transition: opacity 0.5s, bottom 0.5s; }
+        .toast.show { opacity: 1; bottom: 30px; }
         @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
         @keyframes slideIn { from {transform: translateY(-50px); opacity: 0;} to {transform: translateY(0); opacity: 1;} }
     </style>
@@ -150,7 +153,18 @@
         loginBtn.onclick = () => { const provider = new firebase.auth.GoogleAuthProvider(); auth.signInWithPopup(provider).catch(error => console.error("Giriş Hatası:", error)); };
         logoutBtn.onclick = () => auth.signOut();
         
-        const saveData = () => { if (currentUser) { db.collection('users').doc(currentUser.uid).set({ books: books, wishes: wishes }).catch(error => console.error("Kaydetme hatası:", error)); } };
+        // --- DEĞİŞTİ: saveData artık async bir fonksiyon ---
+        const saveData = async () => {
+            if (currentUser) {
+                try {
+                    await db.collection('users').doc(currentUser.uid).set({ books: books, wishes: wishes });
+                } catch (error) {
+                    console.error("Kaydetme hatası:", error);
+                    showToast("Hata: Veri kaydedilemedi!", "error");
+                }
+            }
+        };
+
         const loadData = (userId) => {
             if (unsubscribe) unsubscribe();
             unsubscribe = db.collection('users').doc(userId).onSnapshot(doc => {
@@ -168,6 +182,25 @@
         
         const renderStats = () => { if (!books) return; document.getElementById('stat-total').textContent = books.length; document.getElementById('stat-read').textContent = books.filter(b => b.status === 'Okundu').length; document.getElementById('stat-reading').textContent = books.filter(b => b.status === 'Okunuyor').length; document.getElementById('stat-lent').textContent = books.filter(b => b.status === 'Ödünç Verildi').length; document.getElementById('stat-to-read').textContent = books.filter(b => b.status === 'Okunacak').length; };
         
+        // --- YENİ: KULLANICI GERİ BİLDİRİM FONKSİYONU ---
+        const showToast = (message, type = 'success') => {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            if (type === 'error') {
+                toast.style.backgroundColor = 'var(--danger-color)';
+            }
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.add('show');
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    setTimeout(() => document.body.removeChild(toast), 500);
+                }, 3000);
+            }, 100);
+        };
+
+        // ... Diğer render fonksiyonları ve event handler'lar ...
         let editingBookId = null; let editingWishId = null; let activeBookIdForNotes = null; let searchTimeout;
         const ui = { bookList: document.getElementById('book-list'), wishList: document.getElementById('wish-list'), searchInput: document.getElementById('search-input'), filterStatus: document.getElementById('filter-status'), libraryView: document.getElementById('library-view'), wishlistView: document.getElementById('wishlist-view'), nav: { library: document.getElementById('show-library-btn'), wishlist: document.getElementById('show-wishlist-btn') }, modals: { bookForm: document.getElementById('book-form-modal'), wishForm: document.getElementById('wish-form-modal'), bookDetails: document.getElementById('book-details-modal'), lend: document.getElementById('lend-modal') } };
         const getStarRating = (r) => '★'.repeat(r) + '☆'.repeat(5 - r);
@@ -234,20 +267,23 @@
         const importInput = document.getElementById('import-file');
         document.getElementById('import-btn').onclick = () => importInput.click();
         
-        // --- DEĞİŞTİ: İçe Aktarma Fonksiyonu Düzeltildi ---
-        importInput.onchange = e => {
+        // --- DEĞİŞTİ: İçe Aktarma Fonksiyonu Düzeltildi ve Geliştirildi ---
+        importInput.onchange = async (e) => {
             const file = e.target.files[0];
             if (!file) return;
+            showToast("Dosya okunuyor...", "info");
             const reader = new FileReader();
-            reader.onload = event => {
+            reader.onload = async (event) => {
                 try {
                     const data = JSON.parse(event.target.result);
                     if (data.books && confirm('Mevcut kütüphane bu dosyayla değiştirilecek. Onaylıyor musunuz?')) {
+                        showToast("Veriler kaydediliyor, lütfen bekleyin...", "info");
                         books = data.books || [];
                         wishes = data.wishes || [];
                         
-                        // ÇÖZÜM: Değişiklikleri Firestore'a kaydet!
-                        saveData();
+                        // ÇÖZÜM: Kaydetme işleminin bitmesini bekle
+                        await saveData(); 
+                        showToast("Kütüphane başarıyla güncellendi!", "success");
                         
                     } else {
                         alert('Dosya formatı geçersiz veya işlem iptal edildi.');
