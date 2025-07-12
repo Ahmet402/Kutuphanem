@@ -245,9 +245,9 @@
             });
         };
 
-        // --- Modal Yönetimi ---
+        // --- Modal Yönetimi (DÜZELTİLDİ) ---
         const openModal = (content) => {
-            ui.modalContainer.innerHTML = `<div class="modal" style="display:block;"><div class="modal-content">${content}</div></div>`;
+            ui.modalContainer.innerHTML = `<div class="modal" style="display:flex; align-items:center; justify-content:center;"><div class="modal-content">${content}</div></div>`;
             const modal = ui.modalContainer.querySelector('.modal');
             modal.querySelector('.close-button')?.addEventListener('click', closeModal);
         };
@@ -255,7 +255,7 @@
             const modal = ui.modalContainer.querySelector('.modal');
             if (modal) {
                 modal.style.display = 'none';
-                setTimeout(() => { ui.modalContainer.innerHTML = ''; }, 300);
+                ui.modalContainer.innerHTML = '';
             }
         };
         window.onclick = e => { if (e.target.classList.contains('modal')) closeModal(); };
@@ -354,12 +354,12 @@
                     <button class="btn-delete" style="background:var(--danger-color);">Sil</button>
                 </div>`;
             openModal(content);
-            const modal = ui.modalContainer.querySelector('.modal');
-            modal.querySelector('.btn-edit').onclick = () => renderBookFormModal(book);
-            modal.querySelector('.btn-delete').onclick = async () => { if(confirm('Bu kitabı silmek istediğinize emin misiniz?')){ closeModal(); await getBooksCollection().doc(book.id).delete(); showToast('Kitap silindi.'); }};
-            const lendBtn = modal.querySelector('.btn-lend');
+            const modalContent = ui.modalContainer.querySelector('.modal-content');
+            modalContent.querySelector('.btn-edit').onclick = () => renderBookFormModal(book);
+            modalContent.querySelector('.btn-delete').onclick = async () => { if(confirm('Bu kitabı silmek istediğinize emin misiniz?')){ closeModal(); await getBooksCollection().doc(book.id).delete(); showToast('Kitap silindi.'); }};
+            const lendBtn = modalContent.querySelector('.btn-lend');
             if (lendBtn) lendBtn.onclick = () => handleLendBook(book);
-            const returnBtn = modal.querySelector('.btn-return');
+            const returnBtn = modalContent.querySelector('.btn-return');
             if (returnBtn) returnBtn.onclick = () => handleReturnBook(book);
             renderNotes(book);
         };
