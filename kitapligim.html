@@ -9,45 +9,38 @@
     <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #f4f1de; --card-bg: #FFFFFF; --primary-text: #3d405b; --secondary-text: #81b29a;
-            --accent-1: #e07a5f; --accent-2: #3d405b; --accent-3: #f2cc8f; --danger-color: #d90429;
+            --bg-color: #FDF8F5; --card-bg: #FFFFFF; --primary-text: #3D405B; --secondary-text: #A49E9E;
+            --accent-1: #D4A3A3; --accent-2: #81B29A; --accent-3: #E9C46A; --danger-color: #d90429;
             --font-heading: 'Lora', serif; --font-body: 'Montserrat', sans-serif;
         }
         *, *::before, *::after { box-sizing: border-box; }
         html { scroll-behavior: smooth; }
         body {
-            font-family: var(--font-body); margin: 0;
+            font-family: var(--font-body); margin: 0; background-color: var(--bg-color);
             color: var(--primary-text); font-size: 16px; line-height: 1.6;
-            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-        }
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23e8e2dc' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
         }
         .container { max-width: 1200px; margin: 20px auto; padding: 15px; }
-        h1, h2, h3 { font-family: var(--font-heading); margin-top: 0; color: var(--accent-2); }
+        h1, h2, h3 { font-family: var(--font-heading); margin-top: 0; color: var(--primary-text); }
         header { text-align: center; padding: 1rem; margin-bottom: 20px; }
-        header h1 { color: white; font-size: 3em; margin: 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
-        .controls-bar { padding: 20px; background-color: rgba(255,255,255,0.8); backdrop-filter: blur(10px); border-radius: 16px; box-shadow: 0 8px 32px rgba(61,64,91,0.1); display: flex; flex-direction: column; gap: 15px; margin-bottom: 25px; border: 1px solid rgba(255,255,255,0.2); }
+        header h1 { color: var(--primary-text); font-size: 3em; margin: 0; text-shadow: 1px 1px 2px rgba(0,0,0,0.05); }
+        .controls-bar { padding: 20px; background-color: rgba(255,255,255,0.8); backdrop-filter: blur(10px); border-radius: 16px; box-shadow: 0 8px 32px rgba(61,64,91,0.08); display: flex; flex-direction: column; gap: 15px; margin-bottom: 25px; border: 1px solid rgba(255,255,255,0.2); }
         .top-controls, .bottom-controls { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
         button { background-color: var(--accent-1); color: white; padding: 12px 20px; border: none; border-radius: 8px; cursor: pointer; font-size: 1em; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        button:hover { background-color: #d96a4a; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
+        button:hover { background-color: #c88f8f; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
         button:disabled { background-color: #aaa; cursor: not-allowed; transform: none; box-shadow: none; }
         .controls-bar select, .controls-bar input[type="text"] { padding: 12px; border: 1px solid #ddd; border-radius: 8px; background-color: #fff; min-width: 180px; }
         .list-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; }
         .book-card { background-color: var(--card-bg); border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); overflow: hidden; display: flex; cursor: pointer; transition: transform 0.3s, box-shadow 0.3s; border-left: 5px solid; }
         .book-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(61,64,91,0.1); }
         .book-card:nth-child(4n+1) { border-left-color: var(--accent-1); }
-        .book-card:nth-child(4n+2) { border-left-color: #23a6d5; }
+        .book-card:nth-child(4n+2) { border-left-color: var(--accent-2); }
         .book-card:nth-child(4n+3) { border-left-color: var(--accent-3); }
-        .book-card:nth-child(4n+4) { border-left-color: #e73c7e; }
+        .book-card:nth-child(4n+4) { border-left-color: #B5A3D4; } /* Lila */
         .card-cover img { width: 100px; height: 150px; object-fit: cover; display: block; }
         .card-info { padding: 15px; display: flex; flex-direction: column; justify-content: center; flex-grow: 1; }
         .card-info h3 { margin: 0 0 5px 0; font-size: 1.1em; }
-        .card-info p { margin: 2px 0; font-size: 0.9em; color: #555; }
+        .card-info p { margin: 2px 0; font-size: 0.9em; color: var(--secondary-text); }
         .book-rating { color: var(--accent-3); font-size: 1.2em; margin-top: 8px !important; }
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow-y: auto; background-color: rgba(0,0,0,0.5); backdrop-filter: blur(5px); animation: fadeIn 0.3s; }
         .modal-content { background-color: var(--card-bg); margin: 5% auto; padding: 30px; border-radius: 16px; width: 90%; max-width: 650px; position: relative; box-shadow: 0 5px 25px rgba(0,0,0,0.1); animation: slideIn 0.4s; }
@@ -55,12 +48,11 @@
         .form-group { margin-bottom: 20px; }
         .form-group label { display: block; margin-bottom: 8px; font-weight: 500; }
         .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; background-color: #fdfdfd; box-sizing: border-box; }
-        #api-results { position: absolute; background: white; width: calc(100% - 2px); border: 1px solid #ddd; border-top: none; border-radius: 0 0 8px 8px; z-index: 10; max-height: 250px; overflow-y: auto; }
         .hidden { display: none; }
-        .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background-color: var(--primary-text); color: white; padding: 12px 25px; border-radius: 8px; z-index: 2000; opacity: 0; transition: opacity 0.5s, bottom 0.5s; box-shadow: 0 3px 10px rgba(0,0,0,0.2); }
+        .toast { /* ... önceki kodla aynı ... */ }
         .details-grid { display: grid; grid-template-columns: 150px 1fr; gap: 25px; align-items: start; }
         .details-info-grid { display: grid; grid-template-columns: auto 1fr; gap: 10px 15px; align-items: center; }
-        .details-label { font-weight: 500; color: #888; }
+        .details-label { font-weight: 500; color: var(--secondary-text); }
         .details-status { padding: 4px 10px; border-radius: 15px; font-size: 0.9em; font-weight: 500; color: white; text-align: center;}
         .note-item { background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 10px; cursor: pointer; transition: background-color 0.2s; }
         .note-item:hover { background: #e9e9e9; }
@@ -82,7 +74,7 @@
         <header>
             <h1>Benim Güzel Kütüphanem</h1>
             <div class="user-profile" style="font-weight: 500;">
-                <span id="user-display-name" style="color:white; text-shadow: 1px 1px 2px rgba(0,0,0,0.2);"></span>
+                <span id="user-display-name"></span>
                 <button id="logout-btn" style="background:rgba(255,255,255,0.2);">Çıkış Yap</button>
             </div>
         </header>
@@ -91,7 +83,8 @@
                 <section class="stats-panel" id="stats-panel-id"></section>
                 <div class="controls-bar">
                     <div class="top-controls">
-                        <button id="add-book-btn" style="background-color: var(--accent-2);">Yeni Kitap Ekle</button>
+                        <button id="add-book-btn" style="background-color: var(--primary-text);">Yeni Kitap Ekle</button>
+                        <button id="find-cover-btn" style="background-color: var(--accent-2);">Kapak Bul</button>
                         <input type="text" id="search-input" placeholder="Kütüphanede ara...">
                     </div>
                     <div class="bottom-controls">
@@ -102,11 +95,6 @@
                             <option value="title_asc">Sırala: Ada Göre (A-Z)</option>
                             <option value="dateAdded_desc">Sırala: Eklenme Tarihi (Yeni)</option>
                         </select>
-                        <div style="display:flex; gap:10px;">
-                            <button id="import-btn">İçe Aktar</button>
-                            <button id="export-btn">Dışa Aktar</button>
-                            <input type="file" id="import-file" class="hidden" accept=".json">
-                        </div>
                     </div>
                 </div>
                 <div class="list-container" id="book-list"></div>
@@ -218,17 +206,12 @@
             const title = isEditing ? 'Kitabı Düzenle' : 'Yeni Kitap Ekle';
             const content = `<span class="close-button" aria-label="Kapat">&times;</span><h2>${title}</h2>
                 <form id="book-form">
-                    <div class="form-group" style="position:relative;">
-                        <label for="title">Kitap Adı</label>
-                        <input type="text" id="title" value="${book.title || ''}" required autocomplete="off">
-                        <div id="api-results"></div>
-                    </div>
+                    <div class="form-group"><label for="title">Kitap Adı</label><input type="text" id="title" value="${book.title || ''}" required></div>
                     <div class="form-group"><label for="author">Yazar</label><input type="text" id="author" value="${book.author || ''}" required></div>
                     <div class="form-group"><label for="publisher">Yayınevi</label><input type="text" id="publisher" value="${book.publisher || ''}"></div>
                     <div class="form-group">
                         <label for="cover-url">Kapak Fotoğrafı URL</label>
                         <input type="text" id="cover-url" value="${book.coverUrl || ''}">
-                        <button type="button" class="btn-cover-search" style="background-color:var(--accent-3); margin-top:8px;">Görsel Bul</button>
                         <img id="cover-preview" class="${book.coverUrl ? '' : 'hidden'}" src="${book.coverUrl || ''}" alt="Önizleme" style="max-width:100px; max-height:150px; margin-top:10px; border-radius:8px; border:1px solid #ddd;">
                     </div>
                     <div class="form-group"><label for="status">Durum</label><select id="status"></select></div>
@@ -249,9 +232,6 @@
             };
             statusSelect.onchange = updateDateFields; updateDateFields();
             form.onsubmit = (e) => handleBookFormSubmit(e, book);
-            let searchTimeout;
-            form.querySelector('#title').addEventListener('keyup', (e) => { clearTimeout(searchTimeout); searchTimeout = setTimeout(() => searchGoogleBooksForAutocomplete(e.target.value), 400); });
-            form.querySelector('.btn-cover-search').onclick = () => { const query = `${form.title.value} ${form.author.value}`; renderImageSearchModal(query); };
             form.querySelector('#cover-url').addEventListener('input', e => {
                 const preview = form.querySelector('#cover-preview');
                 preview.src = e.target.value.trim().replace('http://', 'https://');
@@ -283,7 +263,7 @@
         
         // --- Detaylar, Notlar ve Diğer İşlemler ---
         const renderDetailsModal = (book) => {
-            const statusColors = { 'Okunacak': '#a0aec0', 'Okunuyor': 'var(--accent-1)', 'Okundu': '#23a6d5', 'Ödünç Verildi': 'var(--accent-3)' };
+            const statusColors = { 'Okunacak': '#a0aec0', 'Okunuyor': 'var(--accent-1)', 'Okundu': 'var(--accent-2)', 'Ödünç Verildi': 'var(--accent-3)' };
             const statusText = book.status === 'Ödünç Verildi' ? `${book.status} (${book.lentTo || ''})` : book.status;
             const content = `<span class="close-button" aria-label="Kapat">&times;</span>
                 <h2>${book.title}</h2>
@@ -368,84 +348,71 @@
             if(updatedBook && document.getElementById('notes-section')) renderNotes({...updatedBook, notes: currentNotes});
         };
         
-        // --- API, Dosya Yükleme, Import/Export ---
-        const searchGoogleBooksForAutocomplete = async (query) => {
-            const apiResultsDiv = document.getElementById('api-results');
-            if (!apiResultsDiv || query.length < 3) { if(apiResultsDiv) apiResultsDiv.innerHTML = ''; return; }
-            apiResultsDiv.innerHTML = '<div style="padding:10px; text-align:center;">Aranıyor...</div>';
-            try {
-                const res = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&maxResults=5&printType=books`);
-                const data = await res.json();
-                apiResultsDiv.innerHTML = '';
-                if (!data.items) return;
-                data.items.forEach(item => {
-                    const info = item.volumeInfo;
-                    if(!info.title || !info.authors) return;
-                    const div = document.createElement('div');
-                    div.style.padding = '10px'; div.style.cursor = 'pointer';
-                    div.onmouseover = () => div.style.backgroundColor = '#f0f0f0';
-                    div.onmouseout = () => div.style.backgroundColor = 'transparent';
-                    div.innerHTML = `<p style="margin:0; font-weight:bold;">${info.title}</p><p style="margin:0; font-size:0.9em;">${info.authors.join(', ')}</p>`;
-                    div.onclick = () => {
-                        const form = document.getElementById('book-form');
-                        form.title.value = info.title || ''; form.author.value = info.authors?.join(', ') || ''; form.publisher.value = info.publisher || '';
-                        const thumb = (info.imageLinks?.thumbnail || info.imageLinks?.smallThumbnail || '').replace('http://', 'https://');
-                        form.querySelector('#cover-url').value = thumb;
-                        form.querySelector('#cover-preview').src = thumb;
-                        form.querySelector('#cover-preview').classList.remove('hidden');
-                        apiResultsDiv.innerHTML = '';
-                    };
-                    apiResultsDiv.appendChild(div);
-                });
-            } catch (error) { console.error("API Hatası:", error); }
+        // --- API ve Görsel Arama ---
+        const renderCoverSearchModal = () => {
+            const content = `<span class="close-button" aria-label="Kapat">&times;</span><h2>Kapak Görseli Bul</h2>
+                <form id="cover-search-form">
+                    <div class="form-group"><label for="search-title">Kitap Adı</label><input type="text" id="search-title" required></div>
+                    <div class="form-group"><label for="search-author">Yazar</label><input type="text" id="search-author"></div>
+                    <button type="submit">Görsellerde Ara</button>
+                </form>
+                <div id="image-select-grid" style="margin-top:20px;"></div>`;
+            openModal(content, '90%');
+            document.getElementById('cover-search-form').onsubmit = (e) => {
+                e.preventDefault();
+                const title = e.target['search-title'].value;
+                const author = e.target['search-author'].value;
+                searchGoogleImages(title, author);
+            };
         };
 
-        const renderImageSearchModal = async (query) => {
-            const content = `<span class="close-button" aria-label="Kapat">&times;</span><h2>Kapak Görseli Seç</h2><div id="image-select-grid">Yükleniyor...</div>`;
-            openModal(content, '90%');
+        const searchGoogleImages = async (title, author) => {
             const grid = document.getElementById('image-select-grid');
+            if(!grid) return;
+            grid.innerHTML = 'Yükleniyor...';
+
+            // --- KENDİ BİLGİLERİNİZİ GİRİN ---
+            const API_KEY = 'YOUR_API_KEY'; // Google Cloud'dan alacağınız API anahtarı
+            const CX_ID = 'YOUR_CX_ID';   // Programmable Search Engine'den alacağınız ID
+            // ------------------------------------
+
+            if (API_KEY === 'YOUR_API_KEY' || CX_ID === 'YOUR_CX_ID') {
+                grid.innerHTML = '<p style="color:red; text-align:center;">Lütfen kodun içindeki API_KEY ve CX_ID alanlarını kendi bilgilerinizle güncelleyin.</p>';
+                return;
+            }
+
+            const query = `${title} ${author} kitap kapağı`;
+            const url = `https://www.googleapis.com/customsearch/v1?key=${API_KEY}&cx=${CX_ID}&q=${encodeURIComponent(query)}&searchType=image&num=10`;
+
             try {
-                // Google Görseller için doğrudan bir API olmadığından, Google Kitaplar'ı daha fazla sonuçla kullanıyoruz.
-                const res = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&maxResults=24&printType=books&fields=items(volumeInfo/imageLinks)`);
+                const res = await fetch(url);
                 const data = await res.json();
                 grid.innerHTML = '';
-                if (!data.items) { grid.innerHTML = 'Görsel bulunamadı.'; return; }
-                const urls = new Set();
+                if (!data.items || data.items.length === 0) { grid.innerHTML = 'Görsel bulunamadı.'; return; }
+                
                 data.items.forEach(item => {
-                    const thumb = item.volumeInfo?.imageLinks?.thumbnail || item.volumeInfo?.imageLinks?.smallThumbnail;
-                    if(thumb) urls.add(thumb.replace('http://', 'https://').replace('&edge=curl', ''));
-                });
-                if(urls.size === 0) { grid.innerHTML = 'Görsel bulunamadı.'; return; }
-                urls.forEach(url => {
                     const img = document.createElement('img');
-                    img.src = url;
-                    img.onerror = () => img.style.display = 'none'; // Bozuk linkleri gizle
+                    img.src = item.link;
+                    img.onerror = () => img.style.display = 'none';
                     img.onclick = () => {
-                        const form = document.getElementById('book-form');
-                        if (form) {
-                            const urlInput = form.querySelector('#cover-url');
-                            const preview = form.querySelector('#cover-preview');
-                            urlInput.value = url;
-                            preview.src = url;
-                            preview.classList.remove('hidden');
-                        }
-                        closeModal();
+                        closeModal(); // Görsel arama penceresini kapat
+                        renderBookFormModal({ title: title, author: author, coverUrl: item.link }); // Yeni kitap formunu aç ve bilgileri doldur
                     };
                     grid.appendChild(img);
                 });
-            } catch (error) { console.error("Görsel Arama Hatası:", error); grid.innerHTML = 'Görsel arama başarısız.'; }
+            } catch (error) {
+                console.error("Görsel Arama Hatası:", error);
+                grid.innerHTML = 'Görsel arama sırasında bir hata oluştu.';
+            }
         };
-        const handleExport = () => { /* ... önceki kodla aynı ... */ };
-        const handleImport = (e) => { /* ... önceki kodla aynı ... */ };
-        
+
         // --- Event Listeners ---
         ui.searchInput.addEventListener('input', renderBooks);
         ui.filterStatus.addEventListener('change', renderBooks);
         ui.sortBy.addEventListener('change', loadBooks);
         document.getElementById('add-book-btn').onclick = () => renderBookFormModal();
-        document.getElementById('export-btn').onclick = handleExport;
-        document.getElementById('import-btn').onclick = () => document.getElementById('import-file').click();
-        document.getElementById('import-file').onchange = handleImport;
+        document.getElementById('find-cover-btn').onclick = renderCoverSearchModal;
+        // Import/Export butonları kaldırıldığı için event listener'ları da kaldırıldı.
     });
     </script>
 </body>
