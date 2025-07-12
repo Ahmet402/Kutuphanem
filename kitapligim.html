@@ -86,16 +86,10 @@
                         <input type="text" id="search-input" placeholder="Kitap veya yazar ara...">
                     </div>
                     <div class="bottom-controls">
-                        <select id="filter-status" style="flex:1;">
+                        <select id="filter-status" style="flex:2;">
                             <option value="Tümü">Filtrele: Tümü</option><option value="Okunacak">Okunacak</option><option value="Okunuyor">Okunuyor</option><option value="Okundu">Okundu</option><option value="Ödünç Verildi">Ödünç Verildi</option>
                         </select>
-                        <select id="sort-by" style="flex:1;">
-                            <option value="title_asc">Sırala: Ada Göre (A-Z)</option>
-                            <option value="author_asc">Sırala: Yazara Göre (A-Z)</option>
-                            <option value="rating_desc">Sırala: Puana Göre (Yüksek)</option>
-                            <option value="dateAdded_desc">Sırala: Eklenme Tarihi (Yeni)</option>
-                        </select>
-                        <div style="display:flex; gap:10px;">
+                        <div style="display:flex; gap:10px; flex:1; justify-content:flex-end;">
                             <button id="import-btn">İçe Aktar</button>
                             <button id="export-btn">Dışa Aktar</button>
                             <input type="file" id="import-file" class="hidden" accept=".json">
@@ -121,7 +115,7 @@
     document.addEventListener('DOMContentLoaded', () => {
         // --- Firebase ve Değişken Tanımlamaları ---
         const firebaseConfig = {
-             apiKey: "AIzaSyASaHGgjR-zsQ50E9JmCcBnBq2KyXcltuE",
+           apiKey: "AIzaSyASaHGgjR-zsQ50E9JmCcBnBq2KyXcltuE",
             authDomain: "benim-kutuphanem402.firebaseapp.com",
             projectId: "benim-kutuphanem402",
             storageBucket: "benim-kutuphanem402.appspot.com",
@@ -137,7 +131,6 @@
         let allBooks = [];
         let wishes = [];
         let currentUser = null;
-        let unsubscribeBooks = null;
         let unsubscribeWishes = null;
 
         const ui = {
@@ -145,7 +138,7 @@
             loginBtn: document.getElementById('login-btn'), logoutBtn: document.getElementById('logout-btn'),
             userDisplayName: document.getElementById('user-display-name'), bookList: document.getElementById('book-list'),
             wishList: document.getElementById('wish-list'), searchInput: document.getElementById('search-input'),
-            filterStatus: document.getElementById('filter-status'), sortBy: document.getElementById('sort-by'),
+            filterStatus: document.getElementById('filter-status'),
             libraryView: document.getElementById('library-view'), wishlistView: document.getElementById('wishlist-view'),
             nav: { library: document.getElementById('show-library-btn'), wishlist: document.getElementById('show-wishlist-btn') },
             modalContainer: document.getElementById('modal-container'), statsPanel: document.getElementById('stats-panel-id')
@@ -162,7 +155,6 @@
             } else {
                 currentUser = null;
                 ui.loginScreen.classList.remove('hidden'); ui.mainApp.classList.add('hidden');
-                if (unsubscribeBooks) unsubscribeBooks();
                 if (unsubscribeWishes) unsubscribeWishes();
             }
         });
@@ -173,22 +165,17 @@
         const getBooksCollection = () => db.collection('users').doc(currentUser.uid).collection('books');
         const getWishesCollection = () => db.collection('users').doc(currentUser.uid).collection('wishes');
 
-        // --- Veri Yükleme ve Sıralama ---
-        const loadBooks = () => {
-            if (unsubscribeBooks) unsubscribeBooks(); // Önceki listener'ı durdur
-
-            const [field, direction] = ui.sortBy.value.split('_');
-            let query = getBooksCollection().orderBy(field, direction);
-            
-            // Gerçek zamanlı olarak tüm kitapları yükle
-            unsubscribeBooks = query.onSnapshot(snapshot => {
+        // --- Veri Yükleme (ONARILDI ve BASİTLEŞTİRİLDİ) ---
+        const loadBooks = async () => {
+            try {
+                const snapshot = await getBooksCollection().orderBy('title', 'asc').get();
                 allBooks = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 renderBooks();
                 renderStats();
-            }, error => {
+            } catch (error) {
                 console.error("Kitaplar yüklenemedi:", error);
                 showToast("Kitaplar yüklenirken bir hata oluştu.", "error");
-            });
+            }
         };
         
         const loadWishes = () => {
@@ -196,7 +183,7 @@
             unsubscribeWishes = getWishesCollection().orderBy('dateAdded', 'desc').onSnapshot(snapshot => {
                 wishes = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 renderWishes();
-            });
+            }, err => showToast('İstek listesi yüklenemedi.', 'error'));
         };
 
         const renderStats = () => {
@@ -247,7 +234,7 @@
 
         // --- Modal Yönetimi (DÜZELTİLDİ) ---
         const openModal = (content) => {
-            ui.modalContainer.innerHTML = `<div class="modal" style="display:flex; align-items:center; justify-content:center;"><div class="modal-content">${content}</div></div>`;
+            ui.modalContainer.innerHTML = `<div class="modal" style="display:flex; align-items:flex-start; justify-content:center; padding-top: 5%;"><div class="modal-content">${content}</div></div>`;
             const modal = ui.modalContainer.querySelector('.modal');
             modal.querySelector('.close-button')?.addEventListener('click', closeModal);
         };
@@ -330,6 +317,7 @@
                 }
                 closeModal();
                 showToast(existingBook.id ? 'Kitap güncellendi.' : 'Kitap eklendi.');
+                loadBooks(); // Listeyi yeniden yükle
             } catch (error) { console.error("Kitap kaydetme hatası: ", error); showToast('Kitap kaydedilemedi.','error'); }
             finally { submitButton.disabled = false; submitButton.textContent = "Kaydet"; }
         };
@@ -356,7 +344,7 @@
             openModal(content);
             const modalContent = ui.modalContainer.querySelector('.modal-content');
             modalContent.querySelector('.btn-edit').onclick = () => renderBookFormModal(book);
-            modalContent.querySelector('.btn-delete').onclick = async () => { if(confirm('Bu kitabı silmek istediğinize emin misiniz?')){ closeModal(); await getBooksCollection().doc(book.id).delete(); showToast('Kitap silindi.'); }};
+            modalContent.querySelector('.btn-delete').onclick = async () => { if(confirm('Bu kitabı silmek istediğinize emin misiniz?')){ closeModal(); await getBooksCollection().doc(book.id).delete(); showToast('Kitap silindi.'); loadBooks(); }};
             const lendBtn = modalContent.querySelector('.btn-lend');
             if (lendBtn) lendBtn.onclick = () => handleLendBook(book);
             const returnBtn = modalContent.querySelector('.btn-return');
@@ -371,17 +359,18 @@
             ui.modalContainer.querySelector('#lend-form').onsubmit = async (e) => {
                 e.preventDefault();
                 await getBooksCollection().doc(book.id).update({ status: 'Ödünç Verildi', lentTo: e.target.borrower.value, lentDate: new Date().toISOString().slice(0,10) });
-                closeModal(); showToast('Kitap ödünç verildi.');
+                closeModal(); showToast('Kitap ödünç verildi.'); loadBooks();
             };
         };
 
         const handleReturnBook = async (book) => {
             await getBooksCollection().doc(book.id).update({ status: 'Okunacak', lentTo: FieldValue.delete(), lentDate: FieldValue.delete() });
-            closeModal(); showToast('Kitap geri alındı.');
+            closeModal(); showToast('Kitap geri alındı.'); loadBooks();
         };
 
         const renderNotes = (book) => {
             const notesSection = document.getElementById('notes-section');
+            if(!notesSection) return;
             notesSection.innerHTML = `<h3>Kitap Notları</h3><div id="notes-list"></div>
                 <form id="note-form" style="margin-top:15px;"><div class="form-group"><textarea id="new-note-text" placeholder="Yeni bir not ekle..." rows="3" required></textarea><button type="submit" style="width:auto; float:right; margin-top:10px;">Not Ekle</button></div></form>`;
             const notesListDiv = document.getElementById('notes-list');
@@ -399,8 +388,11 @@
         };
 
         const handleAddOrUpdateNote = async (book, text) => {
+            if(!text.trim()) return;
             const newNote = { id: Date.now(), text: text.trim() };
             await getBooksCollection().doc(book.id).update({ notes: FieldValue.arrayUnion(newNote) });
+            const updatedBook = allBooks.find(b => b.id === book.id);
+            if(updatedBook) { updatedBook.notes = [...(updatedBook.notes || []), newNote]; renderDetailsModal(updatedBook); }
         };
 
         const renderWishFormModal = (wish={}) => {
@@ -487,6 +479,7 @@
                             await batch.commit();
                         }
                         showToast("Kütüphane başarıyla güncellendi!", "success");
+                        loadBooks();
                     }
                 } catch (error) { console.error("Import Error:", error); showToast('Hata: Dosya okunamadı veya format geçersiz.', 'error'); }
             };
@@ -496,7 +489,6 @@
         // --- Event Listeners ---
         ui.searchInput.addEventListener('input', renderBooks);
         ui.filterStatus.addEventListener('change', renderBooks);
-        ui.sortBy.addEventListener('change', loadBooks);
         document.getElementById('add-book-btn').onclick = () => renderBookFormModal();
         document.getElementById('add-wish-btn').onclick = () => renderWishFormModal();
         document.getElementById('export-btn').onclick = handleExport;
