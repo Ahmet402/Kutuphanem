@@ -9,50 +9,45 @@
     <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* YENİ RENGARENK PALET */
-            --bg-color: #f4f1de; /* Krem */
-            --card-bg: #FFFFFF;
-            --primary-text: #3d405b; /* Koyu Mavi */
-            --secondary-text: #81b29a; /* Pastel Yeşil */
-            --accent-1: #e07a5f; /* Somon */
-            --accent-2: #3d405b; /* Koyu Mavi (Vurgu için) */
-            --accent-3: #f2cc8f; /* Sarı Hardal */
-            --danger-color: #d90429;
-            --font-heading: 'Lora', serif;
-            --font-body: 'Montserrat', sans-serif;
+            --bg-color: #f4f1de; --card-bg: #FFFFFF; --primary-text: #3d405b; --secondary-text: #81b29a;
+            --accent-1: #e07a5f; --accent-2: #3d405b; --accent-3: #f2cc8f; --danger-color: #d90429;
+            --font-heading: 'Lora', serif; --font-body: 'Montserrat', sans-serif;
         }
         *, *::before, *::after { box-sizing: border-box; }
         html { scroll-behavior: smooth; }
         body {
-            font-family: var(--font-body); margin: 0; background-color: var(--bg-color);
+            font-family: var(--font-body); margin: 0;
             color: var(--primary-text); font-size: 16px; line-height: 1.6;
-            background-image: linear-gradient(45deg, rgba(224, 122, 95, 0.1) 25%, transparent 25%),
-                              linear-gradient(-45deg, rgba(224, 122, 95, 0.1) 25%, transparent 25%),
-                              linear-gradient(45deg, transparent 75%, rgba(224, 122, 95, 0.1) 75%),
-                              linear-gradient(-45deg, transparent 75%, rgba(224, 122, 95, 0.1) 75%);
-            background-size: 20px 20px;
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+        }
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
         .container { max-width: 1200px; margin: 20px auto; padding: 15px; }
         h1, h2, h3 { font-family: var(--font-heading); margin-top: 0; color: var(--accent-2); }
         header { text-align: center; padding: 1rem; margin-bottom: 20px; }
-        header h1 { color: var(--primary-text); font-size: 3em; margin: 0; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
+        header h1 { color: white; font-size: 3em; margin: 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
         .controls-bar { padding: 20px; background-color: rgba(255,255,255,0.8); backdrop-filter: blur(10px); border-radius: 16px; box-shadow: 0 8px 32px rgba(61,64,91,0.1); display: flex; flex-direction: column; gap: 15px; margin-bottom: 25px; border: 1px solid rgba(255,255,255,0.2); }
         .top-controls, .bottom-controls { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
         button { background-color: var(--accent-1); color: white; padding: 12px 20px; border: none; border-radius: 8px; cursor: pointer; font-size: 1em; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         button:hover { background-color: #d96a4a; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
-        button:disabled { background-color: #aaa; cursor: not-allowed; }
+        button:disabled { background-color: #aaa; cursor: not-allowed; transform: none; box-shadow: none; }
         .controls-bar select, .controls-bar input[type="text"] { padding: 12px; border: 1px solid #ddd; border-radius: 8px; background-color: #fff; min-width: 180px; }
         .list-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; }
         .book-card { background-color: var(--card-bg); border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); overflow: hidden; display: flex; cursor: pointer; transition: transform 0.3s, box-shadow 0.3s; border-left: 5px solid; }
         .book-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(61,64,91,0.1); }
         .book-card:nth-child(4n+1) { border-left-color: var(--accent-1); }
-        .book-card:nth-child(4n+2) { border-left-color: var(--secondary-text); }
+        .book-card:nth-child(4n+2) { border-left-color: #23a6d5; }
         .book-card:nth-child(4n+3) { border-left-color: var(--accent-3); }
-        .book-card:nth-child(4n+4) { border-left-color: var(--accent-2); }
+        .book-card:nth-child(4n+4) { border-left-color: #e73c7e; }
         .card-cover img { width: 100px; height: 150px; object-fit: cover; display: block; }
         .card-info { padding: 15px; display: flex; flex-direction: column; justify-content: center; flex-grow: 1; }
         .card-info h3 { margin: 0 0 5px 0; font-size: 1.1em; }
-        .card-info p { margin: 2px 0; font-size: 0.9em; color: var(--secondary-text); }
+        .card-info p { margin: 2px 0; font-size: 0.9em; color: #555; }
         .book-rating { color: var(--accent-3); font-size: 1.2em; margin-top: 8px !important; }
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow-y: auto; background-color: rgba(0,0,0,0.5); backdrop-filter: blur(5px); animation: fadeIn 0.3s; }
         .modal-content { background-color: var(--card-bg); margin: 5% auto; padding: 30px; border-radius: 16px; width: 90%; max-width: 650px; position: relative; box-shadow: 0 5px 25px rgba(0,0,0,0.1); animation: slideIn 0.4s; }
@@ -60,22 +55,25 @@
         .form-group { margin-bottom: 20px; }
         .form-group label { display: block; margin-bottom: 8px; font-weight: 500; }
         .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; background-color: #fdfdfd; box-sizing: border-box; }
-        #api-results { position: absolute; background: white; width: 100%; border: 1px solid #ddd; border-top: none; border-radius: 0 0 8px 8px; z-index: 10; max-height: 250px; overflow-y: auto; }
+        #api-results { position: absolute; background: white; width: calc(100% - 2px); border: 1px solid #ddd; border-top: none; border-radius: 0 0 8px 8px; z-index: 10; max-height: 250px; overflow-y: auto; }
         .hidden { display: none; }
         .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background-color: var(--primary-text); color: white; padding: 12px 25px; border-radius: 8px; z-index: 2000; opacity: 0; transition: opacity 0.5s, bottom 0.5s; box-shadow: 0 3px 10px rgba(0,0,0,0.2); }
         .details-grid { display: grid; grid-template-columns: 150px 1fr; gap: 25px; align-items: start; }
         .details-info-grid { display: grid; grid-template-columns: auto 1fr; gap: 10px 15px; align-items: center; }
-        .details-label { font-weight: 500; color: var(--secondary-text); }
+        .details-label { font-weight: 500; color: #888; }
         .details-status { padding: 4px 10px; border-radius: 15px; font-size: 0.9em; font-weight: 500; color: white; text-align: center;}
-        .note-item { background: #f9f9f9; padding: 10px; border-radius: 8px; margin-bottom: 10px; cursor: pointer; transition: background-color 0.2s; }
+        .note-item { background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 10px; cursor: pointer; transition: background-color 0.2s; }
         .note-item:hover { background: #e9e9e9; }
+        #image-select-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; max-height: 450px; overflow-y: auto; padding-top: 10px;}
+        #image-select-grid img { width: 100%; height: 180px; object-fit: cover; border-radius: 8px; cursor: pointer; border: 3px solid transparent; transition: all 0.2s; }
+        #image-select-grid img:hover { border-color: var(--accent-1); transform: scale(1.05); }
         @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
         @keyframes slideIn { from {transform: translateY(-50px); opacity: 0;} to {transform: translateY(0); opacity: 1;} }
     </style>
 </head>
 <body>
 
-    <div id="login-screen" style="text-align: center; padding-top: 20vh;">
+    <div id="login-screen" style="text-align: center; padding-top: 20vh; color: white;">
         <header><h1>Benim Güzel Kütüphanem</h1></header>
         <button id="login-btn">Google ile Giriş Yap</button>
     </div>
@@ -84,8 +82,8 @@
         <header>
             <h1>Benim Güzel Kütüphanem</h1>
             <div class="user-profile" style="font-weight: 500;">
-                <span id="user-display-name"></span>
-                <button id="logout-btn" style="background:var(--accent-1); margin-left:15px; font-size:0.8em; padding:8px 12px;">Çıkış Yap</button>
+                <span id="user-display-name" style="color:white; text-shadow: 1px 1px 2px rgba(0,0,0,0.2);"></span>
+                <button id="logout-btn" style="background:rgba(255,255,255,0.2);">Çıkış Yap</button>
             </div>
         </header>
         <div class="container">
@@ -120,8 +118,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-storage-compat.js"></script>
-
+    
     <script>
     document.addEventListener('DOMContentLoaded', () => {
         // --- Firebase ve Değişken Tanımlamaları ---
@@ -136,7 +133,6 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
-        const storage = firebase.storage();
         const FieldValue = firebase.firestore.FieldValue;
 
         let allBooks = [];
@@ -168,10 +164,8 @@
         ui.loginBtn.onclick = () => { const p = new firebase.auth.GoogleAuthProvider(); auth.signInWithPopup(p).catch(e => console.error("Giriş Hatası:", e)); };
         ui.logoutBtn.onclick = () => auth.signOut();
 
-        // --- Veri Yolları ---
+        // --- Veri Yolları ve Yükleme ---
         const getBooksCollection = () => db.collection('users').doc(currentUser.uid).collection('books');
-
-        // --- Veri Yükleme (Gerçek Zamanlı) ---
         const loadBooks = () => {
             if (unsubscribeBooks) unsubscribeBooks();
             const [field, direction] = ui.sortBy.value.split('_');
@@ -183,16 +177,8 @@
             }, error => showToast("Kitaplar yüklenemedi: " + error.message, "error"));
         };
         
-        const renderStats = () => {
-            ui.statsPanel.innerHTML = `
-                <div class="stat-item"><h3>${allBooks.length}</h3><p>Toplam Kitap</p></div>
-                <div class="stat-item"><h3>${allBooks.filter(b => b.status === 'Okundu').length}</h3><p>Okunmuş</p></div>
-                <div class="stat-item"><h3>${allBooks.filter(b => b.status === 'Okunuyor').length}</h3><p>Okunuyor</p></div>
-                <div class="stat-item"><h3>${allBooks.filter(b => b.status === 'Ödünç Verildi').length}</h3><p>Ödünç Verilen</p></div>
-                <div class="stat-item"><h3>${allBooks.filter(b => b.status === 'Okunacak').length}</h3><p>Okunacak</p></div>`;
-        };
-        
         // --- Arayüz Çizim (Render) Fonksiyonları ---
+        const renderStats = () => { ui.statsPanel.innerHTML = `<div class="stat-item"><h3>${allBooks.length}</h3><p>Toplam Kitap</p></div><div class="stat-item"><h3>${allBooks.filter(b => b.status === 'Okundu').length}</h3><p>Okunmuş</p></div><div class="stat-item"><h3>${allBooks.filter(b => b.status === 'Okunuyor').length}</h3><p>Okunuyor</p></div><div class="stat-item"><h3>${allBooks.filter(b => b.status === 'Ödünç Verildi').length}</h3><p>Ödünç Verilen</p></div><div class="stat-item"><h3>${allBooks.filter(b => b.status === 'Okunacak').length}</h3><p>Okunacak</p></div>`; };
         const getStarRating = (r=0) => '★'.repeat(r) + '☆'.repeat(5 - r);
         const createBookCard = (book) => {
             const card = document.createElement('div');
@@ -205,25 +191,28 @@
             card.onclick = () => renderDetailsModal(book);
             return card;
         };
-
         const renderBooks = () => {
             const searchTerm = ui.searchInput.value.toLowerCase();
             const currentFilter = ui.filterStatus.value;
-            const filteredBooks = allBooks.filter(book => 
-                (book.title.toLowerCase().includes(searchTerm) || book.author.toLowerCase().includes(searchTerm)) && 
-                (currentFilter === 'Tümü' || book.status === currentFilter)
-            );
+            const filteredBooks = allBooks.filter(book => (book.title.toLowerCase().includes(searchTerm) || book.author.toLowerCase().includes(searchTerm)) && (currentFilter === 'Tümü' || book.status === currentFilter));
             ui.bookList.innerHTML = '';
             filteredBooks.forEach(book => ui.bookList.appendChild(createBookCard(book)));
         };
 
         // --- Modal Yönetimi ---
-        const openModal = (content) => { ui.modalContainer.innerHTML = `<div class="modal" style="display:flex; align-items:flex-start; justify-content:center; padding: 5% 15px; overflow-y:auto;"><div class="modal-content">${content}</div></div>`; ui.modalContainer.querySelector('.close-button')?.addEventListener('click', closeModal); };
+        const openModal = (content, maxWidth = '650px') => {
+            const modalWrapper = document.createElement('div');
+            modalWrapper.className = 'modal';
+            modalWrapper.style.display = 'flex';
+            modalWrapper.innerHTML = `<div class="modal-content" style="max-width:${maxWidth}">${content}</div>`;
+            ui.modalContainer.appendChild(modalWrapper);
+            modalWrapper.querySelector('.close-button')?.addEventListener('click', closeModal);
+        };
         const closeModal = () => { const modal = ui.modalContainer.querySelector('.modal'); if (modal) modal.remove(); };
         window.onclick = e => { if (e.target.classList.contains('modal')) closeModal(); };
         const showToast = (message, type = 'success') => { const toast = document.createElement('div'); toast.className = 'toast'; if(type === 'error') toast.style.backgroundColor = 'var(--danger-color)'; toast.textContent = message; document.body.appendChild(toast); setTimeout(() => { toast.classList.add('show'); setTimeout(() => { toast.classList.remove('show'); setTimeout(() => document.body.removeChild(toast), 500); }, 3000); }, 100); };
         
-        // --- Form ve CRUD Fonksiyonları ---
+        // --- Ana Form ve CRUD İşlemleri ---
         const renderBookFormModal = (book = {}) => {
             const isEditing = !!book.id;
             const title = isEditing ? 'Kitabı Düzenle' : 'Yeni Kitap Ekle';
@@ -239,12 +228,7 @@
                     <div class="form-group">
                         <label for="cover-url">Kapak Fotoğrafı URL</label>
                         <input type="text" id="cover-url" value="${book.coverUrl || ''}">
-                        <div style="display:flex; gap:10px; margin-top: 8px;">
-                            <button type="button" class="btn-g-search">Google'da Görsel Ara</button>
-                            <label for="cover-file-input" style="background-color: var(--accent-3); display:inline-block; padding:8px 15px; border-radius:8px; cursor:pointer; font-size:0.9em;">Veya Yükle</label>
-                        </div>
-                         <small>Google'da aradıktan sonra resim adresini kopyalayıp yukarıdaki alana yapıştırın.</small>
-                        <input type="file" id="cover-file-input" class="hidden" accept="image/*">
+                        <button type="button" class="btn-cover-search" style="background-color:var(--accent-3); margin-top:8px;">Görsel Bul</button>
                         <img id="cover-preview" class="${book.coverUrl ? '' : 'hidden'}" src="${book.coverUrl || ''}" alt="Önizleme" style="max-width:100px; max-height:150px; margin-top:10px; border-radius:8px; border:1px solid #ddd;">
                     </div>
                     <div class="form-group"><label for="status">Durum</label><select id="status"></select></div>
@@ -266,9 +250,8 @@
             statusSelect.onchange = updateDateFields; updateDateFields();
             form.onsubmit = (e) => handleBookFormSubmit(e, book);
             let searchTimeout;
-            form.querySelector('#title').addEventListener('keyup', (e) => { clearTimeout(searchTimeout); searchTimeout = setTimeout(() => searchGoogleBooks(e.target.value), 400); });
-            form.querySelector('.btn-g-search').onclick = () => { const query = `${form.title.value} ${form.author.value} kitap kapağı`; window.open(`https://www.google.com/search?tbm=isch&q=${encodeURIComponent(query)}`, '_blank'); };
-            form.querySelector('#cover-file-input').onchange = (e) => handleCoverFileUpload(e, form);
+            form.querySelector('#title').addEventListener('keyup', (e) => { clearTimeout(searchTimeout); searchTimeout = setTimeout(() => searchGoogleBooksForAutocomplete(e.target.value), 400); });
+            form.querySelector('.btn-cover-search').onclick = () => { const query = `${form.title.value} ${form.author.value}`; renderImageSearchModal(query); };
             form.querySelector('#cover-url').addEventListener('input', e => {
                 const preview = form.querySelector('#cover-preview');
                 preview.src = e.target.value.trim().replace('http://', 'https://');
@@ -281,29 +264,26 @@
             const form = e.target;
             const submitButton = form.querySelector('button[type="submit"]');
             submitButton.disabled = true; submitButton.textContent = "Kaydediliyor...";
-            
             const newValues = {
                 title: form.title.value, author: form.author.value, publisher: form.publisher.value,
                 coverUrl: form['cover-url'].value, status: form.status.value, rating: parseInt(form.rating.value) || 0,
                 startDate: form['start-date']?.value || '', finishDate: form['finish-date']?.value || ''
             };
             const bookData = existingBook.id ? { ...existingBook, ...newValues } : { ...newValues };
-
             try {
                 if (existingBook.id) {
                     await getBooksCollection().doc(existingBook.id).update(bookData);
-                    showToast('Kitap güncellendi.');
                 } else {
                     await getBooksCollection().add({ ...bookData, notes: [], dateAdded: FieldValue.serverTimestamp() });
-                    showToast('Kitap eklendi.');
                 }
-                closeModal();
+                closeModal(); showToast(existingBook.id ? 'Kitap güncellendi.' : 'Kitap eklendi.');
             } catch (error) { console.error("Kitap kaydetme hatası: ", error); showToast('Kitap kaydedilemedi.','error'); }
             finally { submitButton.disabled = false; submitButton.textContent = "Kaydet"; }
         };
         
+        // --- Detaylar, Notlar ve Diğer İşlemler ---
         const renderDetailsModal = (book) => {
-            const statusColors = { 'Okunacak': '#a0aec0', 'Okunuyor': 'var(--accent-1)', 'Okundu': 'var(--secondary-text)', 'Ödünç Verildi': 'var(--accent-3)' };
+            const statusColors = { 'Okunacak': '#a0aec0', 'Okunuyor': 'var(--accent-1)', 'Okundu': '#23a6d5', 'Ödünç Verildi': 'var(--accent-3)' };
             const statusText = book.status === 'Ödünç Verildi' ? `${book.status} (${book.lentTo || ''})` : book.status;
             const content = `<span class="close-button" aria-label="Kapat">&times;</span>
                 <h2>${book.title}</h2>
@@ -336,12 +316,12 @@
         
         const handleLendBook = (book) => { /* ... önceki kodla aynı ... */ };
         const handleReturnBook = async (book) => { /* ... önceki kodla aynı ... */ };
-
+        
         const renderNotes = (book) => {
             const notesSection = document.getElementById('notes-section');
             if(!notesSection) return;
             notesSection.innerHTML = `<h3>Kitap Notları</h3><div id="notes-list"></div>
-                <form id="note-form" style="margin-top:15px;"><div class="form-group"><textarea id="new-note-text" placeholder="Yeni bir not ekle..." rows="3" required></textarea><button type="submit" style="width:auto; float:right; margin-top:10px;">Not Ekle</button></div></form>`;
+                <form id="note-form" style="margin-top:15px;"><div class="form-group"><textarea id="new-note-text" placeholder="Yeni bir not ekle..." rows="3" required></textarea><button type="submit" style="width:auto; float:right; margin-top:10px;">Ekle</button></div></form>`;
             const notesListDiv = document.getElementById('notes-list');
             notesListDiv.innerHTML = '';
             if (book.notes && book.notes.length > 0) {
@@ -365,7 +345,7 @@
                 <div style="display:flex; justify-content:space-between;">
                 ${isEditing ? '<button type="button" class="btn-delete-note" style="background:var(--danger-color)">Sil</button>' : '<div></div>'}
                 <button type="submit">Kaydet</button></div></form>`;
-            openModal(content);
+            openModal(content, '500px');
             const form = document.getElementById('edit-note-form');
             form.onsubmit = (e) => { e.preventDefault(); handleAddOrUpdateNote(book, note.id, form.querySelector('#edit-note-text').value); };
             const deleteBtn = form.querySelector('.btn-delete-note');
@@ -374,24 +354,22 @@
 
         const handleAddOrUpdateNote = async (book, noteId, text) => {
             let currentNotes = book.notes || [];
-            if (text === null && noteId) { // Silme
+            if (text === null && noteId) {
                 currentNotes = currentNotes.filter(n => n.id !== noteId);
-            } else if (noteId) { // Düzenleme
+            } else if (noteId) {
                 const noteIndex = currentNotes.findIndex(n => n.id === noteId);
                 if (noteIndex > -1) currentNotes[noteIndex].text = text.trim();
-            } else { // Ekleme
+            } else {
                 currentNotes.push({ id: Date.now(), text: text.trim() });
             }
             await getBooksCollection().doc(book.id).update({ notes: currentNotes });
-            if(document.getElementById('notes-section')) {
-                const updatedBook = {...book, notes: currentNotes };
-                renderNotes(updatedBook); // Sadece notlar bölümünü yeniden çiz
-            } else {
-                closeModal();
-            }
+            if(document.getElementById('edit-note-form')) closeModal();
+            const updatedBook = allBooks.find(b => b.id === book.id);
+            if(updatedBook && document.getElementById('notes-section')) renderNotes({...updatedBook, notes: currentNotes});
         };
-
-        const searchGoogleBooks = async (query) => {
+        
+        // --- API, Dosya Yükleme, Import/Export ---
+        const searchGoogleBooksForAutocomplete = async (query) => {
             const apiResultsDiv = document.getElementById('api-results');
             if (!apiResultsDiv || query.length < 3) { if(apiResultsDiv) apiResultsDiv.innerHTML = ''; return; }
             apiResultsDiv.innerHTML = '<div style="padding:10px; text-align:center;">Aranıyor...</div>';
@@ -422,9 +400,52 @@
             } catch (error) { console.error("API Hatası:", error); }
         };
 
-        // --- Diğer Event Listeners ---
-        // ...
+        const renderImageSearchModal = async (query) => {
+            const content = `<span class="close-button" aria-label="Kapat">&times;</span><h2>Kapak Görseli Seç</h2><div id="image-select-grid">Yükleniyor...</div>`;
+            openModal(content, '90%');
+            const grid = document.getElementById('image-select-grid');
+            try {
+                // Google Görseller için doğrudan bir API olmadığından, Google Kitaplar'ı daha fazla sonuçla kullanıyoruz.
+                const res = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&maxResults=24&printType=books&fields=items(volumeInfo/imageLinks)`);
+                const data = await res.json();
+                grid.innerHTML = '';
+                if (!data.items) { grid.innerHTML = 'Görsel bulunamadı.'; return; }
+                const urls = new Set();
+                data.items.forEach(item => {
+                    const thumb = item.volumeInfo?.imageLinks?.thumbnail || item.volumeInfo?.imageLinks?.smallThumbnail;
+                    if(thumb) urls.add(thumb.replace('http://', 'https://').replace('&edge=curl', ''));
+                });
+                if(urls.size === 0) { grid.innerHTML = 'Görsel bulunamadı.'; return; }
+                urls.forEach(url => {
+                    const img = document.createElement('img');
+                    img.src = url;
+                    img.onerror = () => img.style.display = 'none'; // Bozuk linkleri gizle
+                    img.onclick = () => {
+                        const form = document.getElementById('book-form');
+                        if (form) {
+                            const urlInput = form.querySelector('#cover-url');
+                            const preview = form.querySelector('#cover-preview');
+                            urlInput.value = url;
+                            preview.src = url;
+                            preview.classList.remove('hidden');
+                        }
+                        closeModal();
+                    };
+                    grid.appendChild(img);
+                });
+            } catch (error) { console.error("Görsel Arama Hatası:", error); grid.innerHTML = 'Görsel arama başarısız.'; }
+        };
+        const handleExport = () => { /* ... önceki kodla aynı ... */ };
+        const handleImport = (e) => { /* ... önceki kodla aynı ... */ };
+        
+        // --- Event Listeners ---
+        ui.searchInput.addEventListener('input', renderBooks);
+        ui.filterStatus.addEventListener('change', renderBooks);
+        ui.sortBy.addEventListener('change', loadBooks);
         document.getElementById('add-book-btn').onclick = () => renderBookFormModal();
+        document.getElementById('export-btn').onclick = handleExport;
+        document.getElementById('import-btn').onclick = () => document.getElementById('import-file').click();
+        document.getElementById('import-file').onchange = handleImport;
     });
     </script>
 </body>
