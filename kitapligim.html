@@ -13,9 +13,9 @@
             --card-bg: #FFFFFF;
             --primary-text: #403D39;
             --secondary-text: #74716C;
-            --accent-color: #D4A276; /* Altın sarısı */
-            --green-accent: #6D8B74; /* Adaçayı yeşili */
-            --pink-accent: #E1C4B8; /* Toz pembe */
+            --accent-color: #D4A276;
+            --green-accent: #6D8B74;
+            --pink-accent: #E1C4B8;
             --danger-color: #e74c3c;
             --font-heading: 'Lora', serif;
             --font-body: 'Montserrat', sans-serif;
@@ -41,9 +41,9 @@
         .list-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
         .book-card, .wish-card { background-color: var(--card-bg); border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); overflow: hidden; display: flex; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; border-left: 5px solid transparent; }
         .book-card:hover, .wish-card:hover { transform: translateY(-5px); box-shadow: 0 6px 20px rgba(0,0,0,0.08); }
-        .status-card-okunuyor { border-left-color: var(--accent-color); background-color: #fefcf9; }
-        .status-card-okundu { border-left-color: var(--green-accent); background-color: #f9fbf8; }
-        .status-card-odunc-verildi { border-left-color: var(--pink-accent); background-color: #fdfaf8; }
+        .status-card-okunuyor { border-left-color: var(--accent-color); }
+        .status-card-okundu { border-left-color: var(--green-accent); }
+        .status-card-odunc-verildi { border-left-color: var(--pink-accent); }
         .card-cover img { width: 100px; height: 150px; object-fit: cover; }
         .card-info { padding: 15px; display: flex; flex-direction: column; justify-content: center; flex-grow: 1; }
         .card-info h3 { margin: 0 0 5px 0; font-size: 1.1em; }
@@ -60,8 +60,6 @@
         .hidden { display: none; }
         #login-screen { text-align: center; padding-top: 20vh; }
         .user-profile { font-weight: 500; }
-        .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background-color: var(--primary-text); color: white; padding: 12px 25px; border-radius: 8px; z-index: 2000; opacity: 0; transition: opacity 0.5s, bottom 0.5s; }
-        .toast.show { opacity: 1; bottom: 30px; }
         @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
         @keyframes slideIn { from {transform: translateY(-50px); opacity: 0;} to {transform: translateY(0); opacity: 1;} }
     </style>
@@ -110,11 +108,6 @@
                                 <option value="Tümü">Tümü</option><option value="Okunacak">Okunacak</option><option value="Okunuyor">Okunuyor</option><option value="Okundu">Okundu</option><option value="Ödünç Verildi">Ödünç Verildi</option>
                             </select>
                         </div>
-                        <div class="data-actions">
-                             <button id="import-btn" class="action-button">İçe Aktar (JSON)</button>
-                             <button id="export-btn" class="action-button">Dışa Aktar (JSON)</button>
-                             <input type="file" id="import-file" class="hidden" accept=".json">
-                        </div>
                     </div>
                 </div>
                 <div class="list-container" id="book-list"></div>
@@ -140,12 +133,12 @@
     <script>
     document.addEventListener('DOMContentLoaded', () => {
         const firebaseConfig = {
-            apiKey: "AIzaSyASaHGgjR-zsQ50E9JmCcBnBq2KyXcltuE",
-            authDomain: "benim-kutuphanem402.firebaseapp.com",
-            projectId: "benim-kutuphanem402",
-            storageBucket: "benim-kutuphanem402.appspot.com",
-            messagingSenderId: "400988696330",
-            appId: "1:400988696330:web:d9e2f0fa4301c2c8f714f3"
+             apiKey: "AIzaSyASaHGgjR-zsQ50E9JmCcBnBq2KyXcltuE",
+            authDomain: "benim-kutuphanem402.firebaseapp.com",
+            projectId: "benim-kutuphanem402",
+            storageBucket: "benim-kutuphanem402.appspot.com",
+            messagingSenderId: "400988696330",
+            appId: "1:400988696330:web:d9e2f0fa4301c2c8f714f3"
         };
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
@@ -226,10 +219,10 @@
             );
             filteredBooks.forEach(book => {
                 const card = document.createElement('div');
-                card.className = `book-card status-card-${(book.status || '').toLowerCase().replace(/\s/g, '-')}`;
+                card.className = `book-card status-card-${(book.status || 'okunacak').toLowerCase().replace(/\s/g, '-')}`;
                 card.dataset.id = book.id;
                 const coverUrl = (book.coverUrl || '').replace('http://', 'https://');
-                card.innerHTML = `<div class="card-cover"><img src="${coverUrl || 'https://via.placeholder.com/100x150/F8F5F2/403D39?text=Kapak'}" alt="${book.title}"></div><div class="card-info"><h3>${book.title}</h3><p>${book.author}</p><p style="font-size: 0.8em; color: #A9A9A9;">${book.publisher || ''}</p><p class="book-rating">${getStarRating(book.rating || 0)}</p></div>`;
+                card.innerHTML = `<div class="card-cover"><img src="${coverUrl || 'https://via.placeholder.com/100x150/F8F5F2/403D39?text=Kapak'}" alt="${book.title}"></div><div class="card-info"><h3>${book.title}</h3><p>${book.author}</p><p style="font-size: 0.8em; color: var(--secondary-text);">${book.publisher || ''}</p><p class="book-rating">${getStarRating(book.rating || 0)}</p></div>`;
                 card.onclick = () => renderDetailsModal(book.id);
                 ui.bookList.appendChild(card);
             });
@@ -241,7 +234,7 @@
                 const card = document.createElement('div');
                 card.className = 'wish-card';
                 card.dataset.id = wish.id;
-                card.innerHTML = `<div class="card-info"><h3>${wish.title}</h3><p>${wish.author}</p><div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap:wrap;"><button class="btn-edit-wish action-button">Düzenle</button><button class="btn-delete-wish action-button" style="background:var(--danger-color);">Sil</button><button class="btn-move-to-library action-button">Kütüphaneye Taşı</button></div></div>`;
+                card.innerHTML = `<div class="card-info"><h3>${wish.title}</h3><p>${wish.author}</p><div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap:wrap;"><button class="btn-edit-wish action-button">Düzenle</button><button class="btn-delete-wish action-button" style="background:var(--danger-color);">Sil</button><button class="btn-move-to-library add-button">Kütüphaneye Taşı</button></div></div>`;
                 card.querySelector('.btn-edit-wish').onclick = (e) => { e.stopPropagation(); handleEditWish(wish.id); };
                 card.querySelector('.btn-delete-wish').onclick = (e) => { e.stopPropagation(); handleDeleteWish(wish.id); };
                 card.querySelector('.btn-move-to-library').onclick = (e) => { e.stopPropagation(); handleMoveToLibrary(wish.id); };
@@ -268,7 +261,13 @@
                     <div class="form-group"><label for="title">Kitap Adı</label><input type="text" id="title" value="${book.title || ''}" required><div id="api-results" style="border:1px solid #eee; border-radius:8px; margin-top:5px;"></div></div>
                     <div class="form-group"><label for="author">Yazar</label><input type="text" id="author" value="${book.author || ''}" required></div>
                     <div class="form-group"><label for="publisher">Yayınevi</label><input type="text" id="publisher" value="${book.publisher || ''}"></div>
-                    <div class="form-group"><label for="cover-url">Kapak Fotoğrafı URL</label><input type="text" id="cover-url" value="${book.coverUrl || ''}"><label for="cover-file-input" class="file-upload-label">Veya Bilgisayardan Yükle</label><input type="file" id="cover-file-input" class="hidden" accept="image/*"><img id="cover-preview" class="${book.coverUrl ? '' : 'hidden'}" src="${book.coverUrl || ''}" alt="Kapak Önizlemesi"></div>
+                    <div class="form-group">
+                        <label for="cover-url">Kapak Fotoğrafı URL</label>
+                        <input type="text" id="cover-url" value="${(book.coverUrl || '').replace('http://', 'https://')}" placeholder="https://ornek.com/resim.jpg">
+                        <label for="cover-file-input" class="file-upload-label">Veya Bilgisayardan Yükle</label>
+                        <input type="file" id="cover-file-input" class="hidden" accept="image/*">
+                        <img id="cover-preview" class="${book.coverUrl ? '' : 'hidden'}" src="${(book.coverUrl || '').replace('http://', 'https://')}" alt="Kapak Önizlemesi">
+                    </div>
                     <div class="form-group"><label for="status">Durum</label><select id="status"></select></div>
                     <div class="form-group hidden" id="start-date-group"><label for="start-date">Başlama Tarihi</label><input type="date" id="start-date" value="${book.startDate || ''}"></div>
                     <div class="form-group hidden" id="finish-date-group"><label for="finish-date">Bitirme Tarihi</label><input type="date" id="finish-date" value="${book.finishDate || ''}"></div>
@@ -276,7 +275,9 @@
                     <button type="submit" class="add-button" style="width:100%; padding: 15px;">Kaydet</button>
                 </form>`;
             renderModalContent(ui.modals.bookForm, content);
-            const statusSelect = ui.modals.bookForm.querySelector('#status');
+            
+            const form = ui.modals.bookForm;
+            const statusSelect = form.querySelector('#status');
             ['Okunacak', 'Okunuyor', 'Okundu'].forEach(s => {
                 const option = document.createElement('option');
                 option.value = s;
@@ -284,21 +285,35 @@
                 if (book.status === s) option.selected = true;
                 statusSelect.appendChild(option);
             });
+
             const updateDateFields = () => {
-                const form = ui.modals.bookForm;
                 form.querySelector('#start-date-group').classList.toggle('hidden', statusSelect.value !== 'Okunuyor');
                 form.querySelector('#finish-date-group').classList.toggle('hidden', statusSelect.value !== 'Okundu');
             };
             statusSelect.onchange = updateDateFields;
             updateDateFields();
             
-            ui.modals.bookForm.querySelector('#book-form').onsubmit = handleBookFormSubmit;
+            form.querySelector('#book-form').onsubmit = handleBookFormSubmit;
             let searchTimeout;
-            ui.modals.bookForm.querySelector('#title').onkeyup = (e) => {
+            form.querySelector('#title').onkeyup = (e) => {
                 clearTimeout(searchTimeout);
                 searchTimeout = setTimeout(() => searchGoogleBooks(e.target.value), 500);
             };
-            ui.modals.bookForm.querySelector('#cover-file-input').onchange = handleCoverFileUpload;
+            form.querySelector('#cover-file-input').onchange = handleCoverFileUpload;
+
+            const coverUrlInput = form.querySelector('#cover-url');
+            const coverPreviewImg = form.querySelector('#cover-preview');
+
+            coverUrlInput.addEventListener('input', () => {
+                const newUrl = coverUrlInput.value.trim();
+                if (newUrl) {
+                    coverPreviewImg.src = newUrl.replace('http://', 'https://');
+                    coverPreviewImg.classList.remove('hidden');
+                } else {
+                    coverPreviewImg.classList.add('hidden');
+                }
+            });
+
             openModal(ui.modals.bookForm);
         };
 
@@ -324,7 +339,7 @@
                 if (editingBookId) {
                     await getBooksCollection().doc(editingBookId).update(bookData);
                 } else {
-                    const newBook = await getBooksCollection().add({ ...bookData, notes: [] });
+                    const newBook = await getBooksCollection().add({ ...bookData, notes: [], lentTo: '', lentDate: '' });
                     const movedFromWishId = form.dataset.movedFromWishId;
                     if (movedFromWishId) {
                         await getWishesCollection().doc(movedFromWishId).delete();
@@ -377,7 +392,7 @@
         const handleWishFormSubmit = async (e) => {
             e.preventDefault();
             const form = e.target.elements;
-            const wishData = { title: form['wish-title'].value, author: form['wish-author'].value };
+            const wishData = { title: form['wish-title'].value, author: form['wish-author'].value, dateAdded: new Date() };
             try {
                 if (editingWishId) {
                     await getWishesCollection().doc(editingWishId).update(wishData);
@@ -462,7 +477,7 @@
                     let thumb = info.imageLinks?.thumbnail || '';
                     if (thumb.startsWith('http://')) thumb = thumb.replace('http://', 'https://');
 
-                    div.innerHTML = `<img src="${thumb}" alt="" style="width:40px; height:60px; object-fit:cover; margin-right:10px;"><div class="api-item-info"><p style="margin:0; font-weight:bold;">${info.title}</p><p style="margin:0; font-size:0.9em;">${info.authors.join(', ')}</p></div>`;
+                    div.innerHTML = `<img src="${thumb || 'https://via.placeholder.com/40x60'}" alt="" style="width:40px; height:60px; object-fit:cover; margin-right:10px;"><div class="api-item-info"><p style="margin:0; font-weight:bold;">${info.title}</p><p style="margin:0; font-size:0.9em;">${info.authors.join(', ')}</p></div>`;
                     div.onclick = () => {
                         const form = document.getElementById('book-form');
                         form.title.value = info.title || '';
@@ -477,8 +492,6 @@
                 });
             } catch (error) { console.error("API Hatası:", error); apiResultsDiv.innerHTML = '<p style="color:red; padding:10px;">API hatası.</p>';}
         };
-        
-        // --- Modal and other handlers ---
 
         document.getElementById('add-book-btn').onclick = () => renderBookFormModal();
         document.getElementById('add-wish-btn').onclick = () => renderWishFormModal();
@@ -486,8 +499,6 @@
         ui.filterStatus.onchange = renderBooks;
         ui.nav.library.onclick = () => { ui.libraryView.classList.remove('hidden'); ui.wishlistView.classList.add('hidden'); ui.nav.library.classList.add('active'); ui.nav.wishlist.classList.remove('active'); };
         ui.nav.wishlist.onclick = () => { ui.libraryView.classList.add('hidden'); ui.wishlistView.classList.remove('hidden'); ui.nav.library.classList.remove('active'); ui.nav.wishlist.classList.add('active'); };
-
-        // ... Details, Lend, Return and Notes logic will go here
         
     });
     </script>
