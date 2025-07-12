@@ -49,12 +49,11 @@
         .close-button { color: #aaa; position: absolute; top: 15px; right: 25px; font-size: 32px; font-weight: bold; cursor: pointer; }
         .form-group { margin-bottom: 20px; }
         .form-group label { display: block; margin-bottom: 8px; font-weight: 500; }
-        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; background-color: var(--bg-color); }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; background-color: var(--bg-color); box-sizing: border-box; }
         #api-results { border:1px solid #eee; border-radius:8px; margin-top:5px; max-height: 250px; overflow-y: auto; }
         .hidden { display: none; }
         .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background-color: var(--primary-text); color: white; padding: 12px 25px; border-radius: 8px; z-index: 2000; opacity: 0; transition: opacity 0.5s, bottom 0.5s; }
         .toast.show { opacity: 1; bottom: 30px; }
-        .load-more-container { text-align: center; margin-top: 20px; padding-bottom: 20px; }
         @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
         @keyframes slideIn { from {transform: translateY(-50px); opacity: 0;} to {transform: translateY(0); opacity: 1;} }
     </style>
@@ -87,8 +86,14 @@
                         <input type="text" id="search-input" placeholder="Kitap veya yazar ara...">
                     </div>
                     <div class="bottom-controls">
-                        <select id="filter-status" style="flex-grow: 1;">
+                        <select id="filter-status" style="flex:1;">
                             <option value="Tümü">Filtrele: Tümü</option><option value="Okunacak">Okunacak</option><option value="Okunuyor">Okunuyor</option><option value="Okundu">Okundu</option><option value="Ödünç Verildi">Ödünç Verildi</option>
+                        </select>
+                        <select id="sort-by" style="flex:1;">
+                            <option value="title_asc">Sırala: Ada Göre (A-Z)</option>
+                            <option value="author_asc">Sırala: Yazara Göre (A-Z)</option>
+                            <option value="rating_desc">Sırala: Puana Göre (Yüksek)</option>
+                            <option value="dateAdded_desc">Sırala: Eklenme Tarihi (Yeni)</option>
                         </select>
                         <div style="display:flex; gap:10px;">
                             <button id="import-btn">İçe Aktar</button>
@@ -98,7 +103,6 @@
                     </div>
                 </div>
                 <div class="list-container" id="book-list"></div>
-                <div class="load-more-container"><button id="load-more-btn" class="hidden">Daha Fazla Yükle</button></div>
             </main>
             <main id="wishlist-view" class="hidden">
                 <div class="controls-bar"><button id="add-wish-btn">Yeni İstek Ekle</button></div>
@@ -117,7 +121,7 @@
     document.addEventListener('DOMContentLoaded', () => {
         // --- Firebase ve Değişken Tanımlamaları ---
         const firebaseConfig = {
-           apiKey: "AIzaSyASaHGgjR-zsQ50E9JmCcBnBq2KyXcltuE",
+             apiKey: "AIzaSyASaHGgjR-zsQ50E9JmCcBnBq2KyXcltuE",
             authDomain: "benim-kutuphanem402.firebaseapp.com",
             projectId: "benim-kutuphanem402",
             storageBucket: "benim-kutuphanem402.appspot.com",
@@ -133,19 +137,18 @@
         let allBooks = [];
         let wishes = [];
         let currentUser = null;
-        let lastVisibleBook = null;
+        let unsubscribeBooks = null;
         let unsubscribeWishes = null;
-        let isFetchingBooks = false;
 
         const ui = {
             loginScreen: document.getElementById('login-screen'), mainApp: document.getElementById('main-app'),
             loginBtn: document.getElementById('login-btn'), logoutBtn: document.getElementById('logout-btn'),
             userDisplayName: document.getElementById('user-display-name'), bookList: document.getElementById('book-list'),
             wishList: document.getElementById('wish-list'), searchInput: document.getElementById('search-input'),
-            filterStatus: document.getElementById('filter-status'), libraryView: document.getElementById('library-view'),
-            wishlistView: document.getElementById('wishlist-view'), nav: { library: document.getElementById('show-library-btn'), wishlist: document.getElementById('show-wishlist-btn') },
-            modalContainer: document.getElementById('modal-container'), loadMoreBtn: document.getElementById('load-more-btn'),
-            statsPanel: document.getElementById('stats-panel-id')
+            filterStatus: document.getElementById('filter-status'), sortBy: document.getElementById('sort-by'),
+            libraryView: document.getElementById('library-view'), wishlistView: document.getElementById('wishlist-view'),
+            nav: { library: document.getElementById('show-library-btn'), wishlist: document.getElementById('show-wishlist-btn') },
+            modalContainer: document.getElementById('modal-container'), statsPanel: document.getElementById('stats-panel-id')
         };
         
         // --- Kimlik Doğrulama ---
@@ -154,10 +157,12 @@
                 currentUser = user;
                 ui.loginScreen.classList.add('hidden'); ui.mainApp.classList.remove('hidden');
                 ui.userDisplayName.textContent = `Hoş geldin, ${user.displayName.split(' ')[0]}`;
-                loadInitialData();
+                loadBooks();
+                loadWishes();
             } else {
                 currentUser = null;
                 ui.loginScreen.classList.remove('hidden'); ui.mainApp.classList.add('hidden');
+                if (unsubscribeBooks) unsubscribeBooks();
                 if (unsubscribeWishes) unsubscribeWishes();
             }
         });
@@ -168,35 +173,21 @@
         const getBooksCollection = () => db.collection('users').doc(currentUser.uid).collection('books');
         const getWishesCollection = () => db.collection('users').doc(currentUser.uid).collection('wishes');
 
-        // --- Veri Yükleme ve Sayfalama ---
-        const BOOKS_PER_PAGE = 15;
-        const loadInitialData = () => {
-            allBooks = [];
-            lastVisibleBook = null;
-            ui.bookList.innerHTML = '';
-            ui.searchInput.value = '';
-            ui.filterStatus.value = 'Tümü';
-            loadMoreBooks();
-            loadWishes();
-            loadStats();
-        };
+        // --- Veri Yükleme ve Sıralama ---
+        const loadBooks = () => {
+            if (unsubscribeBooks) unsubscribeBooks(); // Önceki listener'ı durdur
 
-        const loadMoreBooks = () => {
-            if (isFetchingBooks) return;
-            isFetchingBooks = true;
-            ui.loadMoreBtn.disabled = true; ui.loadMoreBtn.textContent = "Yükleniyor...";
-            let query = getBooksCollection().orderBy('title').limit(BOOKS_PER_PAGE);
-            if (lastVisibleBook) query = query.startAfter(lastVisibleBook);
+            const [field, direction] = ui.sortBy.value.split('_');
+            let query = getBooksCollection().orderBy(field, direction);
             
-            query.get().then(snapshot => {
-                snapshot.docs.forEach(doc => allBooks.push({ id: doc.id, ...doc.data() }));
-                lastVisibleBook = snapshot.docs[snapshot.docs.length - 1];
+            // Gerçek zamanlı olarak tüm kitapları yükle
+            unsubscribeBooks = query.onSnapshot(snapshot => {
+                allBooks = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 renderBooks();
-                ui.loadMoreBtn.classList.toggle('hidden', snapshot.docs.length < BOOKS_PER_PAGE);
-            }).catch(e => console.error("Kitaplar yüklenemedi:", e))
-              .finally(() => { 
-                isFetchingBooks = false;
-                ui.loadMoreBtn.disabled = false; ui.loadMoreBtn.textContent = "Daha Fazla Yükle";
+                renderStats();
+            }, error => {
+                console.error("Kitaplar yüklenemedi:", error);
+                showToast("Kitaplar yüklenirken bir hata oluştu.", "error");
             });
         };
         
@@ -208,17 +199,13 @@
             });
         };
 
-        // --- İstatistikler ---
-        const loadStats = () => {
-            getBooksCollection().get().then(snapshot => {
-                const booksForStats = snapshot.docs.map(d => d.data());
-                ui.statsPanel.innerHTML = `
-                    <div class="stat-item"><h3>${booksForStats.length}</h3><p>Toplam Kitap</p></div>
-                    <div class="stat-item"><h3>${booksForStats.filter(b => b.status === 'Okundu').length}</h3><p>Okunmuş</p></div>
-                    <div class="stat-item"><h3>${booksForStats.filter(b => b.status === 'Okunuyor').length}</h3><p>Okunuyor</p></div>
-                    <div class="stat-item"><h3>${booksForStats.filter(b => b.status === 'Ödünç Verildi').length}</h3><p>Ödünç Verilen</p></div>
-                    <div class="stat-item"><h3>${booksForStats.filter(b => b.status === 'Okunacak').length}</h3><p>Okunacak</p></div>`;
-            });
+        const renderStats = () => {
+            ui.statsPanel.innerHTML = `
+                <div class="stat-item"><h3>${allBooks.length}</h3><p>Toplam Kitap</p></div>
+                <div class="stat-item"><h3>${allBooks.filter(b => b.status === 'Okundu').length}</h3><p>Okunmuş</p></div>
+                <div class="stat-item"><h3>${allBooks.filter(b => b.status === 'Okunuyor').length}</h3><p>Okunuyor</p></div>
+                <div class="stat-item"><h3>${allBooks.filter(b => b.status === 'Ödünç Verildi').length}</h3><p>Ödünç Verilen</p></div>
+                <div class="stat-item"><h3>${allBooks.filter(b => b.status === 'Okunacak').length}</h3><p>Okunacak</p></div>`;
         };
         
         // --- Arayüz Çizim (Render) Fonksiyonları ---
@@ -250,7 +237,7 @@
             wishes.forEach(wish => {
                 const card = document.createElement('div');
                 card.className = 'wish-card';
-                card.innerHTML = `<div class="card-info"><h3>${wish.title}</h3><p>${wish.author}</p><div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap:wrap;"><button class="btn-edit">Düzenle</button><button class="btn-delete" style="background:var(--danger-color);">Sil</button><button class="btn-move">Kütüphaneye Taşı</button></div></div>`;
+                card.innerHTML = `<div class="card-info"><h3>${wish.title}</h3><p>${wish.author || 'Yazar belirtilmemiş'}</p><div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap:wrap;"><button class="btn-edit">Düzenle</button><button class="btn-delete" style="background:var(--danger-color);">Sil</button><button class="btn-move">Kütüphaneye Taşı</button></div></div>`;
                 card.querySelector('.btn-edit').onclick = (e) => { e.stopPropagation(); renderWishFormModal(wish); };
                 card.querySelector('.btn-delete').onclick = (e) => { e.stopPropagation(); if(confirm('Bu isteği silmek istediğinize emin misiniz?')) getWishesCollection().doc(wish.id).delete().catch(err => showToast('İstek silinemedi.', 'error')); };
                 card.querySelector('.btn-move').onclick = (e) => { e.stopPropagation(); handleMoveToLibrary(wish); };
@@ -260,20 +247,19 @@
 
         // --- Modal Yönetimi ---
         const openModal = (content) => {
-            const modalWrapper = document.createElement('div');
-            modalWrapper.className = 'modal';
-            modalWrapper.innerHTML = `<div class="modal-content">${content}</div>`;
-            ui.modalContainer.appendChild(modalWrapper);
-            modalWrapper.style.display = 'block';
+            ui.modalContainer.innerHTML = `<div class="modal" style="display:block;"><div class="modal-content">${content}</div></div>`;
+            const modal = ui.modalContainer.querySelector('.modal');
+            modal.querySelector('.close-button')?.addEventListener('click', closeModal);
         };
         const closeModal = () => {
             const modal = ui.modalContainer.querySelector('.modal');
             if (modal) {
                 modal.style.display = 'none';
-                setTimeout(() => ui.modalContainer.innerHTML = '', 300);
+                setTimeout(() => { ui.modalContainer.innerHTML = ''; }, 300);
             }
         };
         window.onclick = e => { if (e.target.classList.contains('modal')) closeModal(); };
+
         const showToast = (message, type = 'success') => {
             const toast = document.createElement('div');
             toast.className = 'toast';
@@ -300,7 +286,6 @@
                 </form>`;
             openModal(content);
             const form = document.getElementById('book-form');
-            form.parentElement.previousElementSibling.onclick = closeModal;
             const statusSelect = form.querySelector('#status');
             ['Okunacak', 'Okunuyor', 'Okundu'].forEach(s => { const o=document.createElement('option'); o.value=s; o.textContent=s; if(book.status===s) o.selected=true; statusSelect.appendChild(o); });
             const updateDateFields = () => {
@@ -328,7 +313,6 @@
             const submitButton = form.querySelector('button[type="submit"]');
             submitButton.disabled = true; submitButton.textContent = "Kaydediliyor...";
             
-            // Düzenleme sırasında kaybolan alanları korumak için eski veriyle birleştir.
             const newValues = {
                 title: form.title.value, author: form.author.value, publisher: form.publisher.value,
                 coverUrl: form['cover-url'].value, status: form.status.value, rating: parseInt(form.rating.value) || 0,
@@ -345,7 +329,7 @@
                     if (movedFromWishId) await getWishesCollection().doc(movedFromWishId).delete();
                 }
                 closeModal();
-                loadInitialData(); // Başarıdan sonra tüm listeyi yeniden yükle
+                showToast(existingBook.id ? 'Kitap güncellendi.' : 'Kitap eklendi.');
             } catch (error) { console.error("Kitap kaydetme hatası: ", error); showToast('Kitap kaydedilemedi.','error'); }
             finally { submitButton.disabled = false; submitButton.textContent = "Kaydet"; }
         };
@@ -357,8 +341,7 @@
                     <img src="${(book.coverUrl || '').replace('http://', 'https://') || 'https://via.placeholder.com/150x220'}" alt="${book.title}" style="width:150px; height:220px; object-fit:cover; border-radius:8px;">
                     <div style="flex:1;">
                         <h2>${book.title}</h2>
-                        <p><strong>Yazar:</strong> ${book.author}</p>
-                        <p><strong>Puan:</strong> <span class="book-rating">${getStarRating(book.rating)}</span></p>
+                        <p><strong>Yazar:</strong> ${book.author}</p><p><strong>Puan:</strong> <span class="book-rating">${getStarRating(book.rating)}</span></p>
                         <p><strong>Durum:</strong> ${statusText}</p>
                         ${book.startDate ? `<p><strong>Başlama:</strong> ${book.startDate}</p>` : ''}
                         ${book.finishDate ? `<p><strong>Bitirme:</strong> ${book.finishDate}</p>` : ''}
@@ -372,9 +355,8 @@
                 </div>`;
             openModal(content);
             const modal = ui.modalContainer.querySelector('.modal');
-            modal.querySelector('.close-button').onclick = closeModal;
-            modal.querySelector('.btn-edit').onclick = () => { closeModal(); renderBookFormModal(book); };
-            modal.querySelector('.btn-delete').onclick = async () => { if(confirm('Bu kitabı silmek istediğinize emin misiniz?')){ await getBooksCollection().doc(book.id).delete(); closeModal(); loadInitialData(); }};
+            modal.querySelector('.btn-edit').onclick = () => renderBookFormModal(book);
+            modal.querySelector('.btn-delete').onclick = async () => { if(confirm('Bu kitabı silmek istediğinize emin misiniz?')){ closeModal(); await getBooksCollection().doc(book.id).delete(); showToast('Kitap silindi.'); }};
             const lendBtn = modal.querySelector('.btn-lend');
             if (lendBtn) lendBtn.onclick = () => handleLendBook(book);
             const returnBtn = modal.querySelector('.btn-return');
@@ -386,18 +368,16 @@
             const content = `<span class="close-button" aria-label="Kapat">&times;</span><h2>Kitabı Ödünç Ver</h2>
                 <form id="lend-form"><div class="form-group"><label for="borrower">Kime Ödünç Verildi?</label><input type="text" id="borrower" required></div><button type="submit">Onayla</button></form>`;
             openModal(content);
-            const modal = ui.modalContainer.querySelector('.modal');
-            modal.querySelector('.close-button').onclick = closeModal;
-            modal.querySelector('#lend-form').onsubmit = async (e) => {
+            ui.modalContainer.querySelector('#lend-form').onsubmit = async (e) => {
                 e.preventDefault();
                 await getBooksCollection().doc(book.id).update({ status: 'Ödünç Verildi', lentTo: e.target.borrower.value, lentDate: new Date().toISOString().slice(0,10) });
-                closeModal(); loadInitialData();
+                closeModal(); showToast('Kitap ödünç verildi.');
             };
         };
 
         const handleReturnBook = async (book) => {
             await getBooksCollection().doc(book.id).update({ status: 'Okunacak', lentTo: FieldValue.delete(), lentDate: FieldValue.delete() });
-            closeModal(); loadInitialData();
+            closeModal(); showToast('Kitap geri alındı.');
         };
 
         const renderNotes = (book) => {
@@ -421,16 +401,29 @@
         const handleAddOrUpdateNote = async (book, text) => {
             const newNote = { id: Date.now(), text: text.trim() };
             await getBooksCollection().doc(book.id).update({ notes: FieldValue.arrayUnion(newNote) });
-            const updatedBook = allBooks.find(b => b.id === book.id);
-            if(updatedBook) { updatedBook.notes = [...(updatedBook.notes || []), newNote]; renderDetailsModal(updatedBook); }
         };
 
-        const renderWishFormModal = (wish={}) => { /* ...istek listesi formu... */ };
+        const renderWishFormModal = (wish={}) => {
+            const isEditing = !!wish.id;
+            const content = `<span class="close-button" aria-label="Kapat">&times;</span><h2>${isEditing ? 'İsteği Düzenle' : 'Yeni İstek Ekle'}</h2>
+                <form id="wish-form"><div class="form-group"><label for="wish-title">Kitap Adı</label><input type="text" id="wish-title" value="${wish.title || ''}" required></div><div class="form-group"><label for="wish-author">Yazar</label><input type="text" id="wish-author" value="${wish.author || ''}"></div><button type="submit">Kaydet</button></form>`;
+            openModal(content);
+            ui.modalContainer.querySelector('#wish-form').onsubmit = async (e) => {
+                e.preventDefault();
+                const wishData = { title: e.target['wish-title'].value, author: e.target['wish-author'].value };
+                try {
+                    if (isEditing) await getWishesCollection().doc(wish.id).update(wishData);
+                    else await getWishesCollection().add({ ...wishData, dateAdded: new Date() });
+                    closeModal(); showToast(isEditing ? 'İstek güncellendi.' : 'İstek eklendi.');
+                } catch(err) { showToast('İstek kaydedilemedi.', 'error'); }
+            };
+        };
+
         const handleMoveToLibrary = (wish) => { renderBookFormModal({ title: wish.title, author: wish.author, movedFromWishId: wish.id }); };
         
         // --- API, Dosya Yükleme, Import/Export ---
         const handleCoverFileUpload = (e, form) => {
-            const file = e.target.files[0]; if (!file) return;
+             const file = e.target.files[0]; if (!file) return;
             const submitButton = form.querySelector('button[type="submit"]');
             submitButton.disabled = true; submitButton.textContent = "Kapak Yükleniyor...";
             const uploadTask = storage.ref(`covers/${currentUser.uid}/${Date.now()}_${file.name}`).put(file);
@@ -446,8 +439,36 @@
                 }
             );
         };
-        const searchGoogleBooks = async (query) => { /* ... önceki kodla aynı, buraya eklenebilir ... */ };
-        const handleExport = () => { getBooksCollection().get().then(snap => { const data = { books: snap.docs.map(d=>d.data()), wishes }; const blob = new Blob([JSON.stringify(data, null, 2)], {type: "application/json"}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `kutuphanem_${new Date().toISOString().slice(0,10)}.json`; a.click(); URL.revokeObjectURL(url); showToast('Veriler dışa aktarıldı.'); }); };
+        const searchGoogleBooks = async (query) => {
+            const apiResultsDiv = document.getElementById('api-results');
+            if (!apiResultsDiv || query.length < 3) { if(apiResultsDiv) apiResultsDiv.innerHTML = ''; return; }
+            apiResultsDiv.innerHTML = '<p style="padding:10px;">Aranıyor...</p>';
+            try {
+                const res = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&maxResults=5`);
+                const data = await res.json();
+                apiResultsDiv.innerHTML = '';
+                if (!data.items) return;
+                data.items.forEach(item => {
+                    const info = item.volumeInfo;
+                    if(!info.title || !info.authors) return;
+                    const div = document.createElement('div');
+                    div.style.display = 'flex'; div.style.alignItems = 'center'; div.style.padding = '10px'; div.style.cursor = 'pointer';
+                    div.onmouseover = () => div.style.backgroundColor = '#f0f0f0';
+                    div.onmouseout = () => div.style.backgroundColor = 'transparent';
+                    let thumb = (info.imageLinks?.thumbnail || '').replace('http://', 'https://');
+                    div.innerHTML = `<img src="${thumb || 'https://via.placeholder.com/40x60'}" alt="" style="width:40px; height:60px; object-fit:cover; margin-right:10px;"><div class="api-item-info"><p style="margin:0; font-weight:bold;">${info.title}</p><p style="margin:0; font-size:0.9em;">${info.authors.join(', ')}</p></div>`;
+                    div.onclick = () => {
+                        const form = document.getElementById('book-form');
+                        form.title.value = info.title || ''; form.author.value = info.authors?.join(', ') || ''; form.publisher.value = info.publisher || '';
+                        form.querySelector('#cover-url').value = thumb; form.querySelector('#cover-preview').src = thumb;
+                        form.querySelector('#cover-preview').classList.remove('hidden');
+                        apiResultsDiv.innerHTML = '';
+                    };
+                    apiResultsDiv.appendChild(div);
+                });
+            } catch (error) { console.error("API Hatası:", error); apiResultsDiv.innerHTML = '<p style="color:red; padding:10px;">API hatası.</p>';}
+        };
+        const handleExport = () => { showToast('Veriler hazırlanıyor...'); getBooksCollection().get().then(snap => { const data = { books: snap.docs.map(d=>d.data()), wishes }; const blob = new Blob([JSON.stringify(data, null, 2)], {type: "application/json"}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `kutuphanem_${new Date().toISOString().slice(0,10)}.json`; a.click(); URL.revokeObjectURL(url); }); };
         const handleImport = (e) => {
             const file = e.target.files[0]; if (!file) return;
             const reader = new FileReader();
@@ -460,13 +481,12 @@
                         const deleteBatch = db.batch();
                         existingDocs.docs.forEach(doc => deleteBatch.delete(doc.ref));
                         await deleteBatch.commit();
-                        for (let i = 0; i < data.books.length; i += 500) {
+                        for (let i = 0; i < data.books.length; i += 499) {
                             const batch = db.batch();
-                            data.books.slice(i, i + 500).forEach(book => batch.set(getBooksCollection().doc(), book));
+                            data.books.slice(i, i + 499).forEach(book => batch.set(getBooksCollection().doc(), book));
                             await batch.commit();
                         }
                         showToast("Kütüphane başarıyla güncellendi!", "success");
-                        loadInitialData();
                     }
                 } catch (error) { console.error("Import Error:", error); showToast('Hata: Dosya okunamadı veya format geçersiz.', 'error'); }
             };
@@ -474,11 +494,11 @@
         };
         
         // --- Event Listeners ---
-        ui.searchInput.addEventListener('input', () => { ui.loadMoreBtn.classList.add('hidden'); renderBooks(); });
-        ui.filterStatus.addEventListener('change', () => { ui.loadMoreBtn.classList.add('hidden'); renderBooks(); });
-        ui.loadMoreBtn.addEventListener('click', loadMoreBooks);
+        ui.searchInput.addEventListener('input', renderBooks);
+        ui.filterStatus.addEventListener('change', renderBooks);
+        ui.sortBy.addEventListener('change', loadBooks);
         document.getElementById('add-book-btn').onclick = () => renderBookFormModal();
-        document.getElementById('add-wish-btn').onclick = () => { /* ... istek formu render ... */ };
+        document.getElementById('add-wish-btn').onclick = () => renderWishFormModal();
         document.getElementById('export-btn').onclick = handleExport;
         document.getElementById('import-btn').onclick = () => document.getElementById('import-file').click();
         document.getElementById('import-file').onchange = handleImport;
