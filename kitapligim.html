@@ -55,8 +55,6 @@
         .card-info h3 { margin: 0 0 5px 0; font-size: 1.2em; }
         .card-info p { margin: 2px 0; font-size: 0.9em; color: var(--secondary-text); }
         .book-rating { color: var(--accent-3); font-size: 1.2em; margin-top: 10px !important; }
-        .pagination-controls { display: flex; justify-content: center; align-items: center; gap: 20px; padding: 30px 0; }
-        #page-indicator { font-weight: 500; color: var(--secondary-text); }
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow-y: auto; background-color: rgba(0,0,0,0.4); backdrop-filter: blur(8px); animation: fadeIn 0.3s; }
         .modal-content { background-color: var(--card-bg); margin: 5% auto; padding: 35px; border-radius: 20px; width: 90%; max-width: 650px; position: relative; box-shadow: 0 5px 25px rgba(0,0,0,0.1); animation: slideIn 0.4s; }
         .close-button { color: #aaa; background: none; border: none; position: absolute; top: 15px; right: 25px; font-size: 32px; font-weight: bold; cursor: pointer; padding: 0; line-height: 1; }
@@ -113,12 +111,7 @@
                     </div>
                 </div>
                 <div class="list-container" id="book-list"></div>
-                <div id="pagination-controls" class="pagination-controls">
-                    <button id="prev-page-btn" disabled>Önceki</button>
-                    <span id="page-indicator">Sayfa 1</span>
-                    <button id="next-page-btn">Sonraki</button>
-                </div>
-            </main>
+                </main>
         </div>
         <div id="modal-container"></div>
     </div>
@@ -146,11 +139,8 @@
         const FieldValue = firebase.firestore.FieldValue;
 
         let currentUser = null;
-        
-        const BOOKS_PER_PAGE = 20;
-        let currentPage = 1;
-        let lastVisibleDoc = null;
-        let firstVisibleDoc = null;
+        let allBooks = []; // Tüm kitapları tutacak global dizi
+        let unsubscribeBooks = null; // Gerçek zamanlı dinleyiciyi durdurmak için
         
         const ui = {
             loginScreen: document.getElementById('login-screen'), mainApp: document.getElementById('main-app'),
@@ -161,8 +151,6 @@
             addBookBtn: document.getElementById('add-book-btn'), statsBtn: document.getElementById('stats-btn'),
             importBtn: document.getElementById('import-btn'), exportBtn: document.getElementById('export-btn'),
             importFile: document.getElementById('import-file'),
-            prevPageBtn: document.getElementById('prev-page-btn'), nextPageBtn: document.getElementById('next-page-btn'),
-            pageIndicator: document.getElementById('page-indicator')
         };
         
         const BOOK_STATUSES = {
@@ -184,6 +172,7 @@
                 currentUser = null;
                 ui.loginScreen.classList.remove('hidden');
                 ui.mainApp.classList.add('hidden');
+                if (unsubscribeBooks) unsubscribeBooks(); // Çıkış yapınca dinleyiciyi kaldır
             }
         });
         ui.loginBtn.onclick = () => { const p = new firebase.auth.GoogleAuthProvider(); auth.signInWithPopup(p).catch(e => console.error("Giriş Hatası:", e)); };
@@ -192,64 +181,39 @@
         // --- Veri Yolu ---
         const getBooksCollection = () => db.collection('users').doc(currentUser.uid).collection('books');
 
-        // --- Ana Veri Yükleme Fonksiyonu (Sayfalamalı) ---
-        const loadBooks = async (direction = 'first') => {
-            ui.bookList.innerHTML = `<p style='text-align:center; color:var(--secondary-text); grid-column: 1 / -1;'>Kitaplar yükleniyor...</p>`;
+        // --- Ana Veri Yükleme Fonksiyonu (Gerçek Zamanlı) ---
+        const loadBooks = () => {
+            if (unsubscribeBooks) unsubscribeBooks(); // Önceki dinleyiciyi temizle
+
             let query = getBooksCollection().orderBy('title_lowercase', 'asc');
+            
+            ui.bookList.innerHTML = `<p style='text-align:center; color:var(--secondary-text); grid-column: 1 / -1;'>Kitaplar yükleniyor...</p>`;
 
-            const statusFilter = ui.filterStatus.value;
-            if (statusFilter !== 'Tümü') {
-                query = query.where('status', '==', statusFilter);
-            }
-
-            const searchTerm = ui.searchInput.value.toLowerCase().trim();
-            if (searchTerm) {
-                query = query.where('title_lowercase', '>=', searchTerm)
-                             .where('title_lowercase', '<=', searchTerm + '\uf8ff');
-            }
-
-            if (direction === 'next' && lastVisibleDoc) {
-                query = query.startAfter(lastVisibleDoc).limit(BOOKS_PER_PAGE);
-            } else if (direction === 'prev' && firstVisibleDoc) {
-                query = query.endBefore(firstVisibleDoc).limitToLast(BOOKS_PER_PAGE);
-            } else {
-                currentPage = 1;
-                lastVisibleDoc = null;
-                firstVisibleDoc = null;
-                query = query.limit(BOOKS_PER_PAGE);
-            }
-
-            try {
-                const snapshot = await query.get();
-                const books = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                
-                if (!snapshot.empty) {
-                    firstVisibleDoc = snapshot.docs[0];
-                    lastVisibleDoc = snapshot.docs[snapshot.docs.length - 1];
-                }
-
-                renderBooks(books);
-                updatePaginationControls(snapshot.size);
-            } catch (error) {
+            unsubscribeBooks = query.onSnapshot(snapshot => {
+                allBooks = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderBooks(); // Filtrelenmiş kitapları render et
+            }, error => {
                 console.error("Kitap yükleme hatası:", error);
                 showToast("Kitaplar yüklenemedi: " + error.message, "error");
                 ui.bookList.innerHTML = `<p style='text-align:center; color:var(--danger-color); grid-column: 1 / -1;'>Kitaplar yüklenirken bir hata oluştu.</p>`;
-            }
-        };
-
-        const updatePaginationControls = (currentSize) => {
-            ui.prevPageBtn.disabled = currentPage === 1;
-            ui.nextPageBtn.disabled = currentSize < BOOKS_PER_PAGE;
-            ui.pageIndicator.textContent = `Sayfa ${currentPage}`;
+            });
         };
 
         // --- Arayüz Çizim Fonksiyonları ---
-        const renderBooks = (booksToRender) => {
+        const renderBooks = () => {
+            const searchTerm = ui.searchInput.value.toLowerCase();
+            const currentFilter = ui.filterStatus.value;
+
+            const filteredBooks = allBooks.filter(book => 
+                (book.title.toLowerCase().includes(searchTerm) || book.author.toLowerCase().includes(searchTerm)) && 
+                (currentFilter === 'Tümü' || book.status === currentFilter)
+            );
+
             ui.bookList.innerHTML = '';
-            if (booksToRender.length === 0) {
+            if (filteredBooks.length === 0) {
                 ui.bookList.innerHTML = `<p style='text-align:center; color:var(--secondary-text); grid-column: 1 / -1;'>Bu kriterlere uyan kitap bulunamadı.</p>`;
             } else {
-                booksToRender.forEach(book => ui.bookList.appendChild(createBookCard(book)));
+                filteredBooks.forEach(book => ui.bookList.appendChild(createBookCard(book)));
             }
         };
 
@@ -321,7 +285,7 @@
                     closeModal(); 
                     await getBooksCollection().doc(book.id).delete(); 
                     showToast('Kitap silindi.'); 
-                    loadBooks();
+                    // Gerçek zamanlı dinleyici sayesinde liste otomatik güncellenir.
                 } else { 
                     e.target.disabled = false; 
                 }
@@ -411,7 +375,6 @@
                     showToast('Kitap eklendi.');
                 }
                 closeModal();
-                loadBooks(); // Listeyi yenile
             } catch (error) { console.error("Kitap kaydetme hatası: ", error); showToast('Kitap kaydedilemedi.','error'); }
             finally { submitButton.disabled = false; submitButton.textContent = "Kaydet"; }
         };
@@ -427,7 +390,6 @@
                     });
                     showToast(`'${book.title}' kitabı ${lentTo}'a ödünç verildi.`);
                     closeModal();
-                    loadBooks();
                 } catch (error) { showToast('İşlem başarısız oldu.', 'error'); }
             }
         };
@@ -442,7 +404,6 @@
                     });
                     showToast('Kitap kütüphaneye geri alındı.');
                     closeModal();
-                    loadBooks();
                 } catch (error) { showToast('İşlem başarısız oldu.', 'error');}
             }
         };
@@ -496,16 +457,8 @@
             }
             await getBooksCollection().doc(book.id).update({ notes: currentNotes });
             
-            const updatedBookInModal = { ...book, notes: currentNotes };
-            // Modalı kapatıp açmak yerine sadece notlar bölümünü yeniden çiz
-            const notesSection = document.getElementById('notes-section');
-            if(notesSection) {
-                renderNotes(updatedBookInModal);
-                closeModal(); // Not düzenleme modalını kapat
-                renderDetailsModal(updatedBookInModal); // Detay modalını güncel notlarla tekrar aç
-            } else {
-                closeModal();
-            }
+            closeModal(); // Not düzenleme modalını kapat
+            // Detay modalı, gerçek zamanlı dinleyici sayesinde otomatik güncellenecek
         };
 
         // --- Harici API ve Dosya İşlemleri ---
@@ -563,7 +516,7 @@
             }
         };
         
-        const renderStatsModal = (allBooks) => {
+        const renderStatsModal = () => {
             const content = `<button type="button" class="close-button" aria-label="Kapat">&times;</button>
                 <h2>Kütüphane İstatistikleri</h2>
                 <div class="stats-grid">
@@ -576,7 +529,7 @@
             openModal(content);
         };
 
-        const exportLibrary = (allBooks) => {
+        const exportLibrary = () => {
             if (allBooks.length === 0) {
                 showToast('Dışa aktarılacak kitap bulunmuyor.', 'error');
                 return;
@@ -617,7 +570,6 @@
                         });
                         await batch.commit();
                         showToast(`${importedBooks.length} kitap başarıyla içe aktarıldı.`);
-                        loadBooks();
                     }
                 } catch (error) {
                     showToast('İçe aktarma başarısız: ' + error.message, 'error');
@@ -630,31 +582,10 @@
 
         // --- Event Listeners ---
         ui.addBookBtn.onclick = () => renderBookFormModal();
-        
-        let searchTimeout;
-        ui.searchInput.addEventListener('input', () => {
-            clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(() => {
-                loadBooks('first');
-            }, 500);
-        });
-        ui.filterStatus.addEventListener('change', () => {
-            loadBooks('first');
-        });
-        ui.nextPageBtn.onclick = () => { currentPage++; loadBooks('next'); };
-        ui.prevPageBtn.onclick = () => { currentPage--; loadBooks('prev'); };
-        ui.statsBtn.onclick = async () => {
-            showToast("İstatistikler hesaplanıyor...");
-            const allBooksSnapshot = await getBooksCollection().get();
-            const allBooksData = allBooksSnapshot.docs.map(d => d.data());
-            renderStatsModal(allBooksData);
-        };
-        ui.exportBtn.onclick = async () => {
-            showToast("Tüm kitaplar dışa aktarma için hazırlanıyor...");
-            const allBooksSnapshot = await getBooksCollection().orderBy('title_lowercase').get();
-            const allBooksData = allBooksSnapshot.docs.map(d => ({id: d.id, ...d.data()}));
-            exportLibrary(allBooksData);
-        };
+        ui.searchInput.addEventListener('input', renderBooks);
+        ui.filterStatus.addEventListener('change', renderBooks);
+        ui.statsBtn.onclick = renderStatsModal;
+        ui.exportBtn.onclick = exportLibrary;
         ui.importBtn.onclick = () => ui.importFile.click();
         ui.importFile.onchange = importLibrary;
     });
