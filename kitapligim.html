@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Zilla+Slab:wght@400;700&family=Roboto+Mono:wght@400&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* TASARIM UZMANI DOKUNUŞLARI - SÜRÜM 12.0 (NOT SİLME HATASI DÜZELTİLDİ) */
+        /* TASARIM UZMANI DOKUNUŞLARI - SÜRÜM 12.0 (KRİTİK HATA DÜZELTMESİ) */
         :root {
             --font-heading: 'Zilla Slab', serif;
             --font-body: 'Poppins', sans-serif;
@@ -155,7 +155,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
 
     <script>
-    // --- BU BÖLÜM TÜM FONKSİYONLARI EKSİKSİZ İÇERMEKTEDİR ---
     document.addEventListener('DOMContentLoaded', () => {
         // --- Değişkenler ve Firebase Kurulumu ---
         const firebaseConfig = { 
@@ -512,24 +511,37 @@
             };
         };
         
+        // --- DÜZELTİLMİŞ NOT İŞLEMCİSİ ---
         const handleAddOrUpdateNote = async (book, noteId, text) => {
             let currentNotes = book.notes || [];
-            if (text === null && noteId) {
+            if (text === null && noteId) { // Silme işlemi
                 currentNotes = currentNotes.filter(n => n.id !== noteId);
-            } else if (noteId) {
+            } else if (noteId) { // Düzenleme işlemi
                 const noteIndex = currentNotes.findIndex(n => n.id === noteId);
                 if (noteIndex > -1) currentNotes[noteIndex].text = text.trim();
-            } else if (text.trim()) {
+            } else if (text && text.trim()){ // Ekleme işlemi
                 currentNotes.push({ id: new Date().toISOString(), text: text.trim() });
+            } else {
+                return; // Boş not eklemeyi önle
             }
+
             try {
+                // 1. Veritabanını güncelle
                 await getBooksCollection().doc(book.id).update({ notes: currentNotes });
+                
+                // 2. Mevcut (not düzenleme) modalını kapat
                 closeModal();
-                // Detay modalını güncel veriyle tekrar açmak için,
-                // önce kapalı olduğundan emin ol ve sonra en güncel kitap objesiyle aç.
-                const updatedBook = { ...book, notes: currentNotes };
-                renderDetailsModal(updatedBook);
-            } catch (error) { showToast("Not kaydedilemedi.", "error"); }
+                
+                // 3. Detay modalını, güncel notları içeren YENİ bir kitap nesnesiyle tekrar aç.
+                // Bu yöntem, anlık güncellemelerle yaşanabilecek zamanlama hatalarını önler.
+                const updatedBookForDisplay = { ...book, notes: currentNotes };
+                renderDetailsModal(updatedBookForDisplay);
+                
+                showToast("Not güncellendi.", "success");
+
+            } catch (error) {
+                showToast("Not güncellenirken bir hata oluştu: " + error.message, "error");
+            }
         };
 
         const renderSettingsModal = () => {
