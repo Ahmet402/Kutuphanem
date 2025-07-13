@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Zilla+Slab:wght@400;700&family=Roboto+Mono:wght@400&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* TASARIM UZMANI DOKUNUŞLARI - SÜRÜM 15.0 (MODAL DÜZELTMESİ) */
+        /* TASARIM UZMANI DOKUNUŞLARI - SÜRÜM 16.0 (FALLBACK BUTONU EKLENDİ) */
         :root {
             --font-heading: 'Zilla Slab', serif;
             --font-body: 'Poppins', sans-serif;
@@ -61,15 +61,7 @@
         .icon-btn { background: none; padding: 8px; border-radius: 50%; width: 44px; height: 44px; }
         .icon-btn svg { width: 24px; height: 24px; fill: var(--secondary-text); transition: fill 0.2s; } .icon-btn:hover svg { fill: var(--primary-text); }
         
-        #library-stats {
-            margin-left: auto;
-            font-weight: 600;
-            font-size: 0.9em;
-            color: var(--secondary-text);
-            padding: 10px 15px;
-            background-color: var(--bg-color-alt);
-            border-radius: var(--border-radius-md);
-        }
+        #library-stats { margin-left: auto; font-weight: 600; font-size: 0.9em; color: var(--secondary-text); padding: 10px 15px; background-color: var(--bg-color-alt); border-radius: var(--border-radius-md); }
 
         .list-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; }
         .book-card { background-color: var(--card-bg); border-radius: var(--border-radius-md); box-shadow: var(--shadow-sm); overflow: hidden; display: flex; cursor: pointer; border: 1px solid var(--border-color); transition: all var(--transition-speed) ease-in-out; }
@@ -291,7 +283,6 @@
             }
         };
 
-        /* --- DÜZENLENMİŞ MODAL FONKSİYONLARI --- */
         const openModal = (content) => {
             const modalWrapper = document.createElement('div');
             modalWrapper.className = 'modal';
@@ -406,7 +397,7 @@
                 if (apiResultsDiv && !e.target.closest('.form-group')) {
                     apiResultsDiv.classList.add('hidden');
                 }
-            }, true); // Use capture to handle click outside reliably
+            }, true);
         };
 
         const searchGoogleBooks = async (query) => {
@@ -529,7 +520,7 @@
                     <button class="btn-delete btn-danger">Sil</button>
                 </div>`;
             openModal(content);
-            const modalContent = ui.modalContainer.querySelector('.modal:last-of-type .modal-content');
+            const modalContent = document.querySelector('.modal:last-of-type .modal-content');
             modalContent.querySelector('.btn-edit').onclick = () => { closeModal(); renderBookFormModal(book); };
             modalContent.querySelector('.btn-delete').onclick = async (e) => {
                 if(confirm('Bu kitabı silmek istediğinize emin misiniz? Bu işlem geri alınamaz.')){
@@ -1013,8 +1004,22 @@
                 </div>
                 <div class="modal-body" id="cover-search-body">
                     <p>Görseller aranıyor...</p>
-                </div>`;
+                </div>
+                <div class="modal-footer">
+                    <button id="google-images-fallback-btn" class="btn btn-subtle">
+                        Aradığımı Bulamadım (Google'da Aç)
+                    </button>
+                </div>
+            `;
             openModal(modalContent);
+
+            const fallbackBtn = document.querySelector('.modal:last-of-type #google-images-fallback-btn');
+            if(fallbackBtn) {
+                fallbackBtn.onclick = () => {
+                    const googleImagesUrl = `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(query)}`;
+                    window.open(googleImagesUrl, '_blank');
+                };
+            }
 
             try {
                 const apiUrl = `https://www.googleapis.com/customsearch/v1?key=${GOOGLE_API_KEY}&cx=${SEARCH_ENGINE_ID}&q=${encodeURIComponent(query)}&searchType=image&num=10`;
