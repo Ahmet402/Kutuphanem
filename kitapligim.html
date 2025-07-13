@@ -209,8 +209,8 @@
     document.addEventListener('DOMContentLoaded', () => {
         // --- API ANAHTARLARI (LÜTFEN KENDİ ANAHTARLARINIZLA DOLDURUN) ---
         // BU BİLGİLERİ ASLA HALKA AÇIK BİR YERDE PAYLAŞMAYIN!
-        const GOOGLE_API_KEY = "BURAYA-KENDI-GOOGLE-API-ANAHTARINIZI-YAPISTIRIN";
-        const SEARCH_ENGINE_ID = "BURAYA-KENDI-ARAMA-MOTORU-ID-NIZI-YAPISTIRIN";
+        const GOOGLE_API_KEY = "AIzaSyALYX8V5uxtLwlFvWja7NC9iQAXeaLwLog";
+        const SEARCH_ENGINE_ID = "43240a02bb8e24632";
 
         // --- Firebase Kurulumu ---
         const firebaseConfig = { 
@@ -1023,7 +1023,7 @@
 
         /* --- YENİ ÖZELLİK: KAPAK ARAMA MODALI FONKSİYONU --- */
         const renderCoverSearchModal = async (query) => {
-            if (!GOOGLE_API_KEY || GOOGLE_API_KEY.includes("AIzaSyALYX8V5uxtLwlFvWja7NC9iQAXeaLwLog") || !SEARCH_ENGINE_ID || SEARCH_ENGINE_ID.includes("43240a02bb8e24632")) {
+            if (!GOOGLE_API_KEY || GOOGLE_API_KEY.includes("") || !SEARCH_ENGINE_ID || SEARCH_ENGINE_ID.includes("")) {
                 showToast("Google API anahtarları yapılandırılmamış.", "error");
                 return;
             }
