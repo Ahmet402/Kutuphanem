@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Zilla+Slab:wght@400;700&family=Roboto+Mono:wght@400&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* TASARIM UZMANI DOKUNUŞLARI - SÜRÜM 12.0 (KRİTİK HATA DÜZELTMESİ) */
+        /* TASARIM UZMANI DOKUNUŞLARI - SÜRÜM 14.0 (TÜM ÖZELLİKLER DAHİL) */
         :root {
             --font-heading: 'Zilla Slab', serif;
             --font-body: 'Poppins', sans-serif;
@@ -38,7 +38,7 @@
         [data-theme="retro-terminal"] { --bg-color: #000000; --bg-color-alt: #111111; --card-bg: #090909; --primary-text: #39ff14; --secondary-text: #17a400; --border-color: #222; --accent-1: #39ff14; --accent-2: #39ff14; --accent-3: #39ff14; --success-color: #39ff14; --danger-color: #ff073a; --font-override: var(--font-mono); }
         [data-theme="gunes-batimi"] { --bg-color: #2c0e37; --bg-color-alt: #431752; --card-bg: #431752; --primary-text: #fdeaff; --secondary-text: #d8b4e4; --border-color: #6d2f84; --accent-1: #ff5733; --accent-2: #f9a825; --accent-3: #f5d491; --success-color: #90ee90; --danger-color: #ff5733; --font-override: var(--font-body); }
         [data-theme="sade-beton"] { --bg-color: #e9ecef; --bg-color-alt: #ced4da; --card-bg: #f8f9fa; --primary-text: #212529; --secondary-text: #6c757d; --border-color: #dee2e6; --accent-1: #007bff; --accent-2: #6c757d; --accent-3: #ffc107; --success-color: #28a745; --danger-color: #dc3545; --font-override: var(--font-body); }
-        
+
         /* --- GENEL STİLLER --- */
         *, *::before, *::after { box-sizing: border-box; }
         html { scroll-behavior: smooth; }
@@ -61,13 +61,24 @@
         .icon-btn { background: none; padding: 8px; border-radius: 50%; width: 44px; height: 44px; }
         .icon-btn svg { width: 24px; height: 24px; fill: var(--secondary-text); transition: fill 0.2s; } .icon-btn:hover svg { fill: var(--primary-text); }
         
+        /* --- YENİ ÖZELLİK: Toplam Kitap Sayısı --- */
+        #library-stats {
+            margin-left: auto; /* Sağa yaslamak için */
+            font-weight: 600;
+            font-size: 0.9em;
+            color: var(--secondary-text);
+            padding: 10px 15px;
+            background-color: var(--bg-color-alt);
+            border-radius: var(--border-radius-md);
+        }
+
         .list-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; }
         .book-card { background-color: var(--card-bg); border-radius: var(--border-radius-md); box-shadow: var(--shadow-sm); overflow: hidden; display: flex; cursor: pointer; border: 1px solid var(--border-color); transition: all var(--transition-speed) ease-in-out; }
         .book-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); }
         .card-cover img { width: 110px; height: 165px; object-fit: cover; display: block; background-color: var(--bg-color-alt); }
         .card-info { padding: 20px; display: flex; flex-direction: column; justify-content: center; flex-grow: 1; overflow: hidden; }
 
-        /* --- YENİ MODAL TASARIMI --- */
+        /* --- MODAL TASARIMI --- */
         .modal { display: flex; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: color-mix(in srgb, var(--bg-color) 60%, transparent); backdrop-filter: blur(8px); animation: fadeIn 0.3s; padding: 5vh 15px; align-items: center; justify-content: center; }
         .modal-content { background-color: var(--card-bg); border-radius: var(--border-radius-lg); width: 90%; max-width: 800px; position: relative; box-shadow: var(--shadow-lg); animation: slideIn 0.3s; display: flex; flex-direction: column; max-height: 90vh; }
         .modal-header { padding: 25px 35px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
@@ -84,8 +95,40 @@
         .fieldset { border: 1px solid var(--border-color); border-radius: var(--border-radius-md); padding: 20px; margin-bottom: 25px; }
         .fieldset legend { font-family: var(--font-heading); font-weight: 700; color: var(--secondary-text); padding: 0 10px; margin-left: 10px; }
         
+        /* --- YENİ ÖZELLİK: API Arama Menüsü --- */
         #api-results { position: absolute; background: var(--card-bg); width: 100%; border: 1px solid var(--border-color); border-top: none; border-radius: 0 0 var(--border-radius-md) var(--border-radius-md); z-index: 10; max-height: 250px; overflow-y: auto; box-shadow: var(--shadow-md); }
         .api-result-item { padding: 12px 15px; cursor: pointer; border-bottom: 1px solid var(--border-color); }
+        .api-result-item:last-child { border-bottom: none; }
+        .api-result-item:hover { background-color: var(--bg-color-alt); }
+        .api-result-item em { color: var(--secondary-text); font-size: 0.9em; }
+        #close-api-results-btn {
+            position: absolute; top: -15px; right: -5px; background: none; border: none; font-size: 1.5em; cursor: pointer; color: var(--secondary-text);
+        }
+
+        /* --- YENİ ÖZELLİK: Kapak Arama Modalı --- */
+        .cover-search-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 15px;
+            max-height: 60vh;
+            overflow-y: auto;
+            padding-top: 10px;
+        }
+        .cover-search-grid img {
+            width: 100%;
+            height: auto;
+            aspect-ratio: 2 / 3;
+            object-fit: cover;
+            border-radius: var(--border-radius-sm);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow-sm);
+        }
+        .cover-search-grid img:hover {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-md);
+        }
+
         .theme-switcher { display: flex; gap: 10px; flex-wrap: wrap; }
         .theme-btn { padding: 10px 15px; border: 2px solid var(--border-color); background-color: var(--bg-color); color: var(--primary-text); font-weight: 600; cursor: pointer; border-radius: var(--border-radius-md); font-size: 0.9em; }
         .theme-btn.active { border-color: var(--accent-1); color: var(--accent-1); }
@@ -102,11 +145,10 @@
         .discovery-item { display: flex; gap: 15px; align-items: center; padding: 15px; border-bottom: 1px solid var(--border-color); cursor: pointer; }
         .discovery-item:hover { background-color: var(--bg-color-alt); }
         
-        /* --- YENİ: ÖZEL NOTLAR MODÜLÜ STİLLERİ --- */
         #private-notes-list { max-height: 60vh; overflow-y: auto; }
         .private-note-item { padding: 20px; background-color: var(--bg-color-alt); border-radius: var(--border-radius-md); margin-bottom: 15px; cursor: pointer; transition: background-color 0.2s; }
         .private-note-item:hover { background-color: var(--border-color); }
-        .private-note-item p { margin: 0 0 10px 0; white-space: pre-wrap; /* Satır sonlarını korur */ }
+        .private-note-item p { margin: 0 0 10px 0; white-space: pre-wrap; }
         .private-note-item small { color: var(--secondary-text); }
 
         .hidden { display: none; }
@@ -148,7 +190,8 @@
                             <option value="dateAdded_desc">Sırala: Eklenme Tarihi (Yeni)</option>
                         </select>
                     </div>
-                     <button id="settings-btn" class="icon-btn" title="Ayarlar">
+                    <div id="library-stats">Toplam: <span id="total-book-count-display">0</span> Kitap</div>
+                    <button id="settings-btn" class="icon-btn" title="Ayarlar">
                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69-.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24-.42-.12.64l2 3.46c.12.22.39.3.61-.22l2.49-1c.52.4 1.08.73 1.69-.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/></svg>
                     </button>
                 </div>
@@ -164,9 +207,14 @@
 
     <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // --- Değişkenler ve Firebase Kurulumu ---
+        // --- API ANAHTARLARI (LÜTFEN KENDİ ANAHTARLARINIZLA DOLDURUN) ---
+        // BU BİLGİLERİ ASLA HALKA AÇIK BİR YERDE PAYLAŞMAYIN!
+        const GOOGLE_API_KEY = "BURAYA-KENDI-GOOGLE-API-ANAHTARINIZI-YAPISTIRIN";
+        const SEARCH_ENGINE_ID = "BURAYA-KENDI-ARAMA-MOTORU-ID-NIZI-YAPISTIRIN";
+
+        // --- Firebase Kurulumu ---
         const firebaseConfig = { 
-            apiKey: "AIzaSyASaHGgjR-zsQ50E9JmCcBnBq2KyXcltuE",
+            apiKey: "AIzaSyASaHGgjR-zsQ50E9JmCcBnBq2KyXcltuE", // Lütfen kendi Firebase config'inizi kullanın
             authDomain: "benim-kutuphanem402.firebaseapp.com",
             projectId: "benim-kutuphanem402",
             storageBucket: "benim-kutuphanem402.appspot.com",
@@ -191,7 +239,8 @@
             settingsBtn: document.getElementById('settings-btn'),
             addBookBtn: document.getElementById('add-book-btn'),
             discoverBooksBtn: document.getElementById('discover-books-btn'),
-            privateNotesBtn: document.getElementById('private-notes-btn')
+            privateNotesBtn: document.getElementById('private-notes-btn'),
+            totalBookCountDisplay: document.getElementById('total-book-count-display') // YENİ EKLEME
         };
         
         const applyTheme = (themeName) => {
@@ -249,12 +298,16 @@
             const sortValue = ui.sortBy.value;
             if (sortValue === 'title_asc') {
                 booksToRender.sort((a, b) => (a.title || '').localeCompare(b.title || '', 'tr', { sensitivity: 'base' }));
-            } else {
-                // The default is already sorted by dateAdded desc from Firestore query
             }
             const searchTerm = ui.searchInput.value.toLowerCase();
             const currentFilter = ui.filterStatus.value;
             const filteredBooks = booksToRender.filter(book => (book.title?.toLowerCase().includes(searchTerm) || book.author?.toLowerCase().includes(searchTerm)) && (currentFilter === 'Tümü' || book.status === currentFilter));
+            
+            // YENİ ÖZELLİK: Toplam kitap sayısını güncelle
+            if (ui.totalBookCountDisplay) {
+                ui.totalBookCountDisplay.textContent = allBooks.length;
+            }
+
             ui.bookList.innerHTML = '';
             if (filteredBooks.length === 0) {
                 ui.bookList.innerHTML = `<p style="text-align:center; color: var(--secondary-text); grid-column: 1 / -1; margin-top: 40px; font-size: 1.2em;">Sonuç bulunamadı.</p>`;
@@ -305,7 +358,7 @@
                         </fieldset>
                         <fieldset class="fieldset"><legend>Kapak Görseli</legend>
                             <div class="form-group"><label for="cover-url">URL ile Ekle</label><input type="text" id="cover-url" value="${book.coverUrl || ''}" placeholder="Resim adresini buraya yapıştırın"></div>
-                            <button type="button" id="google-cover-search-btn" class="btn btn-secondary">Google'da Kapak Ara</button>
+                            <button type="button" id="search-cover-btn" class="btn btn-secondary">Google'dan Kapak Ara</button>
                         </fieldset>
                         <fieldset class="fieldset"><legend>Okuma Bilgileri</legend>
                             <div class="form-group"><label for="status">Durum</label><select id="status"></select></div>
@@ -337,19 +390,30 @@
             statusSelect.onchange = updateDateFields;
             updateDateFields();
             document.getElementById('form-submit-btn').onclick = () => handleBookFormSubmit(form, book);
+            
+            // YENİ ÖZELLİK: Kapak arama butonu listener'ı
+            document.getElementById('search-cover-btn').onclick = () => {
+                const title = form.querySelector('#title').value;
+                const author = form.querySelector('#author').value;
+                if (!title || !author) {
+                    showToast('Lütfen kapak aramadan önce Kitap Adı ve Yazar alanlarını doldurun.', 'error');
+                    return;
+                }
+                const query = `${title} ${author} book cover`;
+                renderCoverSearchModal(query);
+            };
+            
             let searchTimeout;
             form.querySelector('#title').addEventListener('input', (e) => {
                 clearTimeout(searchTimeout);
                 searchTimeout = setTimeout(() => searchGoogleBooks(e.target.value), 400);
             });
-            form.querySelector('#google-cover-search-btn').onclick = () => {
-                const title = form.querySelector('#title').value;
-                const author = form.querySelector('#author').value;
-                if (!title) { showToast('Lütfen kapak aramadan önce Kitap Adı alanını doldurun.', 'error'); return; }
-                const query = `${title} ${author} kitap kapağı`;
-                const url = `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(query)}`;
-                window.open(url, '_blank');
-            };
+            document.body.addEventListener('click', (e) => {
+                const apiResultsDiv = document.getElementById('api-results');
+                if (apiResultsDiv && !e.target.closest('.form-group')) {
+                    apiResultsDiv.classList.add('hidden');
+                }
+            });
         };
 
         const searchGoogleBooks = async (query) => {
@@ -361,13 +425,25 @@
                 const res = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&maxResults=5&printType=books`);
                 const data = await res.json();
                 apiResultsDiv.innerHTML = '';
+
+                // YENİ ÖZELLİK: Kapatma butonu
+                const closeBtn = document.createElement('button');
+                closeBtn.innerHTML = '&times;';
+                closeBtn.id = 'close-api-results-btn';
+                closeBtn.onclick = (e) => {
+                    e.stopPropagation(); // Butonun arkasındaki click'i tetiklemesini engelle
+                    apiResultsDiv.classList.add('hidden');
+                };
+                apiResultsDiv.appendChild(closeBtn);
+                
                 if (!data.items) { apiResultsDiv.classList.add('hidden'); return; }
                 data.items.forEach(item => {
                     const info = item.volumeInfo;
                     const bookData = { title: info.title || '', author: info.authors?.join(', ') || '', publisher: info.publisher || '', pageCount: info.pageCount || '', coverUrl: (info.imageLinks?.thumbnail || info.imageLinks?.smallThumbnail || '').replace('http://', 'https://') };
                     const div = document.createElement('div');
                     div.className = 'api-result-item';
-                    div.innerHTML = `<strong>${bookData.title}</strong><br><small>${bookData.author}</small>`;
+                    // YENİ ÖZELLİK: Yayınevi bilgisini göster
+                    div.innerHTML = `<strong>${bookData.title}</strong><br><small>${bookData.author} - <em>${bookData.publisher || 'Yayınevi Yok'}</em></small>`;
                     div.onclick = () => fillFormWithGoogleData(bookData);
                     apiResultsDiv.appendChild(div);
                 });
@@ -386,11 +462,34 @@
         };
 
         const handleBookFormSubmit = async (form, existingBook) => {
+            const newTitle = form.title.value.trim();
+            const newAuthor = form.author.value.trim();
+
+            if(!newTitle || !newAuthor) {
+                showToast("Kitap adı ve yazar boş bırakılamaz.", "error");
+                return;
+            }
+
+            // YENİ ÖZELLİK: Mükerrer kayıt kontrolü (sadece yeni kitap eklerken)
+            if (!existingBook.id) {
+                const duplicateBook = allBooks.find(book => 
+                    book.title.trim().toLowerCase() === newTitle.toLowerCase() &&
+                    book.author.trim().toLowerCase() === newAuthor.toLowerCase()
+                );
+
+                if (duplicateBook) {
+                    showToast('Bu kitap kütüphanenizde zaten mevcut.', 'error');
+                    closeModal();
+                    renderDetailsModal(duplicateBook);
+                    return; // Fonksiyonu durdur
+                }
+            }
+
             const submitButton = document.getElementById('form-submit-btn');
             submitButton.disabled = true;
             submitButton.innerHTML = "Kaydediliyor...";
             const newValues = {
-                title: form.title.value, author: form.author.value, publisher: form.publisher.value,
+                title: newTitle, author: newAuthor, publisher: form.publisher.value,
                 pageCount: parseInt(form['page-count'].value) || 0, coverUrl: form['cover-url'].value, status: form.status.value,
                 rating: parseInt(form.rating.value) || 0, startDate: form['start-date']?.value || null, finishDate: form['finish-date']?.value || null
             };
@@ -533,7 +632,7 @@
                 currentNotes.push({ id: new Date().toISOString(), text: text.trim() });
                 toastMessage = "Not eklendi.";
             } else {
-                return; // Boş not eklemeyi önle
+                return;
             }
 
             try {
@@ -720,6 +819,7 @@
             reader.readAsText(file);
         };
         
+        /* --- ORİJİNAL KOD: KİTAP KEŞFET MODÜLÜ --- */
         const renderDiscoveryModal = () => {
             const content = `
                 <div class="modal-header"><h2>Kitap Keşfet</h2><button class="close-button">&times;</button></div>
@@ -804,6 +904,7 @@
             };
         };
 
+        /* --- ORİJİNAL KOD: ÖZEL NOTLAR MODÜLÜ --- */
         const getPrivateNotesCollection = () => db.collection('users').doc(currentUser.uid).collection('privateNotes');
 
         const renderPrivateNotesModal = async () => {
@@ -917,6 +1018,63 @@
                 renderPrivateNotesModal();
             } catch (error) {
                 showToast("Not silinemedi: " + error.message, "error");
+            }
+        };
+
+        /* --- YENİ ÖZELLİK: KAPAK ARAMA MODALI FONKSİYONU --- */
+        const renderCoverSearchModal = async (query) => {
+            if (!GOOGLE_API_KEY || GOOGLE_API_KEY.includes("AIzaSyALYX8V5uxtLwlFvWja7NC9iQAXeaLwLog") || !SEARCH_ENGINE_ID || SEARCH_ENGINE_ID.includes("43240a02bb8e24632")) {
+                showToast("Google API anahtarları yapılandırılmamış.", "error");
+                return;
+            }
+
+            const modalContent = `
+                <div class="modal-header">
+                    <h2>"${query}" için Kapak Görselleri</h2>
+                    <button class="close-button">&times;</button>
+                </div>
+                <div class="modal-body" id="cover-search-body">
+                    <p>Görseller aranıyor...</p>
+                </div>
+            `;
+            openModal(modalContent);
+
+            try {
+                const apiUrl = `https://www.googleapis.com/customsearch/v1?key=${GOOGLE_API_KEY}&cx=${SEARCH_ENGINE_ID}&q=${encodeURIComponent(query)}&searchType=image&num=10`;
+                const response = await fetch(apiUrl);
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(`API isteği başarısız: ${errorData.error.message}`);
+                }
+                const data = await response.json();
+                const modalBody = document.getElementById('cover-search-body');
+
+                if (data.items && data.items.length > 0) {
+                    modalBody.innerHTML = '<div class="cover-search-grid"></div>';
+                    const grid = modalBody.querySelector('.cover-search-grid');
+                    data.items.forEach(item => {
+                        const img = document.createElement('img');
+                        img.src = item.link;
+                        img.alt = item.title;
+                        img.onerror = function() { this.style.display='none'; }; // Bozuk resimleri gizle
+                        img.onclick = () => {
+                            const coverUrlInput = document.getElementById('cover-url');
+                            if (coverUrlInput) {
+                                coverUrlInput.value = item.link;
+                                showToast('Kapak URL\'si eklendi.', 'success');
+                            }
+                            closeModal();
+                        };
+                        grid.appendChild(img);
+                    });
+                } else {
+                    modalBody.innerHTML = '<p>Bu arama için uygun görsel bulunamadı.</p>';
+                }
+            } catch (error) {
+                const modalBody = document.getElementById('cover-search-body');
+                modalBody.innerHTML = `<p style="color:var(--danger-color);">Görseller yüklenirken bir hata oluştu: ${error.message}</p>`;
+                showToast("Görsel arama başarısız oldu.", "error");
+                console.error("Kapak arama hatası:", error);
             }
         };
         
