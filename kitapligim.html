@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Zilla+Slab:wght@400;700&family=Roboto+Mono:wght@400&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* TASARIM UZMANI DOKUNUŞLARI - SÜRÜM 8.0 (HATA DÜZELTMELERİ VE TAMAMLAMA) */
+        /* TASARIM UZMANI DOKUNUŞLARI - SÜRÜM 11.0 (EKSİKSİZ VE TAM) */
         :root {
             --font-heading: 'Zilla Slab', serif;
             --font-body: 'Poppins', sans-serif;
@@ -85,6 +85,7 @@
         .fieldset legend { font-family: var(--font-heading); font-weight: 700; color: var(--secondary-text); padding: 0 10px; margin-left: 10px; }
         
         #api-results { position: absolute; background: var(--card-bg); width: 100%; border: 1px solid var(--border-color); border-top: none; border-radius: 0 0 var(--border-radius-md) var(--border-radius-md); z-index: 10; max-height: 250px; overflow-y: auto; box-shadow: var(--shadow-md); }
+        .api-result-item { padding: 12px 15px; cursor: pointer; border-bottom: 1px solid var(--border-color); }
         .theme-switcher { display: flex; gap: 10px; flex-wrap: wrap; }
         .theme-btn { padding: 10px 15px; border: 2px solid var(--border-color); background-color: var(--bg-color); color: var(--primary-text); font-weight: 600; cursor: pointer; border-radius: var(--border-radius-md); font-size: 0.9em; }
         .theme-btn.active { border-color: var(--accent-1); color: var(--accent-1); }
@@ -154,6 +155,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
 
     <script>
+    // --- BU BÖLÜM TÜM FONKSİYONLARI EKSİKSİZ İÇERMEKTEDİR ---
     document.addEventListener('DOMContentLoaded', () => {
         // --- Değişkenler ve Firebase Kurulumu ---
         const firebaseConfig = { 
@@ -644,7 +646,7 @@
                 }
                 closeModal();
             } catch (error) { showToast('Kayıtları silerken bir hata oluştu.', 'error'); } 
-            finally { if(button) { button.disabled = false; button.textContent = 'Aynı Kitapları Temizle'; } }
+            finally { if(button) { button.disabled = false; button.textContent = 'Aynıları Sil'; } }
         };
 
         const handleExport = () => {
@@ -697,9 +699,10 @@
                 <div class="modal-header"><h2>Kitap Keşfet</h2><button class="close-button">&times;</button></div>
                 <div class="modal-body">
                     <form id="discovery-form">
-                        <div class="form-group" style="display:flex; gap:10px;">
+                        <div class="form-group" style="display:flex; gap:10px; align-items:center;">
                             <input type="text" id="discovery-search-input" placeholder="Kitap veya yazar adı girin..." required style="flex-grow:1;">
-                            <button type="submit" class="btn-primary">Ara</button>
+                            <button type="submit" class="btn btn-secondary">API'de Ara</button>
+                            <button type="button" id="discovery-google-search-btn" class="btn" style="background-color:#4285F4;">Google'da Ara</button>
                         </div>
                     </form>
                     <div id="discovery-results-container"><p style="text-align:center; color: var(--secondary-text);">Yeni kitaplar keşfetmek için arama yapın.</p></div>
@@ -716,6 +719,15 @@
                     if (!data.items) { resultsContainer.innerHTML = '<p>Sonuç bulunamadı.</p>'; return; }
                     displayDiscoveryResults(data.items);
                 } catch (error) { resultsContainer.innerHTML = '<p>Arama sırasında bir hata oluştu.</p>'; }
+            };
+            document.getElementById('discovery-google-search-btn').onclick = () => {
+                const query = document.getElementById('discovery-search-input').value;
+                if (!query.trim()) {
+                    showToast('Lütfen arama yapmak için bir metin girin.', 'error');
+                    return;
+                }
+                const url = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+                window.open(url, '_blank');
             };
         };
 
@@ -743,6 +755,7 @@
                 <div class="details-grid">
                     <div class="details-cover"><img src="${cover}" alt="${info.title}"></div>
                     <div>
+                        <h4>${info.title}</h4>
                         <p><strong>Yazar:</strong> ${info.authors?.join(', ') || '-'}</p>
                         <p><strong>Yayınevi:</strong> ${info.publisher || '-'}</p>
                         <p><strong>Yayın Yılı:</strong> ${info.publishedDate?.substring(0,4) || '-'}</p>
@@ -754,10 +767,18 @@
                 </div>
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-top:20px;">
                     <button id="back-to-discovery-results" class="btn btn-subtle">« Geri</button>
-                    <button id="add-discovered-book" class="btn btn-primary">Kütüphaneme Ekle</button>
+                    <div>
+                        <button id="google-search-discovered-book" class="btn" style="background-color:#4285F4; margin-right:10px;">Google'da Ara</button>
+                        <button id="add-discovered-book" class="btn btn-primary">Kütüphaneme Ekle</button>
+                    </div>
                 </div>`;
             modalBody.querySelector('#back-to-discovery-results').onclick = () => { closeModal(); renderDiscoveryModal(); };
             modalBody.querySelector('#add-discovered-book').onclick = () => { closeModal(); renderBookFormModal(bookForLibrary); };
+            modalBody.querySelector('#google-search-discovered-book').onclick = () => {
+                const query = `${info.title} ${info.authors ? info.authors.join(' ') : ''}`;
+                const url = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+                window.open(url, '_blank');
+            };
         };
 
         ui.addBookBtn.onclick = () => renderBookFormModal();
