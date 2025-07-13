@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Zilla+Slab:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* TASARIM UZMANI DOKUNUŞLARI */
+        /* TASARIM UZMANI DOKUNUŞLARI - TAM SÜRÜM */
         :root {
             --font-heading: 'Zilla Slab', serif;
             --font-body: 'Poppins', sans-serif;
@@ -122,7 +122,7 @@
             border: 1px solid var(--border-color);
         }
         .book-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); }
-        .card-cover img { width: 110px; height: 165px; object-fit: cover; display: block; }
+        .card-cover img { width: 110px; height: 165px; object-fit: cover; display: block; background-color: var(--bg-color-alt); }
         .card-info { padding: 20px; display: flex; flex-direction: column; justify-content: center; flex-grow: 1; overflow: hidden; }
         .card-info h3 { margin: 0 0 5px 0; font-size: 1.3em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .card-info p { margin: 2px 0; font-size: 1em; color: var(--secondary-text); }
@@ -176,7 +176,7 @@
 
         .details-grid { display: grid; grid-template-columns: 200px 1fr; gap: 40px; align-items: flex-start; }
         @media (max-width: 768px) { .details-grid { grid-template-columns: 1fr; text-align: center;} .details-info-grid { grid-template-columns: 1fr; text-align: left;} .details-label {justify-self: start;} }
-        .details-cover img { width: 100%; height: auto; border-radius: var(--border-radius-md); box-shadow: var(--shadow-md); }
+        .details-cover img { width: 100%; height: auto; border-radius: var(--border-radius-md); box-shadow: var(--shadow-md); background-color: var(--bg-color-alt); }
         .details-info-grid { display: grid; grid-template-columns: 100px 1fr; gap: 12px 18px; align-items: center; margin-bottom: 20px;}
         .details-label { font-weight: 600; color: var(--secondary-text); }
         .details-status { padding: 5px 12px; border-radius: 15px; font-size: 0.9em; font-weight: 700; color: white; text-align: center; display: inline-block; }
@@ -207,7 +207,7 @@
     <div id="main-app" class="hidden">
         <header>
             <h1>Benim Güzel Kütüphanem</h1>
-            <div class="user-profile" style="font-weight: 600;">
+            <div class="user-profile" style="font-weight: 600; display: flex; align-items: center; justify-content: center;">
                 <span id="user-display-name"></span>
                 <button id="logout-btn" style="background:var(--secondary-text); margin-left:15px; font-size:0.8em; padding:8px 12px;">Çıkış Yap</button>
             </div>
@@ -260,6 +260,7 @@
         let currentUser = null;
         let unsubscribeBooks = null;
 
+        // --- Arayüz Elemanlarını Seçme ---
         const ui = {
             loginScreen: document.getElementById('login-screen'), mainApp: document.getElementById('main-app'),
             loginBtn: document.getElementById('login-btn'), logoutBtn: document.getElementById('logout-btn'),
@@ -267,6 +268,7 @@
             searchInput: document.getElementById('search-input'), filterStatus: document.getElementById('filter-status'), 
             sortBy: document.getElementById('sort-by'), modalContainer: document.getElementById('modal-container'),
             settingsBtn: document.getElementById('settings-btn'),
+            addBookBtn: document.getElementById('add-book-btn')
         };
         
         // --- TEMA YÖNETİMİ ---
@@ -280,7 +282,7 @@
         };
         loadTheme();
 
-        // --- Kimlik Doğrulama ---
+        // --- KİMLİK DOĞRULAMA ---
         auth.onAuthStateChanged(user => {
             if (user) {
                 currentUser = user;
@@ -296,17 +298,20 @@
         ui.loginBtn.onclick = () => { const p = new firebase.auth.GoogleAuthProvider(); auth.signInWithPopup(p).catch(e => showToast(`Giriş Hatası: ${e.message}`, 'error')); };
         ui.logoutBtn.onclick = () => auth.signOut();
 
+        // --- VERİTABANI İŞLEMLERİ ---
         const getBooksCollection = () => db.collection('users').doc(currentUser.uid).collection('books');
         
         const loadBooks = () => {
             if (unsubscribeBooks) unsubscribeBooks();
-            let query = getBooksCollection();
+            // Firestore'dan verileri varsayılan olarak eklenme tarihine göre azalan sırada al
+            let query = getBooksCollection().orderBy('dateAdded', 'desc');
             unsubscribeBooks = query.onSnapshot(snapshot => {
                 allBooks = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 renderBooks();
             }, error => showToast("Kitaplar yüklenemedi: " + error.message, "error"));
         };
         
+        // --- ARAYÜZ OLUŞTURMA ---
         const getStarRating = (r=0) => '★'.repeat(r) + '☆'.repeat(5 - r);
         
         const createBookCard = (book) => {
@@ -323,14 +328,13 @@
 
         const renderBooks = () => {
             let booksToRender = [...allBooks]; 
-            const [sortField, sortOrder] = ui.sortBy.value.split('_');
+            const sortValue = ui.sortBy.value;
             
-            if (sortField === 'dateAdded') {
-                 booksToRender.sort((a, b) => (b.dateAdded?.toDate() || 0) - (a.dateAdded?.toDate() || 0));
-            } else if (sortField === 'title') {
+            // Sıralama sadece "Ada Göre" seçildiğinde istemci tarafında yapılır.
+            // "Eklenme Tarihi" sıralaması zaten Firestore'dan doğru şekilde gelmektedir.
+            if (sortValue === 'title_asc') {
                 booksToRender.sort((a, b) => (a.title || '').localeCompare(b.title || '', 'tr', { sensitivity: 'base' }));
             }
-            if (sortOrder === 'desc') booksToRender.reverse();
 
             const searchTerm = ui.searchInput.value.toLowerCase();
             const currentFilter = ui.filterStatus.value;
@@ -344,6 +348,7 @@
             }
         };
 
+        // --- MODAL YÖNETİMİ ---
         const openModal = (content) => { ui.modalContainer.innerHTML = `<div class="modal"><div class="modal-content">${content}</div></div>`; ui.modalContainer.querySelector('.close-button')?.addEventListener('click', closeModal); };
         const closeModal = () => { const modal = ui.modalContainer.querySelector('.modal'); if (modal) modal.remove(); };
         window.onclick = e => { if (e.target?.classList.contains('modal')) closeModal(); };
@@ -365,6 +370,7 @@
             }, 3000);
         };
         
+        // --- KİTAP FORMU VE CRUD İŞLEMLERİ ---
         const renderBookFormModal = (book = {}) => {
             const isEditing = !!book.id;
             const title = isEditing ? 'Kitabı Düzenle' : 'Yeni Kitap Ekle';
@@ -381,17 +387,14 @@
                         <div class="form-group"><label for="author">Yazar</label><input type="text" id="author" value="${book.author || ''}" required></div>
                         <div class="form-group" style="margin-bottom:0;"><label for="publisher">Yayınevi</label><input type="text" id="publisher" value="${book.publisher || ''}"></div>
                     </fieldset>
-
                     <fieldset class="fieldset"><legend>Kapak Görseli</legend>
                         <div class="form-group"><label for="cover-url">URL ile Ekle</label><input type="text" id="cover-url" value="${book.coverUrl || ''}" placeholder="Resim adresini buraya yapıştırın"></div>
                     </fieldset>
-
                     <fieldset class="fieldset"><legend>Okuma Bilgileri</legend>
                         <div class="form-group"><label for="status">Durum</label><select id="status"></select></div>
                         <div class="form-group"><label for="rating">Puan (0-5)</label><input type="number" id="rating" min="0" max="5" step="1" value="${book.rating || 0}"></div>
                         <div class="form-group hidden" id="date-fields" style="margin-bottom:0;"></div>
                     </fieldset>
-
                     <div style="text-align:right; margin-top:30px;"><button type="submit">Kaydet</button></div>
                 </form>`;
             openModal(content);
@@ -404,7 +407,7 @@
                 if (statusSelect.value === 'Okunuyor') {
                     fieldsDiv.innerHTML = `<label for="start-date">Başlama Tarihi</label><input type="date" id="start-date" value="${book.startDate || ''}">`;
                 } else if (statusSelect.value === 'Okundu') {
-                    fieldsDiv.innerHTML = `<label for="start-date">Başlama Tarihi</label><input type="date" id="start-date" value="${book.startDate || ''}"><br><br><label for="finish-date">Bitirme Tarihi</label><input type="date" id="finish-date" value="${book.finishDate || ''}">`;
+                    fieldsDiv.innerHTML = `<label for="start-date">Başlama Tarihi</label><input type="date" id="start-date" value="${book.startDate || ''}"><div style="margin-top: 15px;"><label for="finish-date">Bitirme Tarihi</label><input type="date" id="finish-date" value="${book.finishDate || ''}"></div>`;
                 }
                 fieldsDiv.classList.toggle('hidden', statusSelect.value === 'Okunacak' || !statusSelect.value);
             };
@@ -412,7 +415,7 @@
             updateDateFields();
             form.onsubmit = (e) => handleBookFormSubmit(e, book);
             let searchTimeout;
-            form.querySelector('#title').addEventListener('keyup', (e) => {
+            form.querySelector('#title').addEventListener('input', (e) => {
                 clearTimeout(searchTimeout);
                 searchTimeout = setTimeout(() => searchGoogleBooks(e.target.value), 400);
             });
@@ -520,9 +523,9 @@
             modalContent.querySelector('.btn-delete').onclick = async (e) => {
                 if(confirm('Bu kitabı silmek istediğinize emin misiniz? Bu işlem geri alınamaz.')){
                     e.target.disabled = true;
-                    closeModal();
                     await getBooksCollection().doc(book.id).delete();
                     showToast('Kitap silindi.');
+                    closeModal();
                 }
             };
             const lendBtn = modalContent.querySelector('.btn-lend');
@@ -600,13 +603,18 @@
             } else { // Ekleme işlemi
                 currentNotes.push({ id: new Date().toISOString(), text: text.trim() });
             }
-            await getBooksCollection().doc(book.id).update({ notes: currentNotes });
-            closeModal();
-            const updatedBook = {...book, notes: currentNotes};
-            // Detay modalını güncel veriyle tekrar açmak yerine, ana listeyi yenilemek daha basit
-            // renderDetailsModal(updatedBook); 
+            try {
+                await getBooksCollection().doc(book.id).update({ notes: currentNotes });
+                closeModal();
+                // Detayları güncel veriyle tekrar açmak için, kitabı bulup modalı yeniden render et
+                const latestBook = allBooks.find(b => b.id === book.id) || book;
+                renderDetailsModal({...latestBook, notes: currentNotes});
+            } catch (error) {
+                showToast("Not kaydedilemedi.", "error");
+            }
         };
 
+        // --- AYARLAR, İÇE/DIŞA AKTARMA VE TEMİZLEME ---
         const renderSettingsModal = () => {
             const currentTheme = localStorage.getItem('libraryTheme') || 'light';
             const content = `
@@ -652,7 +660,6 @@
             try {
                 const seen = new Map();
                 const idsToDelete = [];
-                // En eski kitabı tutmak için sırala
                 const sortedBooks = [...allBooks].sort((a,b) => (a.dateAdded?.toDate() || 0) - (b.dateAdded?.toDate() || 0));
 
                 sortedBooks.forEach(book => {
@@ -666,22 +673,18 @@
 
                 if (idsToDelete.length === 0) {
                     showToast('Kütüphanenizde aynı kayıttan birden fazla yok.', 'success');
-                    closeModal();
-                    return;
+                } else {
+                    const confirmed = confirm(`${idsToDelete.length} adet mükerrer kitap kaydı bulundu. Bu kayıtlar silinecek ve sadece en eski kayıtlar tutulacaktır. Onaylıyor musunuz?`);
+                    if (confirmed) {
+                        button.textContent = 'Siliniyor...';
+                        const batch = db.batch();
+                        idsToDelete.forEach(id => {
+                            batch.delete(getBooksCollection().doc(id));
+                        });
+                        await batch.commit();
+                        showToast(`${idsToDelete.length} adet mükerrer kayıt başarıyla silindi.`, 'success');
+                    }
                 }
-                const confirmed = confirm(`${idsToDelete.length} adet mükerrer kitap kaydı bulundu. Bu kayıtları silmek istediğinize emin misiniz? Bu işlem geri alınamaz.`);
-                if (!confirmed) {
-                    button.disabled = false;
-                    button.textContent = 'Aynı Kitapları Temizle';
-                    return;
-                }
-                button.textContent = 'Siliniyor...';
-                const batch = db.batch();
-                idsToDelete.forEach(id => {
-                    batch.delete(getBooksCollection().doc(id));
-                });
-                await batch.commit();
-                showToast(`${idsToDelete.length} adet mükerrer kayıt başarıyla silindi.`, 'success');
                 closeModal();
             } catch (error) {
                 showToast('Kayıtları silerken bir hata oluştu.', 'error');
@@ -722,19 +725,15 @@
             reader.onload = async (e) => {
                 try {
                     const importedBooks = JSON.parse(e.target.result);
-                    if (!Array.isArray(importedBooks)) throw new Error("JSON dosyası bir kitap listesi içermiyor.");
-                    const confirmed = confirm(`${importedBooks.length} adet kitap içe aktarılacak. Mevcut kütüphanenizle birleştirilecek. Onaylıyor musunuz?`);
+                    if (!Array.isArray(importedBooks)) throw new Error("JSON dosyası bir kitap listesi (dizi) içermiyor.");
+                    const confirmed = confirm(`${importedBooks.length} adet kitap içe aktarılacak. Onaylıyor musunuz?`);
                     if (!confirmed) { document.getElementById('import-file').value = ''; return; }
                     
                     const batch = db.batch();
                     importedBooks.forEach(book => {
                         const newBookRef = getBooksCollection().doc();
                         const { id, ...bookData } = book;
-                        const newBookData = {
-                             ...bookData,
-                             dateAdded: FieldValue.serverTimestamp() // Yeni eklenme tarihi ver
-                        };
-                        batch.set(newBookRef, newBookData);
+                        batch.set(newBookRef, { ...bookData, dateAdded: FieldValue.serverTimestamp() });
                     });
                     await batch.commit();
                     showToast(`${importedBooks.length} kitap başarıyla içe aktarıldı.`, 'success');
@@ -748,7 +747,7 @@
             reader.readAsText(file);
         };
         
-        // --- Olay Dinleyicileri ---
+        // --- OLAY DİNLEYİCİLERİNİ BAĞLAMA ---
         ui.addBookBtn.onclick = () => renderBookFormModal();
         ui.searchInput.addEventListener('input', renderBooks);
         ui.filterStatus.addEventListener('change', renderBooks);
