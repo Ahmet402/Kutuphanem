@@ -6,13 +6,14 @@
     <title>Benim Güzel Kütüphanem</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Zilla+Slab:wght@400;700&family=Roboto+Mono:wght@400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Zilla+Slab:wght@400;700&family=Roboto+Mono:wght@400&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* TASARIM UZMANI DOKUNUŞLARI - SÜRÜM 5.0 EKSİKSİZ VE TAM */
+        /* TASARIM UZMANI DOKUNUŞLARI - SÜRÜM 6.0 EKSİKSİZ VE TAM */
         :root {
             --font-heading: 'Zilla Slab', serif;
             --font-body: 'Poppins', sans-serif;
             --font-mono: 'Roboto Mono', monospace;
+            --font-serif: 'Merriweather', serif;
             --border-radius-sm: 8px; --border-radius-md: 12px; --border-radius-lg: 16px;
             --shadow-sm: 0 2px 8px rgba(45, 55, 72, 0.07);
             --shadow-md: 0 6px 20px rgba(45, 55, 72, 0.08);
@@ -21,19 +22,24 @@
         }
 
         /* --- TEMA PALETLERİ --- */
-        [data-theme="light"] { --bg-color: #f4f7f9; --bg-color-alt: #e9eef2; --card-bg: #ffffff; --primary-text: #2d3748; --secondary-text: #718096; --border-color: #e2e8f0; --accent-1: #ff6347; --accent-1-dark: #e5533d; --accent-2: #00b894; --accent-2-dark: #00a383; --accent-3: #ffc107; --success-color: #2ecc71; --danger-color: #e74c3c; --font-override: var(--font-body); }
-        [data-theme="sepia"] { --bg-color: #f1e7d0; --bg-color-alt: #e3d9c3; --card-bg: #fdfaf3; --primary-text: #5d4037; --secondary-text: #8d6e63; --border-color: #d7ccc8; --accent-1: #d96d51; --accent-1-dark: #bc5e46; --accent-2: #5a9b7e; --accent-2-dark: #4b836a; --accent-3: #c5a148; --success-color: #689f38; --danger-color: #d32f2f; --font-override: var(--font-body); }
-        [data-theme="nane-sekeri"] { --bg-color: #f0fff4; --bg-color-alt: #e0f8e9; --card-bg: #ffffff; --primary-text: #2f4f4f; --secondary-text: #5f8075; --border-color: #cce8d6; --accent-1: #50c878; --accent-1-dark: #40a060; --accent-2: #3cb371; --accent-2-dark: #2e8b57; --accent-3: #f5b041; --success-color: #2ecc71; --danger-color: #ff6b6b; --font-override: var(--font-body); }
-        [data-theme="lavanta-tarlasi"] { --bg-color: #f3f0ff; --bg-color-alt: #e9e3ff; --card-bg: #ffffff; --primary-text: #4a4a68; --secondary-text: #7b7ba3; --border-color: #d9d2f7; --accent-1: #9d84e1; --accent-1-dark: #826ab5; --accent-2: #a17de0; --accent-2-dark: #8462c1; --accent-3: #f9a825; --success-color: #7dcea0; --danger-color: #ef9a9a; --font-override: var(--font-body); }
-        [data-theme="vanilya-damlasi"] { --bg-color: #fdfcf7; --bg-color-alt: #f8f4e9; --card-bg: #ffffff; --primary-text: #5a4e46; --secondary-text: #918177; --border-color: #e9e2d9; --accent-1: #d2a679; --accent-1-dark: #b88d61; --accent-2: #a89f91; --accent-2-dark: #8d8376; --accent-3: #e5b36f; --success-color: #a1c349; --danger-color: #d87068; --font-override: var(--font-body); }
-        [data-theme="somon-ruyasi"] { --bg-color: #fff5f5; --bg-color-alt: #ffe9e9; --card-bg: #ffffff; --primary-text: #6b4a4a; --secondary-text: #a17d7d; --border-color: #f7dada; --accent-1: #ff8c69; --accent-1-dark: #e07656; --accent-2: #f08080; --accent-2-dark: #d16b6b; --accent-3: #f8c471; --success-color: #6bca88; --danger-color: #e57373; --font-override: var(--font-body); }
-        [data-theme="dark"] { --bg-color: #1a202c; --bg-color-alt: #2d3748; --card-bg: #2d3748; --primary-text: #f7fafc; --secondary-text: #a0aec0; --border-color: #4a5568; --accent-1: #f56565; --accent-1-dark: #e53e3e; --accent-2: #48bb78; --accent-2-dark: #38a169; --accent-3: #f6e05e; --success-color: #48bb78; --danger-color: #f56565; --font-override: var(--font-body); }
-        [data-theme="gece-mavisi"] { --bg-color: #0d1b2a; --bg-color-alt: #1b263b; --card-bg: #1b263b; --primary-text: #e0e1dd; --secondary-text: #778da9; --border-color: #415a77; --accent-1: #3a86ff; --accent-1-dark: #0056d6; --accent-2: #06d6a0; --accent-2-dark: #05b386; --accent-3: #ffd166; --success-color: #06d6a0; --danger-color: #ef476f; --font-override: var(--font-body); }
-        [data-theme="grafit-gecesi"] { --bg-color: #121212; --bg-color-alt: #1e1e1e; --card-bg: #1e1e1e; --primary-text: #ffffff; --secondary-text: #b3b3b3; --border-color: #282828; --accent-1: #bb86fc; --accent-1-dark: #a16ef7; --accent-2: #03dac6; --accent-2-dark: #02b0a1; --accent-3: #f9a825; --success-color: #03dac6; --danger-color: #cf6679; --font-override: var(--font-body); }
-        [data-theme="zumrut-derinligi"] { --bg-color: #0b2027; --bg-color-alt: #103039; --card-bg: #103039; --primary-text: #f4f4f4; --secondary-text: #a4c3b2; --border-color: #1e4550; --accent-1: #69b578; --accent-1-dark: #559462; --accent-2: #4e8789; --accent-2-dark: #3e6a6c; --accent-3: #e5b36f; --success-color: #69b578; --danger-color: #d64933; --font-override: var(--font-body); }
-        [data-theme="yakut-kirmizisi"] { --bg-color: #23001e; --bg-color-alt: #3d0024; --card-bg: #3d0024; --primary-text: #fce5f2; --secondary-text: #d8a1c4; --border-color: #5c0036; --accent-1: #e01e5a; --accent-1-dark: #c0144c; --accent-2: #c44569; --accent-2-dark: #a63958; --accent-3: #ffc40c; --success-color: #79c753; --danger-color: #e01e5a; --font-override: var(--font-body); }
-        [data-theme="retro-terminal"] { --bg-color: #000000; --bg-color-alt: #111111; --card-bg: #090909; --primary-text: #39ff14; --secondary-text: #17a400; --border-color: #222; --accent-1: #39ff14; --accent-1-dark: #1eff00; --accent-2: #39ff14; --accent-2-dark: #1eff00; --accent-3: #39ff14; --success-color: #39ff14; --danger-color: #ff073a; --font-override: var(--font-mono); }
-
+        [data-theme="light"] { --bg-color: #f4f7f9; --bg-color-alt: #e9eef2; --card-bg: #ffffff; --primary-text: #2d3748; --secondary-text: #718096; --border-color: #e2e8f0; --accent-1: #ff6347; --accent-2: #00b894; --accent-3: #ffc107; --success-color: #2ecc71; --danger-color: #e74c3c; --font-override: var(--font-body); }
+        [data-theme="sepia"] { --bg-color: #f1e7d0; --bg-color-alt: #e3d9c3; --card-bg: #fdfaf3; --primary-text: #5d4037; --secondary-text: #8d6e63; --border-color: #d7ccc8; --accent-1: #d96d51; --accent-2: #5a9b7e; --accent-3: #c5a148; --success-color: #689f38; --danger-color: #d32f2f; --font-override: var(--font-body); }
+        [data-theme="nane-sekeri"] { --bg-color: #f0fff4; --bg-color-alt: #e0f8e9; --card-bg: #ffffff; --primary-text: #2f4f4f; --secondary-text: #5f8075; --border-color: #cce8d6; --accent-1: #50c878; --accent-2: #3cb371; --accent-3: #f5b041; --success-color: #2ecc71; --danger-color: #ff6b6b; --font-override: var(--font-body); }
+        [data-theme="lavanta-tarlasi"] { --bg-color: #f3f0ff; --bg-color-alt: #e9e3ff; --card-bg: #ffffff; --primary-text: #4a4a68; --secondary-text: #7b7ba3; --border-color: #d9d2f7; --accent-1: #9d84e1; --accent-2: #a17de0; --accent-3: #f9a825; --success-color: #7dcea0; --danger-color: #ef9a9a; --font-override: var(--font-body); }
+        [data-theme="vanilya-damlasi"] { --bg-color: #fdfcf7; --bg-color-alt: #f8f4e9; --card-bg: #ffffff; --primary-text: #5a4e46; --secondary-text: #918177; --border-color: #e9e2d9; --accent-1: #d2a679; --accent-2: #a89f91; --accent-3: #e5b36f; --success-color: #a1c349; --danger-color: #d87068; --font-override: var(--font-body); }
+        [data-theme="somon-ruyasi"] { --bg-color: #fff5f5; --bg-color-alt: #ffe9e9; --card-bg: #ffffff; --primary-text: #6b4a4a; --secondary-text: #a17d7d; --border-color: #f7dada; --accent-1: #ff8c69; --accent-2: #f08080; --accent-3: #f8c471; --success-color: #6bca88; --danger-color: #e57373; --font-override: var(--font-body); }
+        [data-theme="gazete-kagidi"] { --bg-color: #f5f2e8; --bg-color-alt: #e8e4d9; --card-bg: #fffbf0; --primary-text: #1a1a1a; --secondary-text: #595959; --border-color: #d1cdc0; --accent-1: #d92121; --accent-2: #333333; --accent-3: #b08d57; --success-color: #006400; --danger-color: #d92121; --font-override: var(--font-serif); }
+        [data-theme="okyanus-esintisi"] { --bg-color: #e0f7fa; --bg-color-alt: #b2ebf2; --card-bg: #ffffff; --primary-text: #006064; --secondary-text: #00838f; --border-color: #80deea; --accent-1: #00acc1; --accent-2: #26c6da; --accent-3: #ffc107; --success-color: #80cbc4; --danger-color: #ff8a80; --font-override: var(--font-body); }
+        
+        [data-theme="dark"] { --bg-color: #1a202c; --bg-color-alt: #2d3748; --card-bg: #2d3748; --primary-text: #f7fafc; --secondary-text: #a0aec0; --border-color: #4a5568; --accent-1: #f56565; --accent-2: #48bb78; --accent-3: #f6e05e; --success-color: #48bb78; --danger-color: #f56565; --font-override: var(--font-body); }
+        [data-theme="gece-mavisi"] { --bg-color: #0d1b2a; --bg-color-alt: #1b263b; --card-bg: #1b263b; --primary-text: #e0e1dd; --secondary-text: #778da9; --border-color: #415a77; --accent-1: #3a86ff; --accent-2: #06d6a0; --accent-3: #ffd166; --success-color: #06d6a0; --danger-color: #ef476f; --font-override: var(--font-body); }
+        [data-theme="grafit-gecesi"] { --bg-color: #121212; --bg-color-alt: #1e1e1e; --card-bg: #1e1e1e; --primary-text: #ffffff; --secondary-text: #b3b3b3; --border-color: #282828; --accent-1: #bb86fc; --accent-2: #03dac6; --accent-3: #f9a825; --success-color: #03dac6; --danger-color: #cf6679; --font-override: var(--font-body); }
+        [data-theme="zumrut-derinligi"] { --bg-color: #0b2027; --bg-color-alt: #103039; --card-bg: #103039; --primary-text: #f4f4f4; --secondary-text: #a4c3b2; --border-color: #1e4550; --accent-1: #69b578; --accent-2: #4e8789; --accent-3: #e5b36f; --success-color: #69b578; --danger-color: #d64933; --font-override: var(--font-body); }
+        [data-theme="yakut-kirmizisi"] { --bg-color: #23001e; --bg-color-alt: #3d0024; --card-bg: #3d0024; --primary-text: #fce5f2; --secondary-text: #d8a1c4; --border-color: #5c0036; --accent-1: #e01e5a; --accent-2: #c44569; --accent-3: #ffc40c; --success-color: #79c753; --danger-color: #e01e5a; --font-override: var(--font-body); }
+        [data-theme="retro-terminal"] { --bg-color: #000000; --bg-color-alt: #111111; --card-bg: #090909; --primary-text: #39ff14; --secondary-text: #17a400; --border-color: #222; --accent-1: #39ff14; --accent-2: #39ff14; --accent-3: #39ff14; --success-color: #39ff14; --danger-color: #ff073a; --font-override: var(--font-mono); }
+        [data-theme="gunes-batimi"] { --bg-color: #2c0e37; --bg-color-alt: #431752; --card-bg: #431752; --primary-text: #fdeaff; --secondary-text: #d8b4e4; --border-color: #6d2f84; --accent-1: #ff5733; --accent-2: #f9a825; --accent-3: #f5d491; --success-color: #90ee90; --danger-color: #ff5733; --font-override: var(--font-body); }
+        [data-theme="sade-beton"] { --bg-color: #e9ecef; --bg-color-alt: #ced4da; --card-bg: #f8f9fa; --primary-text: #212529; --secondary-text: #6c757d; --border-color: #dee2e6; --accent-1: #007bff; --accent-2: #6c757d; --accent-3: #ffc107; --success-color: #28a745; --danger-color: #dc3545; --font-override: var(--font-body); border-radius: 0; }
+        
         /* --- GENEL STİLLER --- */
         *, *::before, *::after { box-sizing: border-box; }
         html { scroll-behavior: smooth; }
@@ -43,7 +49,7 @@
         header { text-align: center; padding: 1rem; margin-bottom: 20px; }
         header h1 { font-size: 3.5em; margin: 0; }
         .controls-bar, .modal-content, .book-card, button, .btn, .form-group input, .form-group select, .form-group textarea, .settings-section, .note-item { transition: all var(--transition-speed) ease-in-out; }
-        .controls-bar { padding: 25px; background-color: var(--card-bg); border-radius: var(--border-radius-lg); box-shadow: var(--shadow-md); display: flex; flex-wrap: wrap; align-items: center; gap: 20px; margin-bottom: 30px; border: 1px solid var(--border-color); }
+        .controls-bar { padding: 25px; background-color: var(--card-bg); border-radius: var(--border-radius-lg); box-shadow: var(--shadow-md); display: flex; flex-wrap: wrap; align-items: center; gap: 15px; margin-bottom: 30px; border: 1px solid var(--border-color); }
         .controls-bar input[type="text"] { flex-grow: 1; padding: 12px; border: 1px solid var(--border-color); border-radius: var(--border-radius-md); background-color: var(--bg-color); min-width: 200px; color: var(--primary-text); }
         .controls-bar input[type="text"]:focus { outline: none; border-color: var(--accent-1); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-1) 20%, transparent); }
         .control-group { display: flex; gap: 10px; flex-wrap: wrap; }
@@ -60,27 +66,14 @@
         .book-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); }
         .card-cover img { width: 110px; height: 165px; object-fit: cover; display: block; background-color: var(--bg-color-alt); }
         .card-info { padding: 20px; display: flex; flex-direction: column; justify-content: center; flex-grow: 1; overflow: hidden; }
-        .card-info h3 { margin: 0 0 5px 0; font-size: 1.3em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .card-info p { margin: 2px 0; font-size: 1em; color: var(--secondary-text); }
-        .book-rating { color: var(--accent-3); font-size: 1.3em; margin-top: 10px !important; letter-spacing: 2px; }
         .modal { display: flex; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: color-mix(in srgb, var(--bg-color) 60%, transparent); backdrop-filter: blur(8px); animation: fadeIn 0.3s; padding: 5vh 15px; align-items: flex-start; justify-content: center; overflow-y: auto; }
         .modal-content { background-color: var(--card-bg); padding: 30px 40px; border-radius: var(--border-radius-lg); width: 90%; max-width: 800px; position: relative; box-shadow: var(--shadow-lg); animation: slideIn 0.3s; }
         .close-button { color: var(--secondary-text); position: absolute; top: 15px; right: 25px; font-size: 36px; font-weight: 400; cursor: pointer; z-index: 10; }
-        .form-group { margin-bottom: 25px; }
-        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--secondary-text); }
-        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: var(--border-radius-md); background-color: var(--bg-color); color: var(--primary-text); box-sizing: border-box; }
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--accent-1); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-1) 20%, transparent); }
         .fieldset { border: 1px solid var(--border-color); border-radius: var(--border-radius-md); padding: 10px 20px 20px 20px; margin-bottom: 25px; }
         .fieldset legend { font-family: var(--font-heading); font-weight: 700; color: var(--secondary-text); padding: 0 10px; }
-        #api-results { position: absolute; background: var(--card-bg); width: 100%; border: 1px solid var(--border-color); border-top: none; border-radius: 0 0 var(--border-radius-md) var(--border-radius-md); z-index: 10; max-height: 250px; overflow-y: auto; box-shadow: var(--shadow-md); }
-        .api-result-item { padding: 12px 15px; cursor: pointer; border-bottom: 1px solid var(--border-color); }
         .theme-switcher { display: flex; gap: 10px; flex-wrap: wrap; }
         .theme-btn { padding: 10px 15px; border: 2px solid var(--border-color); background-color: var(--bg-color); color: var(--primary-text); font-weight: 600; cursor: pointer; border-radius: var(--border-radius-md); font-size: 0.9em; }
         .theme-btn.active { border-color: var(--accent-1); color: var(--accent-1); }
-        .details-grid { display: grid; grid-template-columns: 200px 1fr; gap: 40px; align-items: flex-start; }
-        @media (max-width: 768px) { .details-grid { grid-template-columns: 1fr; text-align: center;} .details-info-grid { grid-template-columns: 1fr; text-align: left;} .details-label {justify-self: start;} }
-        .details-cover img { width: 100%; height: auto; border-radius: var(--border-radius-md); box-shadow: var(--shadow-md); background-color: var(--bg-color-alt); }
-        .details-info-grid { display: grid; grid-template-columns: 100px 1fr; gap: 12px 18px; align-items: center; margin-bottom: 20px;}
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 20px; text-align: center; }
         .stat-card { background-color: var(--bg-color-alt); padding: 20px; border-radius: var(--border-radius-lg); }
         .stat-card h3 { font-family: var(--font-body); font-size: 2.5em; color: var(--accent-1); margin: 0 0 5px 0; }
@@ -89,6 +82,12 @@
         .bar-chart .bar-item { margin-bottom: 10px; } .bar-chart .bar-label { font-size: 0.9em; margin-bottom: 5px; } .bar-chart .bar-wrapper { background: var(--bg-color-alt); border-radius: var(--border-radius-sm); overflow: hidden; } .bar-chart .bar { background-color: var(--accent-2); height: 25px; line-height: 25px; color: white; text-align: right; padding-right: 10px; font-weight: 600; white-space: nowrap; }
         .hidden { display: none; }
         .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(20px); background-color: var(--primary-text); color: white; padding: 14px 28px; border-radius: var(--border-radius-md); z-index: 2000; opacity: 0; transition: opacity 0.4s, transform 0.4s; box-shadow: var(--shadow-lg); font-weight: 600; }
+        #discovery-results-list { max-height: 50vh; overflow-y: auto; margin-top: 20px; }
+        .discovery-item { display: flex; gap: 15px; align-items: center; padding: 10px; border-bottom: 1px solid var(--border-color); cursor: pointer; }
+        .discovery-item:hover { background-color: var(--bg-color-alt); }
+        .discovery-item img { width: 50px; height: 75px; object-fit: cover; }
+        .discovery-item-info h4 { margin: 0; font-size: 1.1em; }
+        .discovery-item-info p { margin: 0; font-size: 0.9em; color: var(--secondary-text); }
         @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
         @keyframes slideIn { from {transform: scale(0.95) translateY(-10px); opacity: 0;} to {transform: scale(1) translateY(0); opacity: 1;} }
     </style>
@@ -115,6 +114,7 @@
             <main id="library-view">
                 <div class="controls-bar">
                     <button id="add-book-btn">Yeni Kitap Ekle</button>
+                    <button id="discover-books-btn" class="btn btn-secondary">Kitap Keşfet</button>
                     <input type="text" id="search-input" placeholder="Kütüphanede ara...">
                     <div class="control-group">
                         <select id="filter-status" class="btn" style="background-color: var(--card-bg); color: var(--primary-text); border: 1px solid var(--border-color); padding: 12px;">
@@ -126,7 +126,7 @@
                         </select>
                     </div>
                      <button id="settings-btn" class="icon-btn" title="Ayarlar">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69-.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/></svg>
                     </button>
                 </div>
                 <div class="list-container" id="book-list"></div>
@@ -166,7 +166,8 @@
             searchInput: document.getElementById('search-input'), filterStatus: document.getElementById('filter-status'), 
             sortBy: document.getElementById('sort-by'), modalContainer: document.getElementById('modal-container'),
             settingsBtn: document.getElementById('settings-btn'),
-            addBookBtn: document.getElementById('add-book-btn')
+            addBookBtn: document.getElementById('add-book-btn'),
+            discoverBooksBtn: document.getElementById('discover-books-btn')
         };
         
         const applyTheme = (themeName) => {
@@ -527,10 +528,12 @@
                         <div class="theme-switcher">
                             <button class="theme-btn ${currentTheme === 'light' ? 'active' : ''}" data-theme="light">Açık</button>
                             <button class="theme-btn ${currentTheme === 'sepia' ? 'active' : ''}" data-theme="sepia">Sepya</button>
-                            <button class="theme-btn ${currentTheme === 'nane-sekeri' ? 'active' : ''}" data-theme="nane-sekeri">Nane Şekeri</button>
+                            <button class="theme-btn ${currentTheme === 'nane-sekeri' ? 'active' : ''}" data-theme="nane-sekeri">Nane</button>
                             <button class="theme-btn ${currentTheme === 'lavanta-tarlasi' ? 'active' : ''}" data-theme="lavanta-tarlasi">Lavanta</button>
                             <button class="theme-btn ${currentTheme === 'vanilya-damlasi' ? 'active' : ''}" data-theme="vanilya-damlasi">Vanilya</button>
                             <button class="theme-btn ${currentTheme === 'somon-ruyasi' ? 'active' : ''}" data-theme="somon-ruyasi">Somon</button>
+                            <button class="theme-btn ${currentTheme === 'gazete-kagidi' ? 'active' : ''}" data-theme="gazete-kagidi">Gazete</button>
+                            <button class="theme-btn ${currentTheme === 'okyanus-esintisi' ? 'active' : ''}" data-theme="okyanus-esintisi">Okyanus</button>
                         </div>
                     </fieldset>
                     <fieldset class="fieldset" style="margin-top:10px;"><legend>Koyu Temalar</legend>
@@ -541,15 +544,17 @@
                             <button class="theme-btn ${currentTheme === 'zumrut-derinligi' ? 'active' : ''}" data-theme="zumrut-derinligi">Zümrüt</button>
                             <button class="theme-btn ${currentTheme === 'yakut-kirmizisi' ? 'active' : ''}" data-theme="yakut-kirmizisi">Yakut</button>
                             <button class="theme-btn ${currentTheme === 'retro-terminal' ? 'active' : ''}" data-theme="retro-terminal">Retro</button>
+                            <button class="theme-btn ${currentTheme === 'gunes-batimi' ? 'active' : ''}" data-theme="gunes-batimi">G.Batımı</button>
+                            <button class="theme-btn ${currentTheme === 'sade-beton' ? 'active' : ''}" data-theme="sade-beton">Beton</button>
                         </div>
                     </fieldset>
                 </fieldset>
                 <fieldset class="fieldset"><legend>Veri Yönetimi ve İstatistikler</legend>
                     <div class="data-management-actions" style="display:flex; flex-direction:row; gap:10px; flex-wrap:wrap;">
-                         <button id="stats-btn-modal" class="btn btn-secondary">Kütüphane İstatistikleri</button>
-                         <button id="import-btn-modal" class="btn btn-secondary">İçe Aktar (.json)</button>
-                         <button id="export-btn-modal" class="btn btn-secondary">Dışa Aktar (.json)</button>
-                         <button id="clean-duplicates-btn" class="btn btn-danger">Aynı Kitapları Temizle</button>
+                         <button id="stats-btn-modal" class="btn btn-secondary">İstatistikler</button>
+                         <button id="import-btn-modal" class="btn btn-secondary">İçe Aktar</button>
+                         <button id="export-btn-modal" class="btn btn-secondary">Dışa Aktar</button>
+                         <button id="clean-duplicates-btn" class="btn btn-danger">Aynıları Sil</button>
                          <input type="file" id="import-file" class="hidden" accept=".json">
                     </div>
                 </fieldset>`;
@@ -675,7 +680,99 @@
             reader.readAsText(file);
         };
         
+        const renderDiscoveryModal = () => {
+            const content = `
+                <span class="close-button" aria-label="Kapat">&times;</span>
+                <h2>Kitap Keşfet</h2>
+                <form id="discovery-form">
+                    <div class="form-group" style="display:flex; gap:10px;">
+                        <input type="text" id="discovery-search-input" placeholder="Kitap veya yazar adı girin..." required style="flex-grow:1;">
+                        <button type="submit">Ara</button>
+                    </div>
+                </form>
+                <div id="discovery-results-container"></div>
+            `;
+            openModal(content);
+            const discoveryForm = document.getElementById('discovery-form');
+            discoveryForm.onsubmit = async (e) => {
+                e.preventDefault();
+                const query = document.getElementById('discovery-search-input').value;
+                const resultsContainer = document.getElementById('discovery-results-container');
+                resultsContainer.innerHTML = '<p>Aranıyor...</p>';
+                try {
+                    const res = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&maxResults=20&printType=books`);
+                    const data = await res.json();
+                    if (!data.items) {
+                        resultsContainer.innerHTML = '<p>Sonuç bulunamadı.</p>';
+                        return;
+                    }
+                    displayDiscoveryResults(data.items);
+                } catch (error) {
+                    resultsContainer.innerHTML = '<p>Arama sırasında bir hata oluştu.</p>';
+                }
+            };
+        };
+
+        const displayDiscoveryResults = (items) => {
+            const resultsContainer = document.getElementById('discovery-results-container');
+            resultsContainer.innerHTML = `<div id="discovery-results-list"></div>`;
+            const listDiv = document.getElementById('discovery-results-list');
+            items.forEach(itemData => {
+                const info = itemData.volumeInfo;
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'discovery-item';
+                const cover = info.imageLinks?.thumbnail || `https://via.placeholder.com/50x75/e2e8f0/718096?text=?`;
+                itemDiv.innerHTML = `
+                    <img src="${cover}" alt="${info.title}">
+                    <div class="discovery-item-info">
+                        <h4>${info.title}</h4>
+                        <p>${info.authors?.join(', ') || 'Bilinmeyen Yazar'} (${info.publishedDate?.substring(0,4) || 'N/A'})</p>
+                    </div>
+                `;
+                itemDiv.onclick = () => displayDiscoveryDetail(itemData);
+                listDiv.appendChild(itemDiv);
+            });
+        };
+
+        const displayDiscoveryDetail = (itemData) => {
+            const modalContent = document.querySelector('.modal-content');
+            const info = itemData.volumeInfo;
+            const bookForLibrary = {
+                title: info.title || '',
+                author: info.authors?.join(', ') || '',
+                publisher: info.publisher || '',
+                pageCount: info.pageCount || 0,
+                coverUrl: info.imageLinks?.thumbnail || ''
+            };
+            const cover = info.imageLinks?.thumbnail || `https://via.placeholder.com/200x300/e2e8f0/718096?text=Kapak`;
+            modalContent.innerHTML = `
+                <span class="close-button" aria-label="Kapat">&times;</span>
+                <h2>${info.title}</h2>
+                <div class="details-grid">
+                    <div class="details-cover"><img src="${cover}" alt="${info.title}"></div>
+                    <div>
+                        <p><strong>Yazar:</strong> ${info.authors?.join(', ') || '-'}</p>
+                        <p><strong>Yayınevi:</strong> ${info.publisher || '-'}</p>
+                        <p><strong>Yayın Yılı:</strong> ${info.publishedDate?.substring(0,4) || '-'}</p>
+                        <p><strong>Sayfa Sayısı:</strong> ${info.pageCount || '-'}</p>
+                        <div style="max-height: 200px; overflow-y:auto; margin-top:15px; border-top: 1px solid var(--border-color); padding-top:15px;">
+                         ${info.description || 'Bu kitap için özet bulunamadı.'}
+                        </div>
+                    </div>
+                </div>
+                <div style="text-align:right; margin-top:20px;">
+                    <button id="add-discovered-book" class="btn">Kütüphaneme Ekle</button>
+                </div>
+            `;
+            modalContent.querySelector('.close-button').onclick = closeModal;
+            modalContent.querySelector('#add-discovered-book').onclick = () => {
+                closeModal();
+                renderBookFormModal(bookForLibrary);
+            };
+        };
+
         ui.addBookBtn.onclick = () => renderBookFormModal();
+        ui.discoverBooksBtn.onclick = renderDiscoveryModal;
         ui.searchInput.addEventListener('input', renderBooks);
         ui.filterStatus.addEventListener('change', renderBooks);
         ui.sortBy.addEventListener('change', renderBooks);
