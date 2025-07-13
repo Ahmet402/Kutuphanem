@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Zilla+Slab:wght@400;700&family=Roboto+Mono:wght@400&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* TASARIM UZMANI DOKUNUŞLARI - SÜRÜM 7.0 (MODAL TASARIMLARI) */
+        /* TASARIM UZMANI DOKUNUŞLARI - SÜRÜM 8.0 (HATA DÜZELTMELERİ VE TAMAMLAMA) */
         :root {
             --font-heading: 'Zilla Slab', serif;
             --font-body: 'Poppins', sans-serif;
@@ -21,7 +21,7 @@
             --transition-speed: 0.3s;
         }
 
-        /* --- TEMA PALETLERİ (Değişiklik Yok) --- */
+        /* --- TEMA PALETLERİ --- */
         [data-theme="light"] { --bg-color: #f4f7f9; --bg-color-alt: #e9eef2; --card-bg: #ffffff; --primary-text: #2d3748; --secondary-text: #718096; --border-color: #e2e8f0; --accent-1: #ff6347; --accent-2: #00b894; --accent-3: #ffc107; --success-color: #2ecc71; --danger-color: #e74c3c; --font-override: var(--font-body); }
         [data-theme="sepia"] { --bg-color: #f1e7d0; --bg-color-alt: #e3d9c3; --card-bg: #fdfaf3; --primary-text: #5d4037; --secondary-text: #8d6e63; --border-color: #d7ccc8; --accent-1: #d96d51; --accent-2: #5a9b7e; --accent-3: #c5a148; --success-color: #689f38; --danger-color: #d32f2f; --font-override: var(--font-body); }
         [data-theme="nane-sekeri"] { --bg-color: #f0fff4; --bg-color-alt: #e0f8e9; --card-bg: #ffffff; --primary-text: #2f4f4f; --secondary-text: #5f8075; --border-color: #cce8d6; --accent-1: #50c878; --accent-2: #3cb371; --accent-3: #f5b041; --success-color: #2ecc71; --danger-color: #ff6b6b; --font-override: var(--font-body); }
@@ -70,10 +70,10 @@
         /* --- YENİ MODAL TASARIMI --- */
         .modal { display: flex; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: color-mix(in srgb, var(--bg-color) 60%, transparent); backdrop-filter: blur(8px); animation: fadeIn 0.3s; padding: 5vh 15px; align-items: center; justify-content: center; }
         .modal-content { background-color: var(--card-bg); border-radius: var(--border-radius-lg); width: 90%; max-width: 800px; position: relative; box-shadow: var(--shadow-lg); animation: slideIn 0.3s; display: flex; flex-direction: column; max-height: 90vh; }
-        .modal-header { padding: 25px 35px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
+        .modal-header { padding: 25px 35px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
         .modal-header h2 { margin: 0; font-size: 1.8em; }
         .modal-body { padding: 30px 35px; overflow-y: auto; }
-        .modal-footer { padding: 20px 35px; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 10px; background-color: var(--bg-color-alt); border-radius: 0 0 var(--border-radius-lg) var(--border-radius-lg); }
+        .modal-footer { padding: 20px 35px; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 10px; background-color: var(--bg-color-alt); border-radius: 0 0 var(--border-radius-lg) var(--border-radius-lg); flex-shrink: 0; }
         .close-button { background: none; border: none; font-size: 2.5em; line-height: 1; cursor: pointer; color: var(--secondary-text); padding: 0 5px; } .close-button:hover { color: var(--primary-text); }
         
         .form-group { margin-bottom: 20px; }
@@ -93,7 +93,6 @@
         @media (max-width: 768px) { .details-grid { grid-template-columns: 1fr; } }
         .details-cover img { width: 100%; height: auto; border-radius: var(--border-radius-md); box-shadow: var(--shadow-md); background-color: var(--bg-color-alt); }
         .details-info-grid { display: grid; grid-template-columns: auto 1fr; gap: 10px 15px; align-items: center; margin-bottom: 20px; }
-        .details-label { font-weight: 600; color: var(--secondary-text); }
         
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; text-align: center; }
         .stat-card { background-color: var(--bg-color-alt); padding: 25px 20px; border-radius: var(--border-radius-lg); }
@@ -101,9 +100,6 @@
         #discovery-results-list { max-height: 50vh; overflow-y: auto; margin-top: 20px; border-top: 1px solid var(--border-color); }
         .discovery-item { display: flex; gap: 15px; align-items: center; padding: 15px; border-bottom: 1px solid var(--border-color); cursor: pointer; }
         .discovery-item:hover { background-color: var(--bg-color-alt); }
-        .discovery-item img { width: 50px; height: 75px; object-fit: cover; flex-shrink: 0; }
-        .discovery-item-info h4 { margin: 0; font-size: 1.1em; }
-        .discovery-item-info p { margin: 0; font-size: 0.9em; color: var(--secondary-text); }
         
         .hidden { display: none; }
         @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
@@ -111,9 +107,10 @@
     </style>
 </head>
 <body>
+
     <div id="login-screen" style="text-align: center; padding-top: 20vh;">
         <header><h1>Benim Güzel Kütüphanem</h1></header>
-        <button id="login-btn">
+        <button id="login-btn" class="btn-primary">
             <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="white"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/><path d="M1 1h22v22H1z" fill="none"/></svg>
             Google ile Giriş Yap
         </button>
@@ -143,7 +140,7 @@
                         </select>
                     </div>
                      <button id="settings-btn" class="icon-btn" title="Ayarlar">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69-.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69-.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61-.22l2.49-1c.52.4 1.08.73 1.69-.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/></svg>
                     </button>
                 </div>
                 <div class="list-container" id="book-list"></div>
@@ -158,6 +155,7 @@
 
     <script>
     document.addEventListener('DOMContentLoaded', () => {
+        // --- Değişkenler ve Firebase Kurulumu ---
         const firebaseConfig = { 
             apiKey: "AIzaSyASaHGgjR-zsQ50E9JmCcBnBq2KyXcltuE",
             authDomain: "benim-kutuphanem402.firebaseapp.com",
@@ -455,11 +453,80 @@
             renderNotes(book);
         };
         
-        const handleLendBook = async (book) => { /* Tamamen aynı */ };
-        const handleReturnBook = async (book) => { /* Tamamen aynı */ };
-        const renderNotes = (book) => { /* Tamamen aynı */ };
-        const renderNoteForm = (book, note = {}) => { /* Tamamen aynı */ };
-        const handleAddOrUpdateNote = async (book, noteId, text) => { /* Tamamen aynı */ };
+        const handleLendBook = async (book) => {
+            const lentTo = prompt(`"${book.title}" kitabını kime ödünç veriyorsunuz?`);
+            if (lentTo && lentTo.trim()) {
+                try {
+                    await getBooksCollection().doc(book.id).update({ status: 'Ödünç Verildi', lentTo: lentTo.trim(), previousStatus: book.status });
+                    showToast('Kitap ödünç verildi.', 'success');
+                    closeModal();
+                } catch (error) { showToast('İşlem sırasında bir hata oluştu.', 'error'); }
+            }
+        };
+
+        const handleReturnBook = async (book) => {
+            try {
+                await getBooksCollection().doc(book.id).update({ status: book.previousStatus || 'Okunacak', lentTo: FieldValue.delete(), previousStatus: FieldValue.delete() });
+                showToast('Kitap geri alındı.', 'success');
+                closeModal();
+            } catch (error) { showToast('İşlem sırasında bir hata oluştu.', 'error'); }
+        };
+
+        const renderNotes = (book) => {
+            const notesSection = document.getElementById('notes-section');
+            if(!notesSection) return;
+            notesSection.innerHTML = `<h4 style="margin-top:20px; border-top:1px solid var(--border-color); padding-top:20px;">Kitap Notları</h4><div id="notes-list"></div><form id="note-form" style="margin-top:15px;"><div class="form-group"><textarea id="new-note-text" placeholder="Yeni bir not ekle..." rows="3" required></textarea><button type="submit" class="btn-primary" style="width:auto; float:right; margin-top:10px;">Not Ekle</button></div></form>`;
+            const notesListDiv = document.getElementById('notes-list');
+            notesListDiv.innerHTML = '';
+            if (book.notes && book.notes.length > 0) {
+                book.notes.sort((a,b) => new Date(b.id) - new Date(a.id)).forEach(note => {
+                    const noteDiv = document.createElement('div');
+                    noteDiv.className = 'note-item';
+                    noteDiv.innerHTML = `<p style="margin:0;">${note.text.replace(/\n/g, '<br>')}</p><small style="color:var(--secondary-text)">${new Date(note.id).toLocaleString('tr-TR')}</small>`;
+                    noteDiv.onclick = () => { closeModal(); renderNoteForm(book, note); };
+                    notesListDiv.appendChild(noteDiv);
+                });
+            } else {
+                notesListDiv.innerHTML = '<p style="color:var(--secondary-text); text-align:center; padding:10px 0;">Henüz not eklenmemiş.</p>';
+            }
+            document.getElementById('note-form').onsubmit = (e) => {
+                e.preventDefault();
+                handleAddOrUpdateNote(book, null, e.target['new-note-text'].value);
+                e.target.reset();
+            };
+        };
+        
+        const renderNoteForm = (book, note = {}) => {
+            const isEditing = !!note.id;
+            const content = `<div class="modal-header"><h2>Notu ${isEditing ? 'Düzenle': 'Ekle'}</h2><button class="close-button">&times;</button></div><div class="modal-body"><form id="edit-note-form"><div class="form-group"><textarea id="edit-note-text" rows="8" required>${note.text || ''}</textarea></div></form></div><div class="modal-footer">${isEditing ? '<button type="button" class="btn-delete-note btn-danger" style="margin-right:auto;">Sil</button>' : ''}<button type="button" id="save-note-btn" class="btn-primary">Kaydet</button></div>`;
+            openModal(content);
+            const form = document.getElementById('edit-note-form');
+            document.getElementById('save-note-btn').onclick = () => {
+                handleAddOrUpdateNote(book, note.id, form.querySelector('#edit-note-text').value);
+            };
+            const deleteBtn = form.querySelector('.btn-delete-note');
+            if(deleteBtn) deleteBtn.onclick = () => {
+                if(confirm('Notu silmek istediğinize emin misiniz?')) handleAddOrUpdateNote(book, note.id, null);
+            };
+        };
+        
+        const handleAddOrUpdateNote = async (book, noteId, text) => {
+            let currentNotes = book.notes || [];
+            if (text === null && noteId) {
+                currentNotes = currentNotes.filter(n => n.id !== noteId);
+            } else if (noteId) {
+                const noteIndex = currentNotes.findIndex(n => n.id === noteId);
+                if (noteIndex > -1) currentNotes[noteIndex].text = text.trim();
+            } else {
+                currentNotes.push({ id: new Date().toISOString(), text: text.trim() });
+            }
+            try {
+                await getBooksCollection().doc(book.id).update({ notes: currentNotes });
+                closeModal();
+                const latestBook = allBooks.find(b => b.id === book.id) || book;
+                renderDetailsModal({...latestBook, notes: currentNotes});
+            } catch (error) { showToast("Not kaydedilemedi.", "error"); }
+        };
 
         const renderSettingsModal = () => {
             const currentTheme = localStorage.getItem('libraryTheme') || 'light';
@@ -519,17 +586,115 @@
             modalContent.querySelector('#clean-duplicates-btn').onclick = handleCleanDuplicates;
         };
 
-        const renderStatsModal = () => { /* Tamamen aynı */ };
-        const handleCleanDuplicates = async (e) => { /* Tamamen aynı */ };
-        const handleExport = () => { /* Tamamen aynı */ };
-        const handleImport = (event) => { /* Tamamen aynı */ };
+        const renderStatsModal = () => {
+            if (allBooks.length === 0) { showToast("İstatistik için henüz kitap eklenmemiş.", "error"); return; }
+            const totalBooks = allBooks.length;
+            const statusCounts = { 'Okundu': 0, 'Okunuyor': 0, 'Okunacak': 0, 'Ödünç Verildi': 0 };
+            const authorCounts = {};
+            let totalRating = 0, ratedBooks = 0, totalPagesRead = 0;
+            allBooks.forEach(book => {
+                if (book.status && statusCounts.hasOwnProperty(book.status)) statusCounts[book.status]++;
+                if (book.author) authorCounts[book.author] = (authorCounts[book.author] || 0) + 1;
+                if (book.rating > 0) { totalRating += book.rating; ratedBooks++; }
+                if (book.status === 'Okundu' && book.pageCount > 0) totalPagesRead += book.pageCount;
+            });
+            const avgRating = ratedBooks > 0 ? (totalRating / ratedBooks).toFixed(1) : 'N/A';
+            const topAuthors = Object.entries(authorCounts).sort((a,b) => b[1] - a[1]).slice(0, 5);
+            let statusBarHtml = Object.entries(statusCounts).map(([status, count]) => {
+                const percentage = totalBooks > 0 ? ((count / totalBooks) * 100) : 0;
+                return `<div class="bar-item"><div class="bar-label">${status} (${count})</div><div class="bar-wrapper"><div class="bar" style="width: ${percentage}%;"></div></div></div>`;
+            }).join('');
+            const content = `
+                <div class="modal-header"><h2>Kütüphane İstatistikleri</h2><button class="close-button">&times;</button></div>
+                <div class="modal-body">
+                    <div class="stats-grid">
+                        <div class="stat-card"><h3>${totalBooks}</h3><p>Toplam Kitap</p></div>
+                        <div class="stat-card"><h3>${statusCounts['Okundu']}</h3><p>Okunmuş Kitap</p></div>
+                        <div class="stat-card"><h3>${totalPagesRead.toLocaleString('tr-TR')}</h3><p>Okunan Sayfa</p></div>
+                        <div class="stat-card"><h3>${avgRating}</h3><p>Ort. Puan</p></div>
+                    </div>
+                    <div class="chart-container"><h4>Okuma Durumu Dağılımı</h4><div class="bar-chart">${statusBarHtml}</div></div>
+                    ${topAuthors.length > 0 ? `<div class="chart-container"><h4>En Popüler Yazarlar</h4><ol>${topAuthors.map(a => `<li>${a[0]} (${a[1]} kitap)</li>`).join('')}</ol></div>` : ''}
+                </div>`;
+            openModal(content);
+        };
+        
+        const handleCleanDuplicates = async (e) => {
+            const button = e.target;
+            button.disabled = true;
+            button.textContent = 'Taranıyor...';
+            try {
+                const seen = new Map();
+                const idsToDelete = [];
+                const sortedBooks = [...allBooks].sort((a,b) => (a.dateAdded?.toDate() || 0) - (b.dateAdded?.toDate() || 0));
+                sortedBooks.forEach(book => {
+                    const key = `${book.title?.trim().toLowerCase()}|${book.author?.trim().toLowerCase()}`;
+                    if (seen.has(key)) { idsToDelete.push(book.id); } else { seen.set(key, book.id); }
+                });
+                if (idsToDelete.length === 0) { showToast('Kütüphanenizde aynı kayıttan birden fazla yok.', 'success'); } 
+                else {
+                    const confirmed = confirm(`${idsToDelete.length} adet mükerrer kitap kaydı bulundu. Silinecekler. Onaylıyor musunuz?`);
+                    if (confirmed) {
+                        button.textContent = 'Siliniyor...';
+                        const batch = db.batch();
+                        idsToDelete.forEach(id => { batch.delete(getBooksCollection().doc(id)); });
+                        await batch.commit();
+                        showToast(`${idsToDelete.length} adet mükerrer kayıt başarıyla silindi.`, 'success');
+                    }
+                }
+                closeModal();
+            } catch (error) { showToast('Kayıtları silerken bir hata oluştu.', 'error'); } 
+            finally { if(button) { button.disabled = false; button.textContent = 'Aynı Kitapları Temizle'; } }
+        };
 
+        const handleExport = () => {
+            if (allBooks.length === 0) { showToast('Dışa aktarılacak kitap bulunmuyor.', 'error'); return; }
+            const booksToExport = allBooks.map(book => {
+                const cleanBook = { ...book };
+                if (cleanBook.dateAdded && typeof cleanBook.dateAdded.toDate === 'function') { cleanBook.dateAdded = cleanBook.dateAdded.toDate().toISOString(); }
+                return cleanBook;
+            });
+            const dataStr = JSON.stringify(booksToExport, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.download = `kutuphanem-yedek-${new Date().toISOString().split('T')[0]}.json`;
+            link.href = url;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+            showToast('Kütüphane dışa aktarıldı.', 'success');
+        };
+
+        const handleImport = (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                try {
+                    const importedBooks = JSON.parse(e.target.result);
+                    if (!Array.isArray(importedBooks)) throw new Error("JSON dosyası bir kitap listesi (dizi) içermiyor.");
+                    const confirmed = confirm(`${importedBooks.length} adet kitap içe aktarılacak. Onaylıyor musunuz?`);
+                    if (!confirmed) { document.getElementById('import-file').value = ''; return; }
+                    const batch = db.batch();
+                    importedBooks.forEach(book => {
+                        const newBookRef = getBooksCollection().doc();
+                        const { id, ...bookData } = book;
+                        batch.set(newBookRef, { ...bookData, dateAdded: FieldValue.serverTimestamp() });
+                    });
+                    await batch.commit();
+                    showToast(`${importedBooks.length} kitap başarıyla içe aktarıldı.`, 'success');
+                    closeModal();
+                } catch (error) { showToast(`İçe aktarma başarısız: ${error.message}`, 'error'); } 
+                finally { document.getElementById('import-file').value = ''; }
+            };
+            reader.readAsText(file);
+        };
+        
         const renderDiscoveryModal = () => {
             const content = `
-                <div class="modal-header">
-                    <h2>Kitap Keşfet</h2>
-                    <button class="close-button">&times;</button>
-                </div>
+                <div class="modal-header"><h2>Kitap Keşfet</h2><button class="close-button">&times;</button></div>
                 <div class="modal-body">
                     <form id="discovery-form">
                         <div class="form-group" style="display:flex; gap:10px;">
