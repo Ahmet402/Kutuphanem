@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Zilla+Slab:wght@400;700&family=Roboto+Mono:wght@400&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* TASARIM UZMANI DOKUNUŞLARI - SÜRÜM 14.0 (TÜM ÖZELLİKLER DAHİL) */
+        /* TASARIM UZMANI DOKUNUŞLARI - SÜRÜM 15.0 (MODAL DÜZELTMESİ) */
         :root {
             --font-heading: 'Zilla Slab', serif;
             --font-body: 'Poppins', sans-serif;
@@ -61,9 +61,8 @@
         .icon-btn { background: none; padding: 8px; border-radius: 50%; width: 44px; height: 44px; }
         .icon-btn svg { width: 24px; height: 24px; fill: var(--secondary-text); transition: fill 0.2s; } .icon-btn:hover svg { fill: var(--primary-text); }
         
-        /* --- YENİ ÖZELLİK: Toplam Kitap Sayısı --- */
         #library-stats {
-            margin-left: auto; /* Sağa yaslamak için */
+            margin-left: auto;
             font-weight: 600;
             font-size: 0.9em;
             color: var(--secondary-text);
@@ -78,9 +77,9 @@
         .card-cover img { width: 110px; height: 165px; object-fit: cover; display: block; background-color: var(--bg-color-alt); }
         .card-info { padding: 20px; display: flex; flex-direction: column; justify-content: center; flex-grow: 1; overflow: hidden; }
 
-        /* --- MODAL TASARIMI --- */
         .modal { display: flex; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: color-mix(in srgb, var(--bg-color) 60%, transparent); backdrop-filter: blur(8px); animation: fadeIn 0.3s; padding: 5vh 15px; align-items: center; justify-content: center; }
-        .modal-content { background-color: var(--card-bg); border-radius: var(--border-radius-lg); width: 90%; max-width: 800px; position: relative; box-shadow: var(--shadow-lg); animation: slideIn 0.3s; display: flex; flex-direction: column; max-height: 90vh; }
+        .modal:last-of-type .modal-content { animation: slideIn 0.3s; }
+        .modal-content { background-color: var(--card-bg); border-radius: var(--border-radius-lg); width: 90%; max-width: 800px; position: relative; box-shadow: var(--shadow-lg); display: flex; flex-direction: column; max-height: 90vh; }
         .modal-header { padding: 25px 35px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
         .modal-header h2 { margin: 0; font-size: 1.8em; }
         .modal-body { padding: 30px 35px; overflow-y: auto; }
@@ -95,39 +94,16 @@
         .fieldset { border: 1px solid var(--border-color); border-radius: var(--border-radius-md); padding: 20px; margin-bottom: 25px; }
         .fieldset legend { font-family: var(--font-heading); font-weight: 700; color: var(--secondary-text); padding: 0 10px; margin-left: 10px; }
         
-        /* --- YENİ ÖZELLİK: API Arama Menüsü --- */
         #api-results { position: absolute; background: var(--card-bg); width: 100%; border: 1px solid var(--border-color); border-top: none; border-radius: 0 0 var(--border-radius-md) var(--border-radius-md); z-index: 10; max-height: 250px; overflow-y: auto; box-shadow: var(--shadow-md); }
         .api-result-item { padding: 12px 15px; cursor: pointer; border-bottom: 1px solid var(--border-color); }
         .api-result-item:last-child { border-bottom: none; }
         .api-result-item:hover { background-color: var(--bg-color-alt); }
         .api-result-item em { color: var(--secondary-text); font-size: 0.9em; }
-        #close-api-results-btn {
-            position: absolute; top: -15px; right: -5px; background: none; border: none; font-size: 1.5em; cursor: pointer; color: var(--secondary-text);
-        }
+        #close-api-results-btn { position: absolute; top: -15px; right: -5px; background: none; border: none; font-size: 1.5em; cursor: pointer; color: var(--secondary-text); }
 
-        /* --- YENİ ÖZELLİK: Kapak Arama Modalı --- */
-        .cover-search-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 15px;
-            max-height: 60vh;
-            overflow-y: auto;
-            padding-top: 10px;
-        }
-        .cover-search-grid img {
-            width: 100%;
-            height: auto;
-            aspect-ratio: 2 / 3;
-            object-fit: cover;
-            border-radius: var(--border-radius-sm);
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: var(--shadow-sm);
-        }
-        .cover-search-grid img:hover {
-            transform: scale(1.05);
-            box-shadow: var(--shadow-md);
-        }
+        .cover-search-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 15px; max-height: 60vh; overflow-y: auto; padding-top: 10px; }
+        .cover-search-grid img { width: 100%; height: auto; aspect-ratio: 2 / 3; object-fit: cover; border-radius: var(--border-radius-sm); cursor: pointer; transition: all 0.2s ease; box-shadow: var(--shadow-sm); }
+        .cover-search-grid img:hover { transform: scale(1.05); box-shadow: var(--shadow-md); }
 
         .theme-switcher { display: flex; gap: 10px; flex-wrap: wrap; }
         .theme-btn { padding: 10px 15px; border: 2px solid var(--border-color); background-color: var(--bg-color); color: var(--primary-text); font-weight: 600; cursor: pointer; border-radius: var(--border-radius-md); font-size: 0.9em; }
@@ -240,7 +216,7 @@
             addBookBtn: document.getElementById('add-book-btn'),
             discoverBooksBtn: document.getElementById('discover-books-btn'),
             privateNotesBtn: document.getElementById('private-notes-btn'),
-            totalBookCountDisplay: document.getElementById('total-book-count-display') // YENİ EKLEME
+            totalBookCountDisplay: document.getElementById('total-book-count-display')
         };
         
         const applyTheme = (themeName) => {
@@ -303,7 +279,6 @@
             const currentFilter = ui.filterStatus.value;
             const filteredBooks = booksToRender.filter(book => (book.title?.toLowerCase().includes(searchTerm) || book.author?.toLowerCase().includes(searchTerm)) && (currentFilter === 'Tümü' || book.status === currentFilter));
             
-            // YENİ ÖZELLİK: Toplam kitap sayısını güncelle
             if (ui.totalBookCountDisplay) {
                 ui.totalBookCountDisplay.textContent = allBooks.length;
             }
@@ -316,9 +291,28 @@
             }
         };
 
-        const openModal = (content) => { ui.modalContainer.innerHTML = `<div class="modal"><div class="modal-content">${content}</div></div>`; ui.modalContainer.querySelector('.close-button')?.addEventListener('click', closeModal); };
-        const closeModal = () => { const modal = ui.modalContainer.querySelector('.modal'); if (modal) modal.remove(); };
-        window.onclick = e => { if (e.target?.classList.contains('modal')) closeModal(); };
+        /* --- DÜZENLENMİŞ MODAL FONKSİYONLARI --- */
+        const openModal = (content) => {
+            const modalWrapper = document.createElement('div');
+            modalWrapper.className = 'modal';
+            modalWrapper.innerHTML = `<div class="modal-content">${content}</div>`;
+            ui.modalContainer.appendChild(modalWrapper);
+            modalWrapper.querySelector('.close-button')?.addEventListener('click', closeModal);
+        };
+
+        const closeModal = () => {
+            const modals = ui.modalContainer.querySelectorAll('.modal');
+            if (modals.length > 0) {
+                modals[modals.length - 1].remove();
+            }
+        };
+
+        window.onclick = e => {
+            const modals = ui.modalContainer.querySelectorAll('.modal');
+            if (modals.length > 0 && e.target === modals[modals.length - 1]) {
+                closeModal();
+            }
+        };
         
         const showToast = (message, type = 'success') => {
             const toast = document.createElement('div');
@@ -391,7 +385,6 @@
             updateDateFields();
             document.getElementById('form-submit-btn').onclick = () => handleBookFormSubmit(form, book);
             
-            // YENİ ÖZELLİK: Kapak arama butonu listener'ı
             document.getElementById('search-cover-btn').onclick = () => {
                 const title = form.querySelector('#title').value;
                 const author = form.querySelector('#author').value;
@@ -413,7 +406,7 @@
                 if (apiResultsDiv && !e.target.closest('.form-group')) {
                     apiResultsDiv.classList.add('hidden');
                 }
-            });
+            }, true); // Use capture to handle click outside reliably
         };
 
         const searchGoogleBooks = async (query) => {
@@ -426,12 +419,11 @@
                 const data = await res.json();
                 apiResultsDiv.innerHTML = '';
 
-                // YENİ ÖZELLİK: Kapatma butonu
                 const closeBtn = document.createElement('button');
                 closeBtn.innerHTML = '&times;';
                 closeBtn.id = 'close-api-results-btn';
                 closeBtn.onclick = (e) => {
-                    e.stopPropagation(); // Butonun arkasındaki click'i tetiklemesini engelle
+                    e.stopPropagation();
                     apiResultsDiv.classList.add('hidden');
                 };
                 apiResultsDiv.appendChild(closeBtn);
@@ -442,7 +434,6 @@
                     const bookData = { title: info.title || '', author: info.authors?.join(', ') || '', publisher: info.publisher || '', pageCount: info.pageCount || '', coverUrl: (info.imageLinks?.thumbnail || info.imageLinks?.smallThumbnail || '').replace('http://', 'https://') };
                     const div = document.createElement('div');
                     div.className = 'api-result-item';
-                    // YENİ ÖZELLİK: Yayınevi bilgisini göster
                     div.innerHTML = `<strong>${bookData.title}</strong><br><small>${bookData.author} - <em>${bookData.publisher || 'Yayınevi Yok'}</em></small>`;
                     div.onclick = () => fillFormWithGoogleData(bookData);
                     apiResultsDiv.appendChild(div);
@@ -470,7 +461,6 @@
                 return;
             }
 
-            // YENİ ÖZELLİK: Mükerrer kayıt kontrolü (sadece yeni kitap eklerken)
             if (!existingBook.id) {
                 const duplicateBook = allBooks.find(book => 
                     book.title.trim().toLowerCase() === newTitle.toLowerCase() &&
@@ -481,7 +471,7 @@
                     showToast('Bu kitap kütüphanenizde zaten mevcut.', 'error');
                     closeModal();
                     renderDetailsModal(duplicateBook);
-                    return; // Fonksiyonu durdur
+                    return;
                 }
             }
 
@@ -489,8 +479,8 @@
             submitButton.disabled = true;
             submitButton.innerHTML = "Kaydediliyor...";
             const newValues = {
-                title: newTitle, author: newAuthor, publisher: form.publisher.value,
-                pageCount: parseInt(form['page-count'].value) || 0, coverUrl: form['cover-url'].value, status: form.status.value,
+                title: newTitle, author: newAuthor, publisher: form.publisher.value.trim(),
+                pageCount: parseInt(form['page-count'].value) || 0, coverUrl: form['cover-url'].value.trim(), status: form.status.value,
                 rating: parseInt(form.rating.value) || 0, startDate: form['start-date']?.value || null, finishDate: form['finish-date']?.value || null
             };
             try {
@@ -539,7 +529,7 @@
                     <button class="btn-delete btn-danger">Sil</button>
                 </div>`;
             openModal(content);
-            const modalContent = ui.modalContainer.querySelector('.modal-content');
+            const modalContent = ui.modalContainer.querySelector('.modal:last-of-type .modal-content');
             modalContent.querySelector('.btn-edit').onclick = () => { closeModal(); renderBookFormModal(book); };
             modalContent.querySelector('.btn-delete').onclick = async (e) => {
                 if(confirm('Bu kitabı silmek istediğinize emin misiniz? Bu işlem geri alınamaz.')){
@@ -609,11 +599,11 @@
             const isEditing = !!note.id;
             const content = `<div class="modal-header"><h2>Notu ${isEditing ? 'Düzenle': 'Ekle'}</h2><button class="close-button">&times;</button></div><div class="modal-body"><form id="edit-note-form"><div class="form-group"><textarea id="edit-note-text" rows="8" required>${note.text || ''}</textarea></div></form></div><div class="modal-footer">${isEditing ? '<button type="button" class="btn-delete-note btn-danger" style="margin-right:auto;">Sil</button>' : ''}<button type="button" id="save-note-btn" class="btn-primary">Kaydet</button></div>`;
             openModal(content);
-            const form = ui.modalContainer.querySelector('#edit-note-form');
-            document.getElementById('save-note-btn').onclick = () => {
+            const form = document.querySelector('.modal:last-of-type #edit-note-form');
+            document.querySelector('.modal:last-of-type #save-note-btn').onclick = () => {
                 handleAddOrUpdateNote(book, note.id, form.querySelector('#edit-note-text').value);
             };
-            const deleteBtn = ui.modalContainer.querySelector('.btn-delete-note');
+            const deleteBtn = document.querySelector('.modal:last-of-type .btn-delete-note');
             if(deleteBtn) deleteBtn.onclick = () => {
                 if(confirm('Notu silmek istediğinize emin misiniz?')) handleAddOrUpdateNote(book, note.id, null);
             };
@@ -622,13 +612,13 @@
         const handleAddOrUpdateNote = async (book, noteId, text) => {
             let currentNotes = book.notes || [];
             let toastMessage = "Not güncellendi.";
-            if (text === null && noteId) { // Silme işlemi
+            if (text === null && noteId) {
                 currentNotes = currentNotes.filter(n => n.id !== noteId);
                 toastMessage = "Not silindi.";
-            } else if (noteId) { // Düzenleme işlemi
+            } else if (noteId) {
                 const noteIndex = currentNotes.findIndex(n => n.id === noteId);
                 if (noteIndex > -1) currentNotes[noteIndex].text = text.trim();
-            } else if (text && text.trim()){ // Ekleme işlemi
+            } else if (text && text.trim()){
                 currentNotes.push({ id: new Date().toISOString(), text: text.trim() });
                 toastMessage = "Not eklendi.";
             } else {
@@ -688,7 +678,7 @@
                     </fieldset>
                 </div>`;
             openModal(content);
-            const modalContent = ui.modalContainer.querySelector('.modal-content');
+            const modalContent = document.querySelector('.modal:last-of-type .modal-content');
             modalContent.querySelectorAll('.theme-btn').forEach(btn => {
                 btn.onclick = (e) => {
                     const selectedTheme = e.target.dataset.theme;
@@ -819,7 +809,6 @@
             reader.readAsText(file);
         };
         
-        /* --- ORİJİNAL KOD: KİTAP KEŞFET MODÜLÜ --- */
         const renderDiscoveryModal = () => {
             const content = `
                 <div class="modal-header"><h2>Kitap Keşfet</h2><button class="close-button">&times;</button></div>
@@ -870,7 +859,7 @@
         };
 
         const displayDiscoveryDetail = (itemData) => {
-            const modalBody = document.querySelector('.modal-body');
+            const modalBody = document.querySelector('.modal:last-of-type .modal-body');
             const info = itemData.volumeInfo;
             const bookForLibrary = { title: info.title || '', author: info.authors?.join(', ') || '', publisher: info.publisher || '', pageCount: info.pageCount || 0, coverUrl: info.imageLinks?.thumbnail || '' };
             const cover = info.imageLinks?.thumbnail || `https://via.placeholder.com/200x300/e2e8f0/718096?text=Kapak`;
@@ -904,7 +893,6 @@
             };
         };
 
-        /* --- ORİJİNAL KOD: ÖZEL NOTLAR MODÜLÜ --- */
         const getPrivateNotesCollection = () => db.collection('users').doc(currentUser.uid).collection('privateNotes');
 
         const renderPrivateNotesModal = async () => {
@@ -933,10 +921,7 @@
                         const noteDiv = document.createElement('div');
                         noteDiv.className = 'private-note-item';
                         const noteDate = note.createdAt?.toDate ? note.createdAt.toDate() : new Date();
-                        noteDiv.innerHTML = `
-                            <p>${note.text.replace(/\n/g, '<br>')}</p>
-                            <small>${noteDate.toLocaleString('tr-TR')}</small>
-                        `;
+                        noteDiv.innerHTML = `<p>${note.text.replace(/\n/g, '<br>')}</p><small>${noteDate.toLocaleString('tr-TR')}</small>`;
                         noteDiv.onclick = () => renderPrivateNoteFormModal(note);
                         listContainer.appendChild(noteDiv);
                     });
@@ -946,7 +931,7 @@
                 showToast("Notlar yüklenemedi: " + error.message, "error");
             }
             
-            document.getElementById('add-new-private-note').onclick = () => renderPrivateNoteFormModal();
+            document.querySelector('.modal:last-of-type #add-new-private-note').onclick = () => renderPrivateNoteFormModal();
         };
 
         const renderPrivateNoteFormModal = (note = {}) => {
@@ -969,12 +954,12 @@
                 </div>`;
             openModal(content);
 
-            document.getElementById('save-private-note-btn').onclick = async () => {
-                const text = document.getElementById('private-note-text').value;
+            document.querySelector('.modal:last-of-type #save-private-note-btn').onclick = async () => {
+                const text = document.querySelector('.modal:last-of-type #private-note-text').value;
                 await handleSavePrivateNote(note.id, text);
             };
 
-            const deleteBtn = document.getElementById('delete-private-note-btn');
+            const deleteBtn = document.querySelector('.modal:last-of-type #delete-private-note-btn');
             if (deleteBtn) {
                 deleteBtn.onclick = async () => {
                     if (confirm('Bu notu kalıcı olarak silmek istediğinizden emin misiniz?')) {
@@ -990,17 +975,11 @@
                 return;
             }
             try {
-                if (noteId) { // Düzenleme
-                    await getPrivateNotesCollection().doc(noteId).update({
-                        text: text.trim(),
-                        lastEdited: FieldValue.serverTimestamp()
-                    });
+                if (noteId) {
+                    await getPrivateNotesCollection().doc(noteId).update({ text: text.trim(), lastEdited: FieldValue.serverTimestamp() });
                     showToast("Not güncellendi.", "success");
-                } else { // Yeni not
-                    await getPrivateNotesCollection().add({
-                        text: text.trim(),
-                        createdAt: FieldValue.serverTimestamp()
-                    });
+                } else {
+                    await getPrivateNotesCollection().add({ text: text.trim(), createdAt: FieldValue.serverTimestamp() });
                     showToast("Not eklendi.", "success");
                 }
                 closeModal();
@@ -1021,7 +1000,6 @@
             }
         };
 
-        /* --- YENİ ÖZELLİK: KAPAK ARAMA MODALI FONKSİYONU --- */
         const renderCoverSearchModal = async (query) => {
             if (!GOOGLE_API_KEY || GOOGLE_API_KEY.includes("BURAYA") || !SEARCH_ENGINE_ID || SEARCH_ENGINE_ID.includes("BURAYA")) {
                 showToast("Google API anahtarları yapılandırılmamış.", "error");
@@ -1035,8 +1013,7 @@
                 </div>
                 <div class="modal-body" id="cover-search-body">
                     <p>Görseller aranıyor...</p>
-                </div>
-            `;
+                </div>`;
             openModal(modalContent);
 
             try {
@@ -1044,10 +1021,10 @@
                 const response = await fetch(apiUrl);
                 if (!response.ok) {
                     const errorData = await response.json();
-                    throw new Error(`API isteği başarısız: ${errorData.error.message}`);
+                    throw new Error(`API isteği başarısız: ${errorData.error.message || response.statusText}`);
                 }
                 const data = await response.json();
-                const modalBody = document.getElementById('cover-search-body');
+                const modalBody = document.querySelector('.modal:last-of-type #cover-search-body');
 
                 if (data.items && data.items.length > 0) {
                     modalBody.innerHTML = '<div class="cover-search-grid"></div>';
@@ -1056,7 +1033,7 @@
                         const img = document.createElement('img');
                         img.src = item.link;
                         img.alt = item.title;
-                        img.onerror = function() { this.style.display='none'; }; // Bozuk resimleri gizle
+                        img.onerror = function() { this.style.display='none'; };
                         img.onclick = () => {
                             const coverUrlInput = document.getElementById('cover-url');
                             if (coverUrlInput) {
@@ -1071,8 +1048,8 @@
                     modalBody.innerHTML = '<p>Bu arama için uygun görsel bulunamadı.</p>';
                 }
             } catch (error) {
-                const modalBody = document.getElementById('cover-search-body');
-                modalBody.innerHTML = `<p style="color:var(--danger-color);">Görseller yüklenirken bir hata oluştu: ${error.message}</p>`;
+                const modalBody = document.querySelector('.modal:last-of-type #cover-search-body');
+                if(modalBody) modalBody.innerHTML = `<p style="color:var(--danger-color);">Görseller yüklenirken bir hata oluştu: ${error.message}</p>`;
                 showToast("Görsel arama başarısız oldu.", "error");
                 console.error("Kapak arama hatası:", error);
             }
