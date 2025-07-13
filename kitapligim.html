@@ -111,7 +111,7 @@
                     </div>
                 </div>
                 <div class="list-container" id="book-list"></div>
-                </main>
+            </main>
         </div>
         <div id="modal-container"></div>
     </div>
@@ -124,13 +124,14 @@
     <script>
     document.addEventListener('DOMContentLoaded', () => {
         // --- Firebase ve Global Değişkenler ---
+        // LÜTFEN BU BÖLÜMÜ KENDİ FIREBASE PROJE BİLGİLERİNİZLE DOLDURUN!
         const firebaseConfig = {
-    apiKey: "AIzaSyASaHGgjR-zsQ50E9JmCcBnBq2KyXcltuE",
-    authDomain: "benim-kutuphanem402.firebaseapp.com",
-    projectId: "benim-kutuphanem402",
-    storageBucket: "benim-kutuphanem402.appspot.com",
-    messagingSenderId: "400988696330",
-    appId: "1:400988696330:web:d9e2f0fa4301c2c8f714f3"
+            apiKey: "AIzaSyASaHGgjR-zsQ50E9JmCcBnBq2KyXcltuE",
+            authDomain: "benim-kutuphanem402.firebaseapp.com",
+            projectId: "benim-kutuphanem402",
+            storageBucket: "benim-kutuphanem402.appspot.com",
+            messagingSenderId: "400988696330",
+            appId: "1:400988696330:web:d9e2f0fa4301c2c8f714f3"
         };
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
@@ -191,7 +192,7 @@
 
             unsubscribeBooks = query.onSnapshot(snapshot => {
                 allBooks = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                renderBooks(); // Filtrelenmiş kitapları render et
+                renderBooks();
             }, error => {
                 console.error("Kitap yükleme hatası:", error);
                 showToast("Kitaplar yüklenemedi: " + error.message, "error");
@@ -205,7 +206,7 @@
             const currentFilter = ui.filterStatus.value;
 
             const filteredBooks = allBooks.filter(book => 
-                (book.title.toLowerCase().includes(searchTerm) || book.author.toLowerCase().includes(searchTerm)) && 
+                (book.title.toLowerCase().includes(searchTerm) || (book.author && book.author.toLowerCase().includes(searchTerm))) && 
                 (currentFilter === 'Tümü' || book.status === currentFilter)
             );
 
@@ -226,7 +227,7 @@
             const coverUrl = (book.coverUrl || '').replace('http://', 'https://');
             const placeholder = 'https://via.placeholder.com/110x165/fdfaf6/9b9b9b?text=Kapak';
             card.innerHTML = `<div class="card-cover"><img src="${coverUrl || placeholder}" alt="${book.title}" loading="lazy"></div>
-                              <div class="card-info"><h3>${book.title}</h3><p>${book.author}</p><p class="book-rating">${getStarRating(book.rating)}</p></div>`;
+                              <div class="card-info"><h3>${book.title}</h3><p>${book.author || ''}</p><p class="book-rating">${getStarRating(book.rating)}</p></div>`;
             card.onclick = () => renderDetailsModal(book);
             return card;
         };
@@ -263,7 +264,7 @@
                 <div class="details-grid">
                     <img src="${(book.coverUrl || '').replace('http://', 'https://') || 'https://via.placeholder.com/150x220'}" alt="${book.title}" style="width:150px; height:220px; object-fit:cover; border-radius:12px;">
                     <div class="details-info-grid">
-                        <div class="details-label">Yazar</div> <div>${book.author}</div>
+                        <div class="details-label">Yazar</div> <div>${book.author || ''}</div>
                         <div class="details-label">Puan</div> <div><span class="book-rating">${getStarRating(book.rating)}</span></div>
                         <div class="details-label">Durum</div> <div><span class="details-status" style="background-color:${statusColors[book.status] || '#ccc'}">${statusText}</span></div>
                         ${book.startDate ? `<div class="details-label">Başlama</div> <div>${book.startDate}</div>` : ''}
@@ -284,8 +285,7 @@
                 if(confirm('Bu kitabı silmek istediğinize emin misiniz?')){ 
                     closeModal(); 
                     await getBooksCollection().doc(book.id).delete(); 
-                    showToast('Kitap silindi.'); 
-                    // Gerçek zamanlı dinleyici sayesinde liste otomatik güncellenir.
+                    showToast('Kitap silindi.');
                 } else { 
                     e.target.disabled = false; 
                 }
@@ -447,18 +447,17 @@
 
         const handleAddOrUpdateNote = async (book, noteId, text) => {
             let currentNotes = book.notes || [];
-            if (text === null && noteId) { // Silme
+            if (text === null && noteId) {
                 currentNotes = currentNotes.filter(n => n.id !== noteId);
-            } else if (noteId) { // Düzenleme
+            } else if (noteId) {
                 const noteIndex = currentNotes.findIndex(n => n.id === noteId);
                 if (noteIndex > -1) currentNotes[noteIndex].text = text.trim();
-            } else { // Ekleme
+            } else {
                 currentNotes.push({ id: Date.now(), text: text.trim() });
             }
             await getBooksCollection().doc(book.id).update({ notes: currentNotes });
             
-            closeModal(); // Not düzenleme modalını kapat
-            // Detay modalı, gerçek zamanlı dinleyici sayesinde otomatik güncellenecek
+            closeModal();
         };
 
         // --- Harici API ve Dosya İşlemleri ---
@@ -555,24 +554,48 @@
             reader.onload = async (e) => {
                 try {
                     const importedBooks = JSON.parse(e.target.result);
-                    if (!Array.isArray(importedBooks)) throw new Error("JSON formatı hatalı.");
+                    if (!Array.isArray(importedBooks)) throw new Error("Dosya bir kitap listesi (dizi) içermiyor.");
 
-                    if (confirm(`${importedBooks.length} kitap içe aktarılacak. Bu işlem geri alınamaz. Onaylıyor musunuz?`)) {
+                    if (confirm(`${importedBooks.length} kitap içe aktarılacak. Bu işlem mevcut listenizi etkilemez, sadece ekleme yapar. Onaylıyor musunuz?`)) {
                         const batch = db.batch();
+                        let importedCount = 0;
+                        let skippedCount = 0;
+                        
                         importedBooks.forEach(book => {
-                            if (!book.title) return;
+                            if (typeof book !== 'object' || !book.title) {
+                                skippedCount++;
+                                return;
+                            }
+
                             const newBookRef = getBooksCollection().doc();
-                            batch.set(newBookRef, { 
-                                ...book,
-                                title_lowercase: book.title.toLowerCase(),
-                                dateAdded: FieldValue.serverTimestamp() 
-                            });
+                            const newBookData = {
+                                title: book.title,
+                                author: book.author || "",
+                                title_lowercase: String(book.title).toLowerCase(),
+                                publisher: book.publisher || "",
+                                coverUrl: book.coverUrl || "",
+                                status: book.status || "Okunacak",
+                                rating: Number(book.rating) || 0,
+                                startDate: book.startDate || "",
+                                finishDate: book.finishDate || "",
+                                notes: Array.isArray(book.notes) ? book.notes : [],
+                                lentTo: book.lentTo || null,
+                                previousStatus: book.previousStatus || null,
+                                dateAdded: FieldValue.serverTimestamp()
+                            };
+                            batch.set(newBookRef, newBookData);
+                            importedCount++;
                         });
+
                         await batch.commit();
-                        showToast(`${importedBooks.length} kitap başarıyla içe aktarıldı.`);
+                        let message = `${importedCount} kitap başarıyla içe aktarıldı.`;
+                        if (skippedCount > 0) {
+                            message += ` ${skippedCount} kitap, başlık bilgisi eksik olduğu için atlandı.`;
+                        }
+                        showToast(message, 'success');
                     }
                 } catch (error) {
-                    showToast('İçe aktarma başarısız: ' + error.message, 'error');
+                    showToast(`Hata: ${error.message}. Lütfen JSON dosyanızın geçerli olduğundan emin olun.`, 'error');
                 } finally {
                     event.target.value = '';
                 }
