@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Zilla+Slab:wght@400;700&family=Roboto+Mono:wght@400&display=swap" rel="stylesheet">
     <style>
-        /* TASARIM UZMANI DOKUNUŞLARI - SÜRÜM 4.0 EKSİKSİZ */
+        /* TASARIM UZMANI DOKUNUŞLARI - SÜRÜM 5.0 EKSİKSİZ VE TAM */
         :root {
             --font-heading: 'Zilla Slab', serif;
             --font-body: 'Poppins', sans-serif;
@@ -413,6 +413,7 @@
                     </div>
                 </div>
                 <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid var(--border-color); display: flex; gap: 10px; flex-wrap:wrap; justify-content:flex-end;">
+                    <button class="btn-google-search btn" style="background-color:#4285F4; margin-right:auto;">Google'da Ara</button>
                     <button class="btn-edit">Düzenle</button>
                     ${book.status !== 'Ödünç Verildi' ? '<button class="btn-lend btn-secondary">Ödünç Ver</button>' : '<button class="btn-return btn-secondary">Geri Al</button>'}
                     <button class="btn-delete btn-danger">Sil</button>
@@ -427,6 +428,11 @@
                     showToast('Kitap silindi.');
                     closeModal();
                 }
+            };
+            modalContent.querySelector('.btn-google-search').onclick = () => {
+                const query = `${book.title} ${book.author}`;
+                const url = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+                window.open(url, '_blank');
             };
             const lendBtn = modalContent.querySelector('.btn-lend');
             if (lendBtn) lendBtn.onclick = () => handleLendBook(book);
