@@ -1023,7 +1023,7 @@
 
         /* --- YENİ ÖZELLİK: KAPAK ARAMA MODALI FONKSİYONU --- */
         const renderCoverSearchModal = async (query) => {
-            if (!GOOGLE_API_KEY || GOOGLE_API_KEY.includes("") || !SEARCH_ENGINE_ID || SEARCH_ENGINE_ID.includes("")) {
+            if (!GOOGLE_API_KEY || GOOGLE_API_KEY.includes("BURAYA") || !SEARCH_ENGINE_ID || SEARCH_ENGINE_ID.includes("BURAYA")) {
                 showToast("Google API anahtarları yapılandırılmamış.", "error");
                 return;
             }
