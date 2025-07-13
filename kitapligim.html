@@ -8,14 +8,12 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Zilla+Slab:wght@400;700&family=Roboto+Mono:wght@400&display=swap" rel="stylesheet">
     <style>
-        /* TASARIM UZMANI DOKUNUŞLARI - SÜRÜM 3.0 */
+        /* TASARIM UZMANI DOKUNUŞLARI - SÜRÜM 4.0 EKSİKSİZ */
         :root {
             --font-heading: 'Zilla Slab', serif;
             --font-body: 'Poppins', sans-serif;
             --font-mono: 'Roboto Mono', monospace;
-            --border-radius-sm: 8px;
-            --border-radius-md: 12px;
-            --border-radius-lg: 16px;
+            --border-radius-sm: 8px; --border-radius-md: 12px; --border-radius-lg: 16px;
             --shadow-sm: 0 2px 8px rgba(45, 55, 72, 0.07);
             --shadow-md: 0 6px 20px rgba(45, 55, 72, 0.08);
             --shadow-lg: 0 10px 30px rgba(45, 55, 72, 0.1);
@@ -23,185 +21,74 @@
         }
 
         /* --- TEMA PALETLERİ --- */
-
-        [data-theme="light"] {
-            --bg-color: #f4f7f9; --bg-color-alt: #e9eef2; --card-bg: #ffffff;
-            --primary-text: #2d3748; --secondary-text: #718096; --border-color: #e2e8f0;
-            --accent-1: #ff6347; --accent-1-dark: #e5533d; --accent-2: #00b894;
-            --accent-2-dark: #00a383; --accent-3: #ffc107; --success-color: #2ecc71;
-            --danger-color: #e74c3c; --font-override: var(--font-body);
-        }
-
-        [data-theme="dark"] {
-            --bg-color: #1a202c; --bg-color-alt: #2d3748; --card-bg: #2d3748;
-            --primary-text: #f7fafc; --secondary-text: #a0aec0; --border-color: #4a5568;
-            --accent-1: #f56565; --accent-1-dark: #e53e3e; --accent-2: #48bb78;
-            --accent-2-dark: #38a169; --accent-3: #f6e05e; --success-color: #48bb78;
-            --danger-color: #f56565; --font-override: var(--font-body);
-        }
-
-        [data-theme="sepia"] {
-            --bg-color: #f1e7d0; --bg-color-alt: #e3d9c3; --card-bg: #fdfaf3;
-            --primary-text: #5d4037; --secondary-text: #8d6e63; --border-color: #d7ccc8;
-            --accent-1: #d96d51; --accent-1-dark: #bc5e46; --accent-2: #5a9b7e;
-            --accent-2-dark: #4b836a; --accent-3: #c5a148; --success-color: #689f38;
-            --danger-color: #d32f2f; --font-override: var(--font-body);
-        }
-        
-        [data-theme="gece-mavisi"] {
-            --bg-color: #0d1b2a; --bg-color-alt: #1b263b; --card-bg: #1b263b;
-            --primary-text: #e0e1dd; --secondary-text: #778da9; --border-color: #415a77;
-            --accent-1: #3a86ff; --accent-1-dark: #0056d6; --accent-2: #06d6a0;
-            --accent-2-dark: #05b386; --accent-3: #ffd166; --success-color: #06d6a0;
-            --danger-color: #ef476f; --font-override: var(--font-body);
-        }
-
-        [data-theme="okur-dostu"] {
-            --bg-color: #fbf8f2; --bg-color-alt: #efebe4; --card-bg: #ffffff;
-            --primary-text: #3e3e3e; --secondary-text: #7a7a7a; --border-color: #d9d5cf;
-            --accent-1: #c86b53; --accent-1-dark: #a15643; --accent-2: #6a9582;
-            --accent-2-dark: #537666; --accent-3: #d5a05b; --success-color: #729d39;
-            --danger-color: #c0392b; --font-override: var(--font-body);
-        }
-
-        [data-theme="retro-terminal"] {
-            --bg-color: #000000; --bg-color-alt: #111111; --card-bg: #090909;
-            --primary-text: #39ff14; --secondary-text: #17a400; --border-color: #222;
-            --accent-1: #39ff14; --accent-1-dark: #1eff00; --accent-2: #39ff14;
-            --accent-2-dark: #1eff00; --accent-3: #39ff14; --success-color: #39ff14;
-            --danger-color: #ff073a; --font-override: var(--font-mono);
-        }
-
-        [data-theme="kiraz-cicegi"] {
-            --bg-color: #fff0f5; --bg-color-alt: #fde6ee; --card-bg: #ffffff;
-            --primary-text: #594851; --secondary-text: #96838e; --border-color: #f7d3e1;
-            --accent-1: #ff7e9a; --accent-1-dark: #ff6b89; --accent-2: #6fb5b0;
-            --accent-2-dark: #5a9390; --accent-3: #ffb6c1; --success-color: #90ee90;
-            --danger-color: #f08080; --font-override: var(--font-body);
-        }
+        [data-theme="light"] { --bg-color: #f4f7f9; --bg-color-alt: #e9eef2; --card-bg: #ffffff; --primary-text: #2d3748; --secondary-text: #718096; --border-color: #e2e8f0; --accent-1: #ff6347; --accent-1-dark: #e5533d; --accent-2: #00b894; --accent-2-dark: #00a383; --accent-3: #ffc107; --success-color: #2ecc71; --danger-color: #e74c3c; --font-override: var(--font-body); }
+        [data-theme="sepia"] { --bg-color: #f1e7d0; --bg-color-alt: #e3d9c3; --card-bg: #fdfaf3; --primary-text: #5d4037; --secondary-text: #8d6e63; --border-color: #d7ccc8; --accent-1: #d96d51; --accent-1-dark: #bc5e46; --accent-2: #5a9b7e; --accent-2-dark: #4b836a; --accent-3: #c5a148; --success-color: #689f38; --danger-color: #d32f2f; --font-override: var(--font-body); }
+        [data-theme="nane-sekeri"] { --bg-color: #f0fff4; --bg-color-alt: #e0f8e9; --card-bg: #ffffff; --primary-text: #2f4f4f; --secondary-text: #5f8075; --border-color: #cce8d6; --accent-1: #50c878; --accent-1-dark: #40a060; --accent-2: #3cb371; --accent-2-dark: #2e8b57; --accent-3: #f5b041; --success-color: #2ecc71; --danger-color: #ff6b6b; --font-override: var(--font-body); }
+        [data-theme="lavanta-tarlasi"] { --bg-color: #f3f0ff; --bg-color-alt: #e9e3ff; --card-bg: #ffffff; --primary-text: #4a4a68; --secondary-text: #7b7ba3; --border-color: #d9d2f7; --accent-1: #9d84e1; --accent-1-dark: #826ab5; --accent-2: #a17de0; --accent-2-dark: #8462c1; --accent-3: #f9a825; --success-color: #7dcea0; --danger-color: #ef9a9a; --font-override: var(--font-body); }
+        [data-theme="vanilya-damlasi"] { --bg-color: #fdfcf7; --bg-color-alt: #f8f4e9; --card-bg: #ffffff; --primary-text: #5a4e46; --secondary-text: #918177; --border-color: #e9e2d9; --accent-1: #d2a679; --accent-1-dark: #b88d61; --accent-2: #a89f91; --accent-2-dark: #8d8376; --accent-3: #e5b36f; --success-color: #a1c349; --danger-color: #d87068; --font-override: var(--font-body); }
+        [data-theme="somon-ruyasi"] { --bg-color: #fff5f5; --bg-color-alt: #ffe9e9; --card-bg: #ffffff; --primary-text: #6b4a4a; --secondary-text: #a17d7d; --border-color: #f7dada; --accent-1: #ff8c69; --accent-1-dark: #e07656; --accent-2: #f08080; --accent-2-dark: #d16b6b; --accent-3: #f8c471; --success-color: #6bca88; --danger-color: #e57373; --font-override: var(--font-body); }
+        [data-theme="dark"] { --bg-color: #1a202c; --bg-color-alt: #2d3748; --card-bg: #2d3748; --primary-text: #f7fafc; --secondary-text: #a0aec0; --border-color: #4a5568; --accent-1: #f56565; --accent-1-dark: #e53e3e; --accent-2: #48bb78; --accent-2-dark: #38a169; --accent-3: #f6e05e; --success-color: #48bb78; --danger-color: #f56565; --font-override: var(--font-body); }
+        [data-theme="gece-mavisi"] { --bg-color: #0d1b2a; --bg-color-alt: #1b263b; --card-bg: #1b263b; --primary-text: #e0e1dd; --secondary-text: #778da9; --border-color: #415a77; --accent-1: #3a86ff; --accent-1-dark: #0056d6; --accent-2: #06d6a0; --accent-2-dark: #05b386; --accent-3: #ffd166; --success-color: #06d6a0; --danger-color: #ef476f; --font-override: var(--font-body); }
+        [data-theme="grafit-gecesi"] { --bg-color: #121212; --bg-color-alt: #1e1e1e; --card-bg: #1e1e1e; --primary-text: #ffffff; --secondary-text: #b3b3b3; --border-color: #282828; --accent-1: #bb86fc; --accent-1-dark: #a16ef7; --accent-2: #03dac6; --accent-2-dark: #02b0a1; --accent-3: #f9a825; --success-color: #03dac6; --danger-color: #cf6679; --font-override: var(--font-body); }
+        [data-theme="zumrut-derinligi"] { --bg-color: #0b2027; --bg-color-alt: #103039; --card-bg: #103039; --primary-text: #f4f4f4; --secondary-text: #a4c3b2; --border-color: #1e4550; --accent-1: #69b578; --accent-1-dark: #559462; --accent-2: #4e8789; --accent-2-dark: #3e6a6c; --accent-3: #e5b36f; --success-color: #69b578; --danger-color: #d64933; --font-override: var(--font-body); }
+        [data-theme="yakut-kirmizisi"] { --bg-color: #23001e; --bg-color-alt: #3d0024; --card-bg: #3d0024; --primary-text: #fce5f2; --secondary-text: #d8a1c4; --border-color: #5c0036; --accent-1: #e01e5a; --accent-1-dark: #c0144c; --accent-2: #c44569; --accent-2-dark: #a63958; --accent-3: #ffc40c; --success-color: #79c753; --danger-color: #e01e5a; --font-override: var(--font-body); }
+        [data-theme="retro-terminal"] { --bg-color: #000000; --bg-color-alt: #111111; --card-bg: #090909; --primary-text: #39ff14; --secondary-text: #17a400; --border-color: #222; --accent-1: #39ff14; --accent-1-dark: #1eff00; --accent-2: #39ff14; --accent-2-dark: #1eff00; --accent-3: #39ff14; --success-color: #39ff14; --danger-color: #ff073a; --font-override: var(--font-mono); }
 
         /* --- GENEL STİLLER --- */
         *, *::before, *::after { box-sizing: border-box; }
         html { scroll-behavior: smooth; }
-        body {
-            font-family: var(--font-override, var(--font-body)); margin: 0; background-color: var(--bg-color);
-            color: var(--primary-text); font-size: 16px; line-height: 1.6;
-            transition: background-color var(--transition-speed), color var(--transition-speed);
-        }
+        body { font-family: var(--font-override, var(--font-body)); margin: 0; background-color: var(--bg-color); color: var(--primary-text); font-size: 16px; line-height: 1.6; transition: background-color var(--transition-speed), color var(--transition-speed); }
         .container { max-width: 1200px; margin: 20px auto; padding: 15px; }
         h1, h2, h3, h4 { font-family: var(--font-heading); margin-top: 0; color: var(--primary-text); font-weight: 700; }
         header { text-align: center; padding: 1rem; margin-bottom: 20px; }
         header h1 { font-size: 3.5em; margin: 0; }
-        
-        /* ... Diğer stiller (controls-bar, book-card, modal vb.) önceki versiyonla aynı kalacak ... */
-        .controls-bar, .modal-content, .book-card, button, .btn, .form-group input, .form-group select, .form-group textarea,
-        .settings-section, .note-item { transition: all var(--transition-speed) ease-in-out; }
-
-        .controls-bar {
-            padding: 25px; background-color: var(--card-bg); border-radius: var(--border-radius-lg);
-            box-shadow: var(--shadow-md); display: flex; flex-wrap: wrap; align-items: center;
-            gap: 20px; margin-bottom: 30px; border: 1px solid var(--border-color);
-        }
-        .controls-bar input[type="text"] {
-            flex-grow: 1; padding: 12px; border: 1px solid var(--border-color);
-            border-radius: var(--border-radius-md); background-color: var(--bg-color); min-width: 200px;
-            color: var(--primary-text);
-        }
-        .controls-bar input[type="text"]:focus {
-            outline: none; border-color: var(--accent-1); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-1) 20%, transparent);
-        }
+        .controls-bar, .modal-content, .book-card, button, .btn, .form-group input, .form-group select, .form-group textarea, .settings-section, .note-item { transition: all var(--transition-speed) ease-in-out; }
+        .controls-bar { padding: 25px; background-color: var(--card-bg); border-radius: var(--border-radius-lg); box-shadow: var(--shadow-md); display: flex; flex-wrap: wrap; align-items: center; gap: 20px; margin-bottom: 30px; border: 1px solid var(--border-color); }
+        .controls-bar input[type="text"] { flex-grow: 1; padding: 12px; border: 1px solid var(--border-color); border-radius: var(--border-radius-md); background-color: var(--bg-color); min-width: 200px; color: var(--primary-text); }
+        .controls-bar input[type="text"]:focus { outline: none; border-color: var(--accent-1); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-1) 20%, transparent); }
         .control-group { display: flex; gap: 10px; flex-wrap: wrap; }
-        
-        button, .btn {
-            background-color: var(--accent-1); color: white; padding: 12px 24px; border: none;
-            border-radius: var(--border-radius-md); cursor: pointer; font-size: 1em; font-weight: 600;
-            letter-spacing: 0.5px; display: inline-flex;
-            align-items: center; justify-content: center; gap: 8px; text-decoration: none;
-        }
+        button, .btn { background-color: var(--accent-1); color: white; padding: 12px 24px; border: none; border-radius: var(--border-radius-md); cursor: pointer; font-size: 1em; font-weight: 600; letter-spacing: 0.5px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; }
         button:hover, .btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); }
         button:disabled { background-color: #ccc; color: #666; cursor: not-allowed; transform: translateY(0); box-shadow: none; }
-        #add-book-btn:hover { background-color: var(--accent-1-dark); }
         .btn-secondary { background-color: var(--accent-2); }
-        .btn-secondary:hover { background-color: var(--accent-2-dark); }
         .btn-danger { background-color: var(--danger-color); }
-        
         .icon-btn { background: none; padding: 8px; border-radius: 50%; width: 44px; height: 44px; }
         .icon-btn svg { width: 24px; height: 24px; fill: var(--secondary-text); transition: fill 0.2s; }
         .icon-btn:hover svg { fill: var(--primary-text); }
-        .icon-btn:hover { background-color: var(--bg-color-alt); box-shadow: none; transform: none; }
-
         .list-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; }
-        .book-card {
-            background-color: var(--card-bg); border-radius: var(--border-radius-md); box-shadow: var(--shadow-sm);
-            overflow: hidden; display: flex; cursor: pointer; border: 1px solid var(--border-color);
-        }
+        .book-card { background-color: var(--card-bg); border-radius: var(--border-radius-md); box-shadow: var(--shadow-sm); overflow: hidden; display: flex; cursor: pointer; border: 1px solid var(--border-color); }
         .book-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); }
         .card-cover img { width: 110px; height: 165px; object-fit: cover; display: block; background-color: var(--bg-color-alt); }
         .card-info { padding: 20px; display: flex; flex-direction: column; justify-content: center; flex-grow: 1; overflow: hidden; }
         .card-info h3 { margin: 0 0 5px 0; font-size: 1.3em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .card-info p { margin: 2px 0; font-size: 1em; color: var(--secondary-text); }
         .book-rating { color: var(--accent-3); font-size: 1.3em; margin-top: 10px !important; letter-spacing: 2px; }
-        
-        .modal {
-            display: flex; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%;
-            background-color: color-mix(in srgb, var(--bg-color) 60%, transparent);
-            backdrop-filter: blur(8px); animation: fadeIn 0.3s; padding: 5vh 15px;
-            align-items: flex-start; justify-content: center; overflow-y: auto;
-        }
-        .modal-content {
-            background-color: var(--card-bg); padding: 30px 40px; border-radius: var(--border-radius-lg);
-            width: 90%; max-width: 800px; position: relative; box-shadow: var(--shadow-lg);
-            animation: slideIn 0.3s;
-        }
-        .close-button {
-            color: var(--secondary-text); position: absolute; top: 15px; right: 25px; font-size: 36px;
-            font-weight: 400; cursor: pointer; z-index: 10;
-        }
-        .close-button:hover { color: var(--primary-text); }
-        .modal-content h2 { margin-bottom: 30px; }
-
+        .modal { display: flex; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: color-mix(in srgb, var(--bg-color) 60%, transparent); backdrop-filter: blur(8px); animation: fadeIn 0.3s; padding: 5vh 15px; align-items: flex-start; justify-content: center; overflow-y: auto; }
+        .modal-content { background-color: var(--card-bg); padding: 30px 40px; border-radius: var(--border-radius-lg); width: 90%; max-width: 800px; position: relative; box-shadow: var(--shadow-lg); animation: slideIn 0.3s; }
+        .close-button { color: var(--secondary-text); position: absolute; top: 15px; right: 25px; font-size: 36px; font-weight: 400; cursor: pointer; z-index: 10; }
         .form-group { margin-bottom: 25px; }
         .form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--secondary-text); }
-        .form-group input, .form-group select, .form-group textarea {
-            width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: var(--border-radius-md);
-            background-color: var(--bg-color); color: var(--primary-text); box-sizing: border-box;
-        }
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-            outline: none; border-color: var(--accent-1); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-1) 20%, transparent);
-        }
-        
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: var(--border-radius-md); background-color: var(--bg-color); color: var(--primary-text); box-sizing: border-box; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--accent-1); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-1) 20%, transparent); }
         .fieldset { border: 1px solid var(--border-color); border-radius: var(--border-radius-md); padding: 10px 20px 20px 20px; margin-bottom: 25px; }
         .fieldset legend { font-family: var(--font-heading); font-weight: 700; color: var(--secondary-text); padding: 0 10px; }
-        
         #api-results { position: absolute; background: var(--card-bg); width: 100%; border: 1px solid var(--border-color); border-top: none; border-radius: 0 0 var(--border-radius-md) var(--border-radius-md); z-index: 10; max-height: 250px; overflow-y: auto; box-shadow: var(--shadow-md); }
         .api-result-item { padding: 12px 15px; cursor: pointer; border-bottom: 1px solid var(--border-color); }
-        .api-result-item:last-child { border-bottom: none; }
-        .api-result-item:hover { background-color: var(--bg-color-alt); }
-        .api-result-item p { margin: 0; } .api-result-item .title { font-weight: 600; } .api-result-item .author { font-size: 0.9em; color: var(--secondary-text); }
-        
-        .settings-section { margin-bottom: 40px; }
-        .settings-section h3 { font-family: var(--font-heading); border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 20px; }
         .theme-switcher { display: flex; gap: 10px; flex-wrap: wrap; }
         .theme-btn { padding: 10px 15px; border: 2px solid var(--border-color); background-color: var(--bg-color); color: var(--primary-text); font-weight: 600; cursor: pointer; border-radius: var(--border-radius-md); font-size: 0.9em; }
         .theme-btn.active { border-color: var(--accent-1); color: var(--accent-1); }
-        .data-management-actions { display: flex; flex-direction: column; gap: 15px; align-items: flex-start; }
-
         .details-grid { display: grid; grid-template-columns: 200px 1fr; gap: 40px; align-items: flex-start; }
         @media (max-width: 768px) { .details-grid { grid-template-columns: 1fr; text-align: center;} .details-info-grid { grid-template-columns: 1fr; text-align: left;} .details-label {justify-self: start;} }
         .details-cover img { width: 100%; height: auto; border-radius: var(--border-radius-md); box-shadow: var(--shadow-md); background-color: var(--bg-color-alt); }
         .details-info-grid { display: grid; grid-template-columns: 100px 1fr; gap: 12px 18px; align-items: center; margin-bottom: 20px;}
-        .details-label { font-weight: 600; color: var(--secondary-text); }
-        .details-status { padding: 5px 12px; border-radius: 15px; font-size: 0.9em; font-weight: 700; color: white; text-align: center; display: inline-block; }
-        #notes-section { margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--border-color); }
-        .note-item { background: var(--bg-color-alt); padding: 15px; border-radius: var(--border-radius-md); margin-bottom: 10px; border: 1px solid var(--border-color); }
-        
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 20px; text-align: center; }
+        .stat-card { background-color: var(--bg-color-alt); padding: 20px; border-radius: var(--border-radius-lg); }
+        .stat-card h3 { font-family: var(--font-body); font-size: 2.5em; color: var(--accent-1); margin: 0 0 5px 0; }
+        .stat-card p { margin: 0; color: var(--secondary-text); font-weight: 600; }
+        .chart-container { margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--border-color); }
+        .bar-chart .bar-item { margin-bottom: 10px; } .bar-chart .bar-label { font-size: 0.9em; margin-bottom: 5px; } .bar-chart .bar-wrapper { background: var(--bg-color-alt); border-radius: var(--border-radius-sm); overflow: hidden; } .bar-chart .bar { background-color: var(--accent-2); height: 25px; line-height: 25px; color: white; text-align: right; padding-right: 10px; font-weight: 600; white-space: nowrap; }
         .hidden { display: none; }
-        .toast {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(20px);
-            background-color: var(--primary-text); color: white; padding: 14px 28px; border-radius: var(--border-radius-md);
-            z-index: 2000; opacity: 0; transition: opacity 0.4s, transform 0.4s; box-shadow: var(--shadow-lg); font-weight: 600;
-        }
-
+        .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(20px); background-color: var(--primary-text); color: white; padding: 14px 28px; border-radius: var(--border-radius-md); z-index: 2000; opacity: 0; transition: opacity 0.4s, transform 0.4s; box-shadow: var(--shadow-lg); font-weight: 600; }
         @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
         @keyframes slideIn { from {transform: scale(0.95) translateY(-10px); opacity: 0;} to {transform: scale(1) translateY(0); opacity: 1;} }
     </style>
@@ -272,7 +159,6 @@
         let currentUser = null;
         let unsubscribeBooks = null;
 
-        // --- Arayüz Elemanlarını Seçme ---
         const ui = {
             loginScreen: document.getElementById('login-screen'), mainApp: document.getElementById('main-app'),
             loginBtn: document.getElementById('login-btn'), logoutBtn: document.getElementById('logout-btn'),
@@ -283,7 +169,6 @@
             addBookBtn: document.getElementById('add-book-btn')
         };
         
-        // --- TEMA YÖNETİMİ ---
         const applyTheme = (themeName) => {
             document.documentElement.dataset.theme = themeName;
             localStorage.setItem('libraryTheme', themeName);
@@ -294,7 +179,6 @@
         };
         loadTheme();
 
-        // --- KİMLİK DOĞRULAMA ---
         auth.onAuthStateChanged(user => {
             if (user) {
                 currentUser = user;
@@ -310,7 +194,6 @@
         ui.loginBtn.onclick = () => { const p = new firebase.auth.GoogleAuthProvider(); auth.signInWithPopup(p).catch(e => showToast(`Giriş Hatası: ${e.message}`, 'error')); };
         ui.logoutBtn.onclick = () => auth.signOut();
 
-        // --- VERİTABANI İŞLEMLERİ ---
         const getBooksCollection = () => db.collection('users').doc(currentUser.uid).collection('books');
         
         const loadBooks = () => {
@@ -322,7 +205,6 @@
             }, error => showToast("Kitaplar yüklenemedi: " + error.message, "error"));
         };
         
-        // --- ARAYÜZ OLUŞTURMA ---
         const getStarRating = (r=0) => '★'.repeat(r) + '☆'.repeat(5 - r);
         
         const createBookCard = (book) => {
@@ -340,16 +222,12 @@
         const renderBooks = () => {
             let booksToRender = [...allBooks]; 
             const sortValue = ui.sortBy.value;
-            
             if (sortValue === 'title_asc') {
                 booksToRender.sort((a, b) => (a.title || '').localeCompare(b.title || '', 'tr', { sensitivity: 'base' }));
             }
-            // "Eklenme Tarihi" için ekstra sıralama gerekmez, Firestore'dan zaten sıralı gelir.
-
             const searchTerm = ui.searchInput.value.toLowerCase();
             const currentFilter = ui.filterStatus.value;
             const filteredBooks = booksToRender.filter(book => (book.title?.toLowerCase().includes(searchTerm) || book.author?.toLowerCase().includes(searchTerm)) && (currentFilter === 'Tümü' || book.status === currentFilter));
-            
             ui.bookList.innerHTML = '';
             if (filteredBooks.length === 0) {
                 ui.bookList.innerHTML = `<p style="text-align:center; color: var(--secondary-text); grid-column: 1 / -1; margin-top: 20px;">Bu kriterlere uygun kitap bulunamadı.</p>`;
@@ -358,7 +236,6 @@
             }
         };
 
-        // --- MODAL YÖNETİMİ ---
         const openModal = (content) => { ui.modalContainer.innerHTML = `<div class="modal"><div class="modal-content">${content}</div></div>`; ui.modalContainer.querySelector('.close-button')?.addEventListener('click', closeModal); };
         const closeModal = () => { const modal = ui.modalContainer.querySelector('.modal'); if (modal) modal.remove(); };
         window.onclick = e => { if (e.target?.classList.contains('modal')) closeModal(); };
@@ -376,11 +253,10 @@
             setTimeout(() => {
                 toast.style.opacity = '0';
                 toast.style.transform = 'translateX(-50%) translateY(20px)';
-                setTimeout(() => document.body.removeChild(toast), 500);
+                setTimeout(() => document.body.removeChild(toast), 3000);
             }, 3000);
         };
         
-        // --- KİTAP FORMU VE CRUD İŞLEMLERİ ---
         const renderBookFormModal = (book = {}) => {
             const isEditing = !!book.id;
             const title = isEditing ? 'Kitabı Düzenle' : 'Yeni Kitap Ekle';
@@ -395,7 +271,8 @@
                             <div id="api-results" class="hidden"></div>
                         </div>
                         <div class="form-group"><label for="author">Yazar</label><input type="text" id="author" value="${book.author || ''}" required></div>
-                        <div class="form-group" style="margin-bottom:0;"><label for="publisher">Yayınevi</label><input type="text" id="publisher" value="${book.publisher || ''}"></div>
+                        <div class="form-group"><label for="publisher">Yayınevi</label><input type="text" id="publisher" value="${book.publisher || ''}"></div>
+                        <div class="form-group" style="margin-bottom:0;"><label for="page-count">Sayfa Sayısı</label><input type="number" id="page-count" value="${book.pageCount || ''}" min="0"></div>
                     </fieldset>
                     <fieldset class="fieldset"><legend>Kapak Görseli</legend>
                         <div class="form-group"><label for="cover-url">URL ile Ekle</label><input type="text" id="cover-url" value="${book.coverUrl || ''}" placeholder="Resim adresini buraya yapıştırın"></div>
@@ -430,14 +307,10 @@
                 clearTimeout(searchTimeout);
                 searchTimeout = setTimeout(() => searchGoogleBooks(e.target.value), 400);
             });
-            // Kapak arama butonu
             form.querySelector('#google-cover-search-btn').onclick = () => {
                 const title = form.querySelector('#title').value;
                 const author = form.querySelector('#author').value;
-                if (!title) {
-                    showToast('Lütfen kapak aramadan önce Kitap Adı alanını doldurun.', 'error');
-                    return;
-                }
+                if (!title) { showToast('Lütfen kapak aramadan önce Kitap Adı alanını doldurun.', 'error'); return; }
                 const query = `${title} ${author} kitap kapağı`;
                 const url = `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(query)}`;
                 window.open(url, '_blank');
@@ -458,6 +331,7 @@
                     const info = item.volumeInfo;
                     const bookData = {
                         title: info.title || '', author: info.authors?.join(', ') || '', publisher: info.publisher || '',
+                        pageCount: info.pageCount || '',
                         coverUrl: (info.imageLinks?.thumbnail || info.imageLinks?.smallThumbnail || '').replace('http://', 'https://')
                     };
                     const div = document.createElement('div');
@@ -475,6 +349,7 @@
             form.title.value = bookData.title;
             form.author.value = bookData.author;
             form.publisher.value = bookData.publisher;
+            form.querySelector('#page-count').value = bookData.pageCount;
             form.querySelector('#cover-url').value = bookData.coverUrl;
             document.getElementById('api-results').classList.add('hidden');
         };
@@ -489,6 +364,7 @@
                 title: form.title.value,
                 author: form.author.value,
                 publisher: form.publisher.value,
+                pageCount: parseInt(form['page-count'].value) || 0,
                 coverUrl: form['cover-url'].value,
                 status: form.status.value,
                 rating: parseInt(form.rating.value) || 0,
@@ -527,6 +403,7 @@
                     <div>
                         <div class="details-info-grid">
                             <div class="details-label">Yazar</div> <div>${book.author || '-'}</div>
+                            <div class="details-label">Sayfa</div> <div>${book.pageCount || '-'}</div>
                             <div class="details-label">Puan</div> <div><span class="book-rating">${getStarRating(book.rating)}</span></div>
                             <div class="details-label">Durum</div> <div><span class="details-status" style="background-color:${statusColors[book.status] || '#ccc'}">${statusText}</span></div>
                             ${book.startDate ? `<div class="details-label">Başlama</div> <div>${new Date(book.startDate).toLocaleDateString('tr-TR')}</div>` : ''}
@@ -634,33 +511,42 @@
             } catch (error) { showToast("Not kaydedilemedi.", "error"); }
         };
 
-        // --- AYARLAR, İÇE/DIŞA AKTARMA VE TEMİZLEME ---
         const renderSettingsModal = () => {
             const currentTheme = localStorage.getItem('libraryTheme') || 'light';
             const content = `
                 <span class="close-button" aria-label="Kapat">&times;</span>
                 <h2>Ayarlar</h2>
-                <div class="settings-section">
-                    <h3>Görünüm Teması</h3>
-                    <div class="theme-switcher">
-                        <button class="theme-btn ${currentTheme === 'light' ? 'active' : ''}" data-theme="light">Açık</button>
-                        <button class="theme-btn ${currentTheme === 'dark' ? 'active' : ''}" data-theme="dark">Karanlık</button>
-                        <button class="theme-btn ${currentTheme === 'sepia' ? 'active' : ''}" data-theme="sepia">Sepya</button>
-                        <button class="theme-btn ${currentTheme === 'gece-mavisi' ? 'active' : ''}" data-theme="gece-mavisi">Gece Mavisi</button>
-                        <button class="theme-btn ${currentTheme === 'okur-dostu' ? 'active' : ''}" data-theme="okur-dostu">Okur Dostu</button>
-                        <button class="theme-btn ${currentTheme === 'retro-terminal' ? 'active' : ''}" data-theme="retro-terminal">Retro</button>
-                        <button class="theme-btn ${currentTheme === 'kiraz-cicegi' ? 'active' : ''}" data-theme="kiraz-cicegi">Kiraz</button>
-                    </div>
-                </div>
-                <div class="settings-section">
-                    <h3>Veri Yönetimi</h3>
-                    <div class="data-management-actions">
-                         <button id="import-btn-modal" class="btn btn-secondary">Kütüphaneyi İçe Aktar (.json)</button>
-                         <button id="export-btn-modal" class="btn btn-secondary">Kütüphaneyi Dışa Aktar (.json)</button>
+                <fieldset class="fieldset"><legend>Görünüm Teması</legend>
+                    <fieldset class="fieldset" style="margin-top:10px;"><legend>Pastel Temalar</legend>
+                        <div class="theme-switcher">
+                            <button class="theme-btn ${currentTheme === 'light' ? 'active' : ''}" data-theme="light">Açık</button>
+                            <button class="theme-btn ${currentTheme === 'sepia' ? 'active' : ''}" data-theme="sepia">Sepya</button>
+                            <button class="theme-btn ${currentTheme === 'nane-sekeri' ? 'active' : ''}" data-theme="nane-sekeri">Nane Şekeri</button>
+                            <button class="theme-btn ${currentTheme === 'lavanta-tarlasi' ? 'active' : ''}" data-theme="lavanta-tarlasi">Lavanta</button>
+                            <button class="theme-btn ${currentTheme === 'vanilya-damlasi' ? 'active' : ''}" data-theme="vanilya-damlasi">Vanilya</button>
+                            <button class="theme-btn ${currentTheme === 'somon-ruyasi' ? 'active' : ''}" data-theme="somon-ruyasi">Somon</button>
+                        </div>
+                    </fieldset>
+                    <fieldset class="fieldset" style="margin-top:10px;"><legend>Koyu Temalar</legend>
+                        <div class="theme-switcher">
+                            <button class="theme-btn ${currentTheme === 'dark' ? 'active' : ''}" data-theme="dark">Karanlık</button>
+                            <button class="theme-btn ${currentTheme === 'gece-mavisi' ? 'active' : ''}" data-theme="gece-mavisi">Gece Mavisi</button>
+                            <button class="theme-btn ${currentTheme === 'grafit-gecesi' ? 'active' : ''}" data-theme="grafit-gecesi">Grafit</button>
+                            <button class="theme-btn ${currentTheme === 'zumrut-derinligi' ? 'active' : ''}" data-theme="zumrut-derinligi">Zümrüt</button>
+                            <button class="theme-btn ${currentTheme === 'yakut-kirmizisi' ? 'active' : ''}" data-theme="yakut-kirmizisi">Yakut</button>
+                            <button class="theme-btn ${currentTheme === 'retro-terminal' ? 'active' : ''}" data-theme="retro-terminal">Retro</button>
+                        </div>
+                    </fieldset>
+                </fieldset>
+                <fieldset class="fieldset"><legend>Veri Yönetimi ve İstatistikler</legend>
+                    <div class="data-management-actions" style="display:flex; flex-direction:row; gap:10px; flex-wrap:wrap;">
+                         <button id="stats-btn-modal" class="btn btn-secondary">Kütüphane İstatistikleri</button>
+                         <button id="import-btn-modal" class="btn btn-secondary">İçe Aktar (.json)</button>
+                         <button id="export-btn-modal" class="btn btn-secondary">Dışa Aktar (.json)</button>
                          <button id="clean-duplicates-btn" class="btn btn-danger">Aynı Kitapları Temizle</button>
                          <input type="file" id="import-file" class="hidden" accept=".json">
                     </div>
-                </div>`;
+                </fieldset>`;
             openModal(content);
             const modalContent = ui.modalContainer.querySelector('.modal-content');
             modalContent.querySelectorAll('.theme-btn').forEach(btn => {
@@ -671,10 +557,43 @@
                     e.target.classList.add('active');
                 }
             });
+            modalContent.querySelector('#stats-btn-modal').onclick = renderStatsModal;
             modalContent.querySelector('#import-btn-modal').onclick = () => document.getElementById('import-file').click();
             document.getElementById('import-file').onchange = handleImport;
             modalContent.querySelector('#export-btn-modal').onclick = handleExport;
             modalContent.querySelector('#clean-duplicates-btn').onclick = handleCleanDuplicates;
+        };
+
+        const renderStatsModal = () => {
+            if (allBooks.length === 0) { showToast("İstatistik için henüz kitap eklenmemiş.", "error"); return; }
+            const totalBooks = allBooks.length;
+            const statusCounts = { 'Okundu': 0, 'Okunuyor': 0, 'Okunacak': 0, 'Ödünç Verildi': 0 };
+            const authorCounts = {};
+            let totalRating = 0, ratedBooks = 0, totalPagesRead = 0;
+            allBooks.forEach(book => {
+                if (book.status && statusCounts.hasOwnProperty(book.status)) statusCounts[book.status]++;
+                if (book.author) authorCounts[book.author] = (authorCounts[book.author] || 0) + 1;
+                if (book.rating > 0) { totalRating += book.rating; ratedBooks++; }
+                if (book.status === 'Okundu' && book.pageCount > 0) totalPagesRead += book.pageCount;
+            });
+            const avgRating = ratedBooks > 0 ? (totalRating / ratedBooks).toFixed(1) : 'N/A';
+            const topAuthors = Object.entries(authorCounts).sort((a,b) => b[1] - a[1]).slice(0, 5);
+            let statusBarHtml = Object.entries(statusCounts).map(([status, count]) => {
+                const percentage = totalBooks > 0 ? ((count / totalBooks) * 100) : 0;
+                return `<div class="bar-item"><div class="bar-label">${status} (${count})</div><div class="bar-wrapper"><div class="bar" style="width: ${percentage}%;"></div></div></div>`;
+            }).join('');
+            const content = `
+                <span class="close-button" aria-label="Kapat">&times;</span>
+                <h2>Kütüphane İstatistikleri</h2>
+                <div class="stats-grid">
+                    <div class="stat-card"><h3>${totalBooks}</h3><p>Toplam Kitap</p></div>
+                    <div class="stat-card"><h3>${statusCounts['Okundu']}</h3><p>Okunmuş Kitap</p></div>
+                    <div class="stat-card"><h3>${totalPagesRead.toLocaleString('tr-TR')}</h3><p>Okunan Sayfa</p></div>
+                    <div class="stat-card"><h3>${avgRating}</h3><p>Ort. Puan</p></div>
+                </div>
+                <div class="chart-container"><h4>Okuma Durumu Dağılımı</h4><div class="bar-chart">${statusBarHtml}</div></div>
+                ${topAuthors.length > 0 ? `<div class="chart-container"><h4>En Popüler Yazarlar</h4><ol>${topAuthors.map(a => `<li>${a[0]} (${a[1]} kitap)</li>`).join('')}</ol></div>` : ''}`;
+            openModal(content);
         };
         
         const handleCleanDuplicates = async (e) => {
@@ -685,48 +604,31 @@
                 const seen = new Map();
                 const idsToDelete = [];
                 const sortedBooks = [...allBooks].sort((a,b) => (a.dateAdded?.toDate() || 0) - (b.dateAdded?.toDate() || 0));
-
                 sortedBooks.forEach(book => {
                     const key = `${book.title?.trim().toLowerCase()}|${book.author?.trim().toLowerCase()}`;
-                    if (seen.has(key)) {
-                        idsToDelete.push(book.id);
-                    } else {
-                        seen.set(key, book.id);
-                    }
+                    if (seen.has(key)) { idsToDelete.push(book.id); } else { seen.set(key, book.id); }
                 });
-
-                if (idsToDelete.length === 0) {
-                    showToast('Kütüphanenizde aynı kayıttan birden fazla yok.', 'success');
-                } else {
-                    const confirmed = confirm(`${idsToDelete.length} adet mükerrer kitap kaydı bulundu. Bu kayıtlar silinecek ve sadece en eski kayıtlar tutulacaktır. Onaylıyor musunuz?`);
+                if (idsToDelete.length === 0) { showToast('Kütüphanenizde aynı kayıttan birden fazla yok.', 'success'); } 
+                else {
+                    const confirmed = confirm(`${idsToDelete.length} adet mükerrer kitap kaydı bulundu. Silinecekler. Onaylıyor musunuz?`);
                     if (confirmed) {
                         button.textContent = 'Siliniyor...';
                         const batch = db.batch();
-                        idsToDelete.forEach(id => {
-                            batch.delete(getBooksCollection().doc(id));
-                        });
+                        idsToDelete.forEach(id => { batch.delete(getBooksCollection().doc(id)); });
                         await batch.commit();
                         showToast(`${idsToDelete.length} adet mükerrer kayıt başarıyla silindi.`, 'success');
                     }
                 }
                 closeModal();
-            } catch (error) {
-                showToast('Kayıtları silerken bir hata oluştu.', 'error');
-            } finally {
-                if(button) {
-                   button.disabled = false;
-                   button.textContent = 'Aynı Kitapları Temizle';
-                }
-            }
+            } catch (error) { showToast('Kayıtları silerken bir hata oluştu.', 'error'); } 
+            finally { if(button) { button.disabled = false; button.textContent = 'Aynı Kitapları Temizle'; } }
         };
 
         const handleExport = () => {
             if (allBooks.length === 0) { showToast('Dışa aktarılacak kitap bulunmuyor.', 'error'); return; }
             const booksToExport = allBooks.map(book => {
                 const cleanBook = { ...book };
-                if (cleanBook.dateAdded && typeof cleanBook.dateAdded.toDate === 'function') {
-                    cleanBook.dateAdded = cleanBook.dateAdded.toDate().toISOString();
-                }
+                if (cleanBook.dateAdded && typeof cleanBook.dateAdded.toDate === 'function') { cleanBook.dateAdded = cleanBook.dateAdded.toDate().toISOString(); }
                 return cleanBook;
             });
             const dataStr = JSON.stringify(booksToExport, null, 2);
@@ -752,7 +654,6 @@
                     if (!Array.isArray(importedBooks)) throw new Error("JSON dosyası bir kitap listesi (dizi) içermiyor.");
                     const confirmed = confirm(`${importedBooks.length} adet kitap içe aktarılacak. Onaylıyor musunuz?`);
                     if (!confirmed) { document.getElementById('import-file').value = ''; return; }
-                    
                     const batch = db.batch();
                     importedBooks.forEach(book => {
                         const newBookRef = getBooksCollection().doc();
@@ -762,16 +663,12 @@
                     await batch.commit();
                     showToast(`${importedBooks.length} kitap başarıyla içe aktarıldı.`, 'success');
                     closeModal();
-                } catch (error) {
-                    showToast(`İçe aktarma başarısız: ${error.message}`, 'error');
-                } finally {
-                    document.getElementById('import-file').value = '';
-                }
+                } catch (error) { showToast(`İçe aktarma başarısız: ${error.message}`, 'error'); } 
+                finally { document.getElementById('import-file').value = ''; }
             };
             reader.readAsText(file);
         };
         
-        // --- OLAY DİNLEYİCİLERİNİ BAĞLAMA ---
         ui.addBookBtn.onclick = () => renderBookFormModal();
         ui.searchInput.addEventListener('input', renderBooks);
         ui.filterStatus.addEventListener('change', renderBooks);
